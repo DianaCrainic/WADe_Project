@@ -1,0 +1,54 @@
+body {
+    margin-left: 10vw;
+    margin-right: 10vw;
+    font-size: 1.5rem;
+}
+
+body>main>article>header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+}
+
+#team_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+header>p {
+    font-size: larger;
+    font-weight: bold;
+}
+
+a:hover,
+a:link,
+a:visited,
+a:active {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+section>section {
+    margin-left: 5vw;
+}
+
+ol.nested {
+    counter-reset: item;
+}
+
+li.nested {
+    display: block
+}
+
+li.nested:before {
+    content: counters(item, ".") " ";
+    counter-increment: item;
+}
+
+p {
+    text-align: justify;
+}
