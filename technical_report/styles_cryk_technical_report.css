@@ -44,6 +44,10 @@ li.nested {
     display: block
 }
 
+li.without_number {
+    list-style-type: none;
+}
+
 li.nested:before {
     content: counters(item, ".") " ";
     counter-increment: item;
@@ -51,4 +55,9 @@ li.nested:before {
 
 p {
     text-align: justify;
+}
+
+.architecture-image {
+    width: 100%;
+    height: auto;
 }
