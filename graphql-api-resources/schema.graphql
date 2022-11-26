@@ -1,0 +1,88 @@
+# https://doacc.github.io/doacc.xml#ProtectionScheme
+type ProtectionScheme {
+    id: ID!
+    description: String
+}
+
+# https://doacc.github.io/doacc.xml#DistributionScheme
+type DistributionScheme {
+    id: ID!
+    description: String
+}
+
+# https://doacc.github.io/doacc.xml#Cryptocurrency
+type Cryptocurrency {
+    id: ID!
+    symbol: String!
+    description: String
+    blockReward: String
+    blockTime: Int
+    totalCoins: String
+    source: String
+    website: String
+    protectionScheme: ProtectionScheme
+    distributionScheme: DistributionScheme
+}
+
+input CreateCryptocurrencyInput {
+    id: ID!
+    symbol: String!
+    description: String
+    blockReward: String
+    blockTime: Int
+    totalCoins: String
+    source: String
+    website: String
+    protectionScheme: ProtectionScheme
+    distributionScheme: DistributionScheme
+}
+
+input UpdateCryptoCurrencyInput {
+    id: ID!
+    description: String
+    blockReward: String
+    blockTime: Int
+    totalCoins: String
+    source: String
+    website: String
+    protectionScheme: ProtectionScheme
+    distributionScheme: DistributionScheme
+}
+
+# https://schema.org/NewsArticle
+type CryptoNews {
+    id: ID!
+    title: String!
+    body: String! # https://schema.org/articleBody
+    about: [Cryptocurrency!]!
+}
+
+input CreateCryptoNewsInput {
+    title: String!
+    body: String!
+    about: [ID!]!
+}
+
+input UpdateCryptoNewsInput {
+    id: ID!
+    title: String
+    body: String
+    about: [ID!]
+}
+
+type Query {
+    cryptocurrency(id: ID!): Cryptocurrency!
+    cryptocurrencies(limit: Int, offset: Int): [Cryptocurrency!]!
+
+    cryptoNews(cryptocurrencyId: ID!): [CryptoNews!]!
+}
+
+type Mutation {
+    createCryptocurrency(createCryptocurrencyInput: CreateCryptocurrencyInput!): Cryptocurrency!
+    updateCryptoCurrency(updateCryptoCurrencyInput: UpdateCryptoCurrencyInput!): Cryptocurrency!
+    removeCryptocurrency(id: ID!): Cryptocurrency!
+
+    createCryptoNews(createCryptoNewsInput: CreateCryptoNewsInput!): CryptoNews!
+    updateCryptoNews(updateCryptoNewsInput: UpdateCryptoNewsInput!): CryptoNews!
+    removeCryptoNews(id: ID!): CryptoNews!
+}
