@@ -79,7 +79,8 @@
                     </li>
                     <li class="nested"><a href="#Data_Sources">Data Sources</a>
                         <ol class="nested">
-                            <li class="nested"><a href="#Internal_Data_Structures/Models">Internal Data Structures/Models</a></li>
+                            <li class="nested"><a href="#Internal_Data_Structures/Models">Internal Data
+                                    Structures/Models</a></li>
                             <li class="nested"><a href="#External_Data_Sources">External Data Sources</a></li>
                         </ol>
                     </li>
@@ -95,10 +96,11 @@
                                     <li class="nested"><a href="#AWSAppSync">AWS AppSync</a></li>
                                     <li class="nested"><a href="#AmazonS3">Amazon S3</a></li>
                                     <li class="nested"><a href="#AmazonCloudfront">Amazon Cloudfront</a></li>
-                                    <li class="nested"><a href="#AmazonCognito">AmazonCognito</a></li>
+                                    <li class="nested"><a href="#AmazonCognito">Amazon Cognito</a></li>
                                 </ol>
                             </li>
-                            <li class="nested"><a href="#Libraries_&_External_APIs">Libraries &amp; ExternalAPIs</a></li>
+                            <li class="nested"><a href="#Libraries_&_External_APIs">Libraries &amp; ExternalAPIs</a>
+                            </li>
                         </ol>
                     </li>
                     <li class="nested"><a href="#Conclusions">Conclusions</a></li>
@@ -110,7 +112,9 @@
                 <h2 id="Abstract">Abstract</h2>
                 <div>
                     <p>
-                        <b>cryk</b> is a crypto application which gives you personalized cryptocurrency information and news, analytics about the desired cryptocurrencies, to cut short your struggles. It gives vital details with great accuracy that otherwise take hours of calculation.
+                        <b>cryk</b> is a crypto application which gives you personalized cryptocurrency information and
+                        news, analytics about the desired cryptocurrencies, to cut short your struggles. It gives vital
+                        details with great accuracy that otherwise take hours of calculation.
                     </p>
                 </div>
             </section>
@@ -120,16 +124,29 @@
                     <section>
                         <h3 id="Description">1.1 Description</h3>
                         <p>
-                            The cryk (cryptocurrency knowledge manager) application represents a modular Web system capable to express and manage the knowledge about existing cryptocurrencies and their (meta-)data. Each functionality will be implemented by a (micro-)service and all queries will be performed via a SPARQL endpoint. Exposed information will be available in multiple formats (e.g. HTML+RDFa and JSON-LD). Also, multiple visualizations of interest will be provided.
+                            The cryk (cryptocurrency knowledge manager) application represents a modular Web system
+                            capable to express and manage the knowledge about existing cryptocurrencies and their
+                            (meta-)data. Each functionality will be implemented by a (micro-)service and all queries
+                            will be performed via a SPARQL endpoint. Exposed information will be available in multiple
+                            formats (e.g. HTML+RDFa and JSON-LD). Moreover, multiple visualizations of interest will be
+                            provided.
                         </p>
                     </section>
                     <section>
                         <h3 id="Motivation">1.2 Motivation</h3>
                         <p>
+                        <p>
                             Nowadays, cryptocurrency domain is attracting a lot of interest. Cryptocurrency is a
-                            decentralized digital currency stored in an online form that does not fall under governments and banks control, which was proposed in an attempt to replace the fiat
-                            currency. <br>
-                            Among thousands of cryptocurrencies, it can be overwhelming to decide which crypto to invest in. More often than not, people miss the important details and end up mismanaging their crypto investments. And that's especially true for serious investors with a widely spread-out portfolio.
+                            decentralized digital currency stored in an online form that does not fall under governments
+                            and banks control, which was proposed in an attempt to replace the fiat
+                            currency.
+                        </p>
+                        <p>
+                            Among thousands of cryptocurrencies, it can be overwhelming to decide which crypto to invest
+                            in. More often than not, people miss the important details and end up mismanaging their
+                            crypto investments. And that's especially true for serious investors with a widely
+                            spread-out portfolio.
+                        </p>
                         </p>
                     </section>
                 </div>
@@ -141,63 +158,98 @@
                         <h3 id="Architecture">2.1 Architecture</h3>
                         <h4 id="ArchitectureDescription">2.1.1 Description</h4>
                         <p>
-                            The application architecture is based on microservices, with two microservices: <i><b>Cryptocurrencies service</b></i> and <i><b>News service</b></i>.
-                            <ol>
-                                <li><i><b>Cryptocurrencies service</b></i> is a service whose responsibility is to manage cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> function that performs various SPARQL queries
-                                    (e.g. <code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>) on an <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database. The database contains RDF triples that model knowledge about existing
-                                    cryptocurrencies and their (meta-)data. These RDF triples are loaded into the database through <a href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon Neptune Bulk Loader</a> (an external
-                                    file uploaded to an <a href="https://aws.amazon.com/s3/">Amazon S3</a> bucket will be loaded). Both the lambda function and the database runs within the same VPC (security reasons).</li>
+                            The application architecture is based on microservices, with two microservices:
+                            <i><b>Cryptocurrencies service</b></i> and <i><b>News service</b></i>.
+                        <ol>
+                            <li><i><b>Cryptocurrencies service</b></i> is a service whose responsibility is to manage
+                                cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS
+                                    Lambda</a> function that performs various SPARQL queries
+                                (e.g. <code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>) on an <a
+                                    href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database. The database
+                                contains RDF triples that model knowledge about existing
+                                cryptocurrencies and their (meta-)data. These RDF triples are loaded into the database
+                                through <a
+                                    href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon
+                                    Neptune Bulk Loader</a> (an external
+                                file uploaded to an <a href="https://aws.amazon.com/s3/">Amazon S3</a> bucket will be
+                                loaded). Both the lambda function and the database runs within the same VPC (security
+                                reasons).</li>
 
-                                <li><i><b>News service</b></i> is a service whose responsibility is to manage news about cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> function that performs various SPARQL queries
-                                    (e.g. <code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>) on an <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database, like <i><b>Cryptocurrencies service</b></i>. The database contains RDF
-                                    triples that model knowledge about crypto news. Both the lambda function and the database runs within the same VPC (security reasons).</li>
-                            </ol>
+                            <li><i><b>News service</b></i> is a service whose responsibility is to manage news about
+                                cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS
+                                    Lambda</a> function that performs various SPARQL queries
+                                (e.g. <code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>) on an <a
+                                    href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database, like
+                                <i><b>Cryptocurrencies service</b></i>. The database contains RDF triples that model
+                                knowledge about crypto news. Both the lambda function and the database runs within the
+                                same VPC (security reasons).
+                            </li>
+                        </ol>
 
-                            <p>The execution of the lambda functions associated with the microservices is triggered by calling the GraphQL API provided by <a href="https://aws.amazon.com/appsync/">AWS AppSync</a>. Depending on the query or mutation that
-                                was called, the lambda function of the corresponding microservice will be executed. See <a href="https://github.com/DianaCrainic/WADe_Project/wiki/GraphQL-API#schema">GraphQL API: Schema</a> for the schema structure of
-                                the GraphQL API.</p>
+                        <p>The execution of the lambda functions associated with the microservices is triggered by
+                            calling the GraphQL API provided by <a href="https://aws.amazon.com/appsync/">AWS
+                                AppSync</a>. Depending on the query or mutation that
+                            was called, the lambda function of the corresponding microservice will be executed. See <a
+                                href="https://github.com/DianaCrainic/WADe_Project/wiki/GraphQL-API#schema">GraphQL API:
+                                Schema</a> for the schema structure of
+                            the GraphQL API.</p>
 
-                            <p>A React client will call the GraphQL API and display the received data in a Single Page Application. An <a href="https://aws.amazon.com/s3/">Amazon S3</a> bucket is used to store the static files built from the React application.
-                                The bucket is enabled for static hosting and is made public so the files can be accessed by the website endpoint. The website is served through an <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> distribution
-                                (a content delivery network (CDN) service built for high performance, security, and developer convenience).</p>
+                        <p>A React client will call the GraphQL API and display the received data in a Single Page
+                            Application. An <a href="https://aws.amazon.com/s3/">Amazon S3</a> bucket is used to store
+                            the static files built from the React application.
+                            The bucket is enabled for static hosting and is made public so the files can be accessed by
+                            the website endpoint. The website is served through an <a
+                                href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> distribution
+                            (a content delivery network (CDN) service built for high performance, security, and
+                            developer convenience).</p>
 
-                            <p>The access to the application's features is controlled using <a href="#Users&UseCases">Application-Design: Users & Use Cases</a> to learn more about the user types of the application as well as the features they can access.</p>
+                        <p>The access to the application's features is controlled using <a
+                                href="https://aws.amazon.com/cognito/">Amazon Cognito</a>. See <a
+                                href="#Users&UseCases">Application-Design: Users & Use Cases</a> to learn more about the
+                            user types of the application as well as the features they can access.</p>
                         </p>
                         <h4 id="Diagram">2.1.2 High-level Diagram</h4>
-                        <img class="diagram-image" src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/architecture/Architecture.png" alt="Application Architecture">
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/architecture/Architecture.png"
+                            alt="Application Architecture">
                     </section>
                     <section>
                         <h3 id="Design">2.2 Design</h3>
                         <h4 id="C4Diagrams">2.2.1 C4 Diagrams</h4>
                         <h4 id="Users&UseCases">2.2.2 Users &amp; Use Cases</h4>
                         <p>
-                            There are 2 types of users: the <b>unauthenticated user</b> and the <b>admin</b> (which it is an authenticated user with more permissions). <br>
+                            There are 2 types of users: the <b>unauthenticated user</b> and the <b>admin</b> (which it
+                            is an authenticated user with more permissions). <br>
 
                             The final user, which in this case is an <b>unauthenticated user</b> can:
-                            <ul>
-                                <li>visualize the list of the existing cryptocurrencies, action which includes the following:
-                                    <ul>
+                        <ul>
+                            <li>visualize the list of the existing cryptocurrencies, action which includes the
+                                following:
+                                <ul>
                                     <li>compare 2 desired cryptocurrencies based on various criteria</li>
                                     <li>view the volume of the desired cryptocurrency</li>
                                     <li>view the relevant news about the desired cryptocurrency</li>
-                                    </ul>
-                                </li>
-                                <li>export the data in the desired format</li>
-                            </ul>
-                            
+                                </ul>
+                            </li>
+                            <li>export the data in the desired format</li>
+                        </ul>
 
-                            The <b>admin</b> can perform the following actions, in addition to those that the unauthenticated user can do:
-                            <ul>
-                                <li>create a new desired cryptocurrency</li>
-                                <li>update the desired cryptocurrency</li>
-                                <li>delete the desired cryptocurrency</li>
-                                <li>create a piece of news about a cryptocurrency</li>
-                                <li>update a piece of news about a cryptocurrency</li>
-                                <li>delete a piece of news about a cryptocurrency</li>
-                            </ul>
+
+                        The <b>admin</b> can perform the following actions, in addition to those that the
+                        unauthenticated user can do:
+                        <ul>
+                            <li>create a new desired cryptocurrency</li>
+                            <li>update the desired cryptocurrency</li>
+                            <li>delete the desired cryptocurrency</li>
+                            <li>create a piece of news about a cryptocurrency</li>
+                            <li>update a piece of news about a cryptocurrency</li>
+                            <li>delete a piece of news about a cryptocurrency</li>
+                        </ul>
 
                         </p>
-                        <img class="diagram-image" src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/use-case/UsersUseCaseDiagram.png" alt="Use Case Diagram">
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/use-case/UsersUseCaseDiagram.png"
+                            alt="Use Case Diagram">
 
                         <h4 id="I/ODataFormats">2.2.3 I/O Data Formats</h4>
                         <h4 id="Data/TaskFlows">2.2.4 Data/Task Flows</h4>
@@ -246,30 +298,74 @@
                     </section>
                     <section>
                         <h3 id="AWS">5.3 AWS services</h3>
-                            <h4 id="AmazonNeptune">5.3.1 Amazon Neptune</h4>
-                                <p>
+                        <h4 id="AmazonNeptune">5.3.1 Amazon Neptune</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> is a fully managed database
+                            service built for the cloud that makes it easier to build and run graph applications.
+                            Neptune provides built-in security, continuous backups, serverless compute, and integrations
+                            with other AWS services. The database contains RDF triples that model knowledge about
+                            existing cryptocurrencies and their (meta-)data and also about crypto news.
+                        </p>
+                        <h4 id="AWSLambda">5.3.2 AWS Lambda</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> is a serverless, event-driven
+                            compute service where the code is run virtually for any type of application or backend
+                            service without provisioning or managing servers.
+                            It is responsible for managing data from <a href="https://aws.amazon.com/neptune/">Amazon
+                                Neptune</a> database using various SPARQL queries (e.g. <code>SELECT</code>,
+                            <code>INSERT</code>, <code>DELETE</code>).
 
-                                </p>
-                            <h4 id="AWSLambda">5.3.2 AWS Lambda</h4>
-                                <p>
-
-                                </p>
-                            <h4 id="AWSAppSync">5.3.3 AWS AppSync</h4>
-                                <p>
-
-                                </p>
-                            <h4 id="AmazonS3">5.3.4 Amazon S3</h4>
-                                <p>
-
-                                </p>
-                            <h4 id="AmazonCloudfront">5.3.5 Amazon Cloudfront</h4>
-                                <p>
-
-                                </p>
-                            <h4 id="AmazonCognito">5.3.6 Amazon Cognito</h4>
-                                <p>
-
-                                </p>
+                        </p>
+                        <h4 id="AWSAppSync">5.3.3 AWS AppSync</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a> creates serverless GraphQL and
+                            Pub/Sub APIs that simplify application development through a single endpoint to securely
+                            query, update, or publish data.
+                            The GraphQL API provided by AWS AppSync is called when the execution of the lambda functions
+                            associated with the microservices is triggered
+                            Depending on the query or mutation that was called, the lambda function of the corresponding
+                            microservice will be executed.
+                        </p>
+                        <h4 id="AmazonS3">5.3.4 Amazon S3</h4>
+                        <p>
+                        <p>
+                            <a href="https://aws.amazon.com/s3/">Amazon Simple Storage Service</a> (Amazon S3) is an
+                            object storage service offering industry-leading scalability, data availability, security,
+                            and performance. Customers of all
+                            sizes and industries can store and protect any amount of data for virtually any use case,
+                            such as data lakes, cloud-native applications, and mobile apps. With cost-effective storage
+                            classes and easy-to-use management features, you can optimize costs, organize data, and
+                            configure fine-tuned access controls to meet specific business, organizational, and
+                            compliance requirements.
+                        </p>
+                        <p>
+                            In this context, Amazon S3 bucket is used to store the static files built from the React
+                            application. The
+                            bucket is enabled for static hosting and is made public so the files can be accessed by the
+                            website endpoint. Besides that, an Amazon S3 bucket is used to upload RDF triples containing knowledge about
+                            cryptocurrencies to Amazon Neptune. The RDF file is stored in the s3 bucket and loading is
+                            done through
+                            <a href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon
+                                Neptune Bulk Loader</a>.
+                        </p>
+                        </p>
+                        <h4 id="AmazonCloudfront">5.3.5 Amazon Cloudfront</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> is a content delivery
+                            network (CDN) service built for high performance, security, and developer convenience. When
+                            a user requests content that is served with CloudFront, the request is routed to the
+                            edge location that provides the lowest latency (time delay), so that content is delivered
+                            with the best possible performance.
+                        </p>
+                        <h4 id="AmazonCognito">5.3.6 Amazon Cognito</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a> provides an identity store that
+                            provides user sign-up and sign-in features and control access to the web applications. It
+                            scales to millions of users, supports social and enterprise identity federation, and offers
+                            advanced security features to protect the consumers and business. Built on open identity
+                            standards, Amazon Cognito supports various compliance regulations and integrates with
+                            frontend and backend development resources.
+                        </p>
                     </section>
                     <section>
                         <h3 id="Libraries_&_External_APIs">5.4 Libraries &amp; External APIs</h3>
@@ -327,9 +423,48 @@
             <section role="doc-bibliography">
                 <h2 id="References">8 References</h2>
                 <ul>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html" property="schema:citation" id="course-site">
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html"
+                        property="schema:citation" id="course-site">
                         <cite property="schema:name">
-                        <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application Development - linked data & knowledge management on Web</a>
+                            <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application
+                                Development - linked data & knowledge management on Web</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/neptune/"
+                        property="schema:citation" id="neptune">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/lambda/"
+                        property="schema:citation" id="lambda">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/appsync/"
+                        property="schema:citation" id="appsync">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/s3/"
+                        property="schema:citation" id="s3">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/s3/">Amazon S3</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cloudfront/"
+                        property="schema:citation" id="cloudfront">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cognito/"
+                        property="schema:citation" id="cognito">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>
                         </cite>
                     </li>
                 </ul>
