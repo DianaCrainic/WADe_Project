@@ -167,6 +167,36 @@
                         <h3 id="Design">2.2 Design</h3>
                         <h4 id="C4Diagrams">2.2.1 C4 Diagrams</h4>
                         <h4 id="Users&UseCases">2.2.2 Users &amp; Use Cases</h4>
+                        <p>
+                            There are 2 types of users: the <b>unauthenticated user</b> and the <b>admin</b> (which it is an authenticated user with more permissions). <br>
+
+                            The final user, which in this case is an <b>unauthenticated user</b> can:
+                            <ul>
+                                <li>visualize the list of the existing cryptocurrencies, action which includes the following:
+                                    <ul>
+                                    <li>view the evolution of the desired cryptocurrency</li>
+                                    <li>compare 2 desired cryptocurrencies based on various criteria</li>
+                                    <li>view the volume of the desired cryptocurrency</li>
+                                    <li>view the relevant news about the desired cryptocurrency</li>
+                                    </ul>
+                                </li>
+                                <li>export the data in the desired format</li>
+                            </ul>
+                            
+
+                            The <b>admin</b> can perform the following actions, in addition to those that the unauthenticated user can do:
+                            <ul>
+                                <li>create a new desired cryptocurrency</li>
+                                <li>update the desired cryptocurrency</li>
+                                <li>delete the desired cryptocurrency</li>
+                                <li>create a piece of news about a cryptocurrency</li>
+                                <li>update a piece of news about a cryptocurrency</li>
+                                <li>delete a piece of news about a cryptocurrency</li>
+                            </ul>
+
+                        </p>
+                        <img class="architecture-image" src="images/UsersUseCaseDiagram.png" alt="Use Case Diagram">
+
                         <h4 id="I/ODataFormats">2.2.3 I/O Data Formats</h4>
                         <h4 id="Data/TaskFlows">2.2.4 Data/Task Flows</h4>
                     </section>
