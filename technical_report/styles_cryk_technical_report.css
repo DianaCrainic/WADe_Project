@@ -61,3 +61,12 @@ p {
     width: 100%;
     height: auto;
 }
+
+.c4-diagram {
+    margin: auto;
+    display: block;
+}
+
+figcaption {
+    text-align: center;
+}
