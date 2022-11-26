@@ -88,14 +88,14 @@
                         <ol class="nested">
                             <li class="nested"><a href="#Node.JS">Node.JS</a></li>
                             <li class="nested"><a href="#React">React</a></li>
-                            <li class="nested"><a href="#AWS">AWS</a>
+                            <li class="nested"><a href="#AWS">AWS services</a>
                                 <ol class="nested">
-                                    <li class="nested"><a href="#AmazonCloudfront">Amazon Cloudfront</a></li>
-                                    <li class="nested"><a href="#AmazonS3">AmazonS3</a></li>
-                                    <li class="nested"><a href="#AmazonCognito">AmazonCognito</a></li>
-                                    <li class="nested"><a href="#AWSAppSync">AWS AppSync</a></li>
-                                    <li class="nested"><a href="#AWSLambda">AWS Lambda</a></li>
                                     <li class="nested"><a href="#AmazonNeptune">Amazon Neptune</a></li>
+                                    <li class="nested"><a href="#AWSLambda">AWS Lambda</a></li>
+                                    <li class="nested"><a href="#AWSAppSync">AWS AppSync</a></li>
+                                    <li class="nested"><a href="#AmazonS3">Amazon S3</a></li>
+                                    <li class="nested"><a href="#AmazonCloudfront">Amazon Cloudfront</a></li>
+                                    <li class="nested"><a href="#AmazonCognito">AmazonCognito</a></li>
                                 </ol>
                             </li>
                             <li class="nested"><a href="#Libraries_&_External_APIs">Libraries &amp; ExternalAPIs</a></li>
@@ -110,7 +110,7 @@
                 <h2 id="Abstract">Abstract</h2>
                 <div>
                     <p>
-
+                        <b>cryk</b> is a crypto application which gives you personalized cryptocurrency information and news, analytics about the desired cryptocurrencies, to cut short your struggles. It gives vital details with great accuracy that otherwise take hours of calculation.
                     </p>
                 </div>
             </section>
@@ -120,13 +120,16 @@
                     <section>
                         <h3 id="Description">1.1 Description</h3>
                         <p>
-
+                            The cryk (cryptocurrency knowledge manager) application represents a modular Web system capable to express and manage the knowledge about existing cryptocurrencies and their (meta-)data. Each functionality will be implemented by a (micro-)service and all queries will be performed via a SPARQL endpoint. Exposed information will be available in multiple formats (e.g. HTML+RDFa and JSON-LD). Also, multiple visualizations of interest will be provided.
                         </p>
                     </section>
                     <section>
                         <h3 id="Motivation">1.2 Motivation</h3>
                         <p>
-
+                            Nowadays, cryptocurrency domain is attracting a lot of interest. Cryptocurrency is a
+                            decentralized digital currency stored in an online form that does not fall under governments and banks control, which was proposed in an attempt to replace the fiat
+                            currency. <br>
+                            Among thousands of cryptocurrencies, it can be overwhelming to decide which crypto to invest in. More often than not, people miss the important details and end up mismanaging their crypto investments. And that's especially true for serious investors with a widely spread-out portfolio.
                         </p>
                     </section>
                 </div>
@@ -158,10 +161,10 @@
                                 The bucket is enabled for static hosting and is made public so the files can be accessed by the website endpoint. The website is served through an <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> distribution
                                 (a content delivery network (CDN) service built for high performance, security, and developer convenience).</p>
 
-                            <p>The access to the application's features is controlled using <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>. See <a href="https://github.com/DianaCrainic/WADe_Project/wiki/Application-Design#users--use-cases">Application-Design: Users & Use Cases</a>                                to learn more about the user types of the application as well as the features they can access.</p>
+                            <p>The access to the application's features is controlled using <a href="#Users&UseCases">Application-Design: Users & Use Cases</a> to learn more about the user types of the application as well as the features they can access.</p>
                         </p>
                         <h4 id="Diagram">2.1.2 High-level Diagram</h4>
-                        <img class="architecture-image" src="images/Architecture.png" alt="Application Architecture">
+                        <img class="diagram-image" src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/architecture/Architecture.png" alt="Application Architecture">
                     </section>
                     <section>
                         <h3 id="Design">2.2 Design</h3>
@@ -174,7 +177,6 @@
                             <ul>
                                 <li>visualize the list of the existing cryptocurrencies, action which includes the following:
                                     <ul>
-                                    <li>view the evolution of the desired cryptocurrency</li>
                                     <li>compare 2 desired cryptocurrencies based on various criteria</li>
                                     <li>view the volume of the desired cryptocurrency</li>
                                     <li>view the relevant news about the desired cryptocurrency</li>
@@ -195,7 +197,7 @@
                             </ul>
 
                         </p>
-                        <img class="architecture-image" src="images/UsersUseCaseDiagram.png" alt="Use Case Diagram">
+                        <img class="diagram-image" src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/use-case/UsersUseCaseDiagram.png" alt="Use Case Diagram">
 
                         <h4 id="I/ODataFormats">2.2.3 I/O Data Formats</h4>
                         <h4 id="Data/TaskFlows">2.2.4 Data/Task Flows</h4>
@@ -243,13 +245,31 @@
                         </p>
                     </section>
                     <section>
-                        <h3 id="AWS">5.3 AWS</h3>
-                        <h4 id="AmazonCloudfront">5.3.1 Amazon Cloudfront</h4>
-                        <h4 id="AmazonS3">5.3.2 Amazon S3</h4>
-                        <h4 id="AmazonCognito">5.3.3 Amazon Cognito</h4>
-                        <h4 id="AWSAppSync">5.3.4 AWS AppSync</h4>
-                        <h4 id="AWSLambda">5.3.5 AWS Lambda</h4>
-                        <h4 id="AmazonNeptune">5.3.6 Amazon Neptune</h4>
+                        <h3 id="AWS">5.3 AWS services</h3>
+                            <h4 id="AmazonNeptune">5.3.1 Amazon Neptune</h4>
+                                <p>
+
+                                </p>
+                            <h4 id="AWSLambda">5.3.2 AWS Lambda</h4>
+                                <p>
+
+                                </p>
+                            <h4 id="AWSAppSync">5.3.3 AWS AppSync</h4>
+                                <p>
+
+                                </p>
+                            <h4 id="AmazonS3">5.3.4 Amazon S3</h4>
+                                <p>
+
+                                </p>
+                            <h4 id="AmazonCloudfront">5.3.5 Amazon Cloudfront</h4>
+                                <p>
+
+                                </p>
+                            <h4 id="AmazonCognito">5.3.6 Amazon Cognito</h4>
+                                <p>
+
+                                </p>
                     </section>
                     <section>
                         <h3 id="Libraries_&_External_APIs">5.4 Libraries &amp; External APIs</h3>
