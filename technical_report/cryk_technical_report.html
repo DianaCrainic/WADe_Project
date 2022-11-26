@@ -87,7 +87,7 @@
                     <li class="nested"><a href="#Linked_Data_Principles">Linked Data Principles</a></li>
                     <li class="nested"><a href="#Technologies_Used">Used Technologies</a>
                         <ol class="nested">
-                            <li class="nested"><a href="#Node.JS">Node.JS</a></li>
+                            <li class="nested"><a href="#Node.JS">Node.js</a></li>
                             <li class="nested"><a href="#React">React</a></li>
                             <li class="nested"><a href="#AWS">AWS services</a>
                                 <ol class="nested">
@@ -285,15 +285,25 @@
                 <h2 id="Technologies_Used">5 Used Technologies</h2>
                 <div>
                     <section>
-                        <h3 id="Node.JS">5.1 Node.JS</h3>
+                        <h3 id="Node.JS">5.1 Node.js</h3>
                         <p>
-
+                            <a href="https://nodejs.org/en/">Node.js</a> is an asynchronous event-driven JavaScript
+                            runtime, which is
+                            designed to build scalable network applications. The microservices from the current
+                            application are developed using Node.js.
                         </p>
                     </section>
                     <section>
                         <h3 id="React">5.2 React</h3>
                         <p>
-
+                            <a href="https://reactjs.org/">React</a> is a declarative, efficient, and flexible
+                            JavaScript library for building user interfaces. React can be used as a base in the
+                            development of single-page, mobile, or server-rendered applications with frameworks like
+                            Next.js.
+                        </p>
+                        <p>
+                            In this context, a React client will call the GraphQL API and display the received data in a
+                            Single Page Application (the website).
                         </p>
                     </section>
                     <section>
@@ -342,7 +352,8 @@
                             In this context, Amazon S3 bucket is used to store the static files built from the React
                             application. The
                             bucket is enabled for static hosting and is made public so the files can be accessed by the
-                            website endpoint. Besides that, an Amazon S3 bucket is used to upload RDF triples containing knowledge about
+                            website endpoint. Besides that, an Amazon S3 bucket is used to upload RDF triples containing
+                            knowledge about
                             cryptocurrencies to Amazon Neptune. The RDF file is stored in the s3 bucket and loading is
                             done through
                             <a href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon
@@ -429,6 +440,18 @@
                         <cite property="schema:name">
                             <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application
                                 Development - linked data & knowledge management on Web</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://nodejs.org/en/"
+                        property="schema:citation" id="nodejs">
+                        <cite property="schema:name">
+                            <a href="https://nodejs.org/en/">Node.js</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://reactjs.org/"
+                        property="schema:citation" id="react">
+                        <cite property="schema:name">
+                            <a href="https://reactjs.org/">React</a>
                         </cite>
                     </li>
                     <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/neptune/"
