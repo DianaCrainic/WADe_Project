@@ -235,13 +235,18 @@
                     <section>
                         <h3 id="Internal_Data_Structures/Models">3.1 Internal Data Structures/Models</h3>
                         <p>
-
+                            Application data can be accessed and manipulated through a GraphQL API. Each query or mutation call from the API will be directed to the corresponding microservice based on the data required for the operation, therefore 2 models/entities have been defined:
+                            <em>Cryptocurrency</em>, which describes a cryptocurrency, with all its (meta-)data, and <em>CryptoNews</em>, which depicts a news article regarding a cryptocurrency. These 2 models are based on appropiate RDF entities, namely
+                            <a href="https://doacc.github.io/index.html">DOACC</a>'s <a href="https://doacc.github.io/doacc.xml#Cryptocurrency"><em>Cryptocurrency</em></a> and Schema.org's <a href="https://schema.org/NewsArticle"><em>NewsArticle</em></a>,
+                            respectively.
                         </p>
                     </section>
                     <section>
                         <h3 id="External_Data_Sources">3.2 External Data Sources</h3>
                         <p>
-
+                            Information regarding cryptocurrencies is procured from <strong>DOACC</strong> (<strong>D</strong>escription <strong>O</strong>f <strong>A</strong> <strong>C</strong>rypto<strong>C</strong>urrency), a catalogue of published
+                            facts about altcoins (cryptocurrencies other than Bitcoin), like name, trading symbol, total coins, block target time, hashing algorithm, date launched, URL of the source code repository, etc. It is published using semantic
+                            web technology, which takes advantage of the attendant power and flexibility of representation in order to improve ease of re-use.
                         </p>
                     </section>
                 </div>
@@ -250,7 +255,25 @@
                 <h2 id="Linked_Data_Principles">4 Linked Data Principles</h2>
                 <div>
                     <p>
+                        The Linked Data principles refer to a set of best practices for publishing structured data on the Web. The rules, which are as follows:
+                        <ol>
+                            <li>Use URIs as names for things.</li>
+                            <li>Use HTTP URIs so that people can look up those names.</li>
+                            <li>When someone looks up a URI, provide useful information, using the standards (RDF, SPARQL).</li>
+                            <li>Include links to other URIs. so that they can discover more things.</li>
+                        </ol>
+                        are meant to implement the Semantic Web, which revolves around creating links, so that a person or machine can explore the web of data.
+                    </p>
 
+                    <p>
+                        To evaluate the data openness and essentially whether these principles are followed closely or not, a star rating has been designed, known as 5 &starf; Open Data. It is comprised of 5 quality levels, rewarding from 1 to 5 stars based on how open, public,
+                        easy to use and rich in context is the data offered.
+                    </p>
+
+                    <p>
+                        Our team strives to offer 5 &starf; Open Data, rich in context and easy to be used by people and machines alike. In order to do so, we provide (meta-)data on cryptocurrencies and news related to them and make the information available on the Web with
+                        an open license (&starf;). Moreover, the facts are offered as machine-readable structured data (&starf;&starf;), in a non-proprietary format (&starf;&starf;&starf;) which uses the RDF standard to identify things (&starf;&starf;&starf;&starf;)
+                        that link to other datasets, according to the linked data initiative (&starf;&starf;&starf;&starf;&starf;).
                     </p>
                 </div>
             </section>
@@ -420,6 +443,11 @@
                     <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cognito/" property="schema:citation" id="cognito">
                         <cite property="schema:name">
                             <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://doacc.github.io/index.html" property="schema:citation" id="doacc">
+                        <cite property="schema:name">
+                            <a href="https://doacc.github.io/index.html">DOACC</a>
                         </cite>
                     </li>
                 </ul>
