@@ -99,12 +99,22 @@
                                     <li class="nested"><a href="#AmazonCognito">Amazon Cognito</a></li>
                                 </ol>
                             </li>
-                            <li class="nested"><a href="#Libraries_&_External_APIs">Libraries &amp; ExternalAPIs</a>
+                            <li class="nested"><a href="#Libraries">Libraries</a>
+                                <ol class="nested">
+                                    <li class="nested"><a href="#RDF.js">RDF JavaScript Libraries</a>
+                                        <ol class="nested">
+                                            <li class="nested"><a href="#GraphQLToSPARQL">GraphQL to SPARQL</a></li>
+                                            <li class="nested"><a href="#SPARQL-XMLParser">SPARQL/XML Parser</a></li>
+                                        </ol>
+                                    </li>
+                                    <li class="nested"><a href="#AWS-SDK">AWS SDK for JavaScript</a></li>
+                                    <li class="nested"><a href="#ReactApollo">React Apollo</a></li>
+                                </ol>
                             </li>
                         </ol>
                     </li>
                     <li class="nested"><a href="#Conclusions">Conclusions</a></li>
-                    <li class="nested"><a href="#Appendix">Appendix</a></li>
+                    <li class="nested appendix-li"><a href="#Appendix">Appendix 1 - Task Distribution</a></li>
                     <li class="nested"><a href="#References">References</a></li>
                 </ol>
             </section>
@@ -225,6 +235,9 @@
                         <img class="diagram-image" src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/diagrams/diagrams/use-case/UsersUseCaseDiagram.png" alt="Use Case Diagram">
 
                         <h4 id="I/ODataFormats">2.2.3 I/O Data Formats</h4>
+                        <p>
+                            For the Cryptocurrency Service, a file in the format <strong>n-triples</strong> (with extension <em>.nt</em>) is loaded from an Amazon S3 bucket in Amazon Neptune. The lambdas query Neptune using <strong>SPARQL</strong> and receive the result as <strong>RDF</strong> and/or <strong>JSON</strong>. The front-end sends <strong>JSON</strong> with a GraphQL query to AWS AppSync. AppSync then sends the query further, to the corresponding lambda of the operation. The lambda sends back to the client <strong>JSON(-LD)</strong>. The webpage presents to the user data in <strong>JSON-LD</strong>, <strong>RDFa</strong> formats and allows them to export it as a <em>.csv</em> file.
+                        </p>
                         <h4 id="Data/TaskFlows">2.2.4 Data/Task Flows</h4>
                     </section>
                 </div>
@@ -344,9 +357,27 @@
                         </p>
                     </section>
                     <section>
-                        <h3 id="Libraries_&_External_APIs">5.4 Libraries &amp; External APIs</h3>
+                        <h3 id="Libraries">5.4 Libraries</h3>
+                        <h4 id="RDF.js">5.4.1 RDF JavaScript Libraries</h4>
+                        <h5 id="GraphQLToSPARQL">5.4.1.1 GraphQL to SPARQL</h5>
                         <p>
-
+                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a> is a utility package that allows you to convert GraphQL queries to SPARQL or SPARQL algebra, using a <a href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a>. Such queries are also known as GraphQL-LD queries.
+                        </p>
+                        <h5 id="SPARQL-XMLParser">5.4.1.2 SPARQL/XML Parser</h5>
+                        <p>
+                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL-Results+XML Parse</a> is A utility package that allows you to parse <a href="https://www.w3.org/TR/rdf-sparql-XMLres/">SPARQL XML</a> results in a convenient <a href="http://rdf.js.org/">RDFJS</a>-based datastructure.
+                        </p>
+                        <h4 id="AWS-SDK">5.4.2 AWS SDK for JavaScript</h4>
+                        <p>
+                            The <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a> simpliﬁes use of AWS Services by providing a set of libraries that are consistent and familiar for JavaScript developers. It provides support for API lifecycle consideration such as credential management, retries, data marshaling, serialization, and deserialization. The AWS SDK for JavaScript also supports higher level abstractions for simplified development.
+                        </p>
+                        <p>
+                            Within the project, the library is used within Amazon Lambda functions to establish the connection to the Amazon Neptune database, as well as to execute SPARQL queries on it. 
+                            Also, the library is used within the React client to be able to connect to the AWS AppSync client.
+                        </p>
+                        <h4 id="ReactApollo">React Apollo</h4>
+                        <p>
+                            <a>React Apollo</a> allows you to fetch data from your GraphQL server and use it in building complex and reactive UIs using the React framework. React Apollo may be used in any context that React may be used. In the browser, in React Native, or in Node.js when you want to do server-side rendering.
                         </p>
                     </section>
                 </div>
@@ -360,8 +391,7 @@
                 </div>
             </section>
             <section role="doc-appendix">
-                <h2 id="Appendix">7 Appendix</h2>
-                <h3 id="Task_Distribution">Task Distribution</h3>
+                <h2 id="Appendix-1">7 Appendix 1 - Task Distribution</h2>
                 <div>
                     <section>
                         <span typeof="schema:Person">
@@ -397,7 +427,7 @@
                 </div>
             </section>
             <section role="doc-bibliography">
-                <h2 id="References">8 References</h2>
+                <h2 id="References">7 References</h2>
                 <ul>
                     <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html" property="schema:citation" id="course-site">
                         <cite property="schema:name">
@@ -448,6 +478,31 @@
                     <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://doacc.github.io/index.html" property="schema:citation" id="doacc">
                         <cite property="schema:name">
                             <a href="https://doacc.github.io/index.html">DOACC</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://rdf.js.org/" property="schema:citation" id="rdf.js">
+                        <cite property="schema:name">
+                            <a href="https://rdf.js.org/">RDF JavaScript Libraries</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://github.com/rubensworks/graphql-to-sparql.js" property="schema:citation" id="graphql-to-sparql">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://github.com/rubensworks/sparqlxml-parse.js" property="schema:citation" id="sparql-xml-parser">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL/XML Parser</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/sdk-for-javascript/" property="schema:citation" id="aws-sdk-js">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.npmjs.com/package/react-apollo" property="schema:citation" id="react-apollo">
+                        <cite property="schema:name">
+                            <a href="https://www.npmjs.com/package/react-apollo">React Apollo</a>
                         </cite>
                     </li>
                 </ul>
