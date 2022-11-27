@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <title>cryk (cryptocurrency knowledge manager)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles_cryk_technical_report.css" />
+</head>
+
+<body>
+    <main>
+        <article resource="#" typeof="schema:ScholarlyArticle">
+            <header>
+                <h1 property="schema:name">cryk (cryptocurrency knowledge manager)</h1>
+                <p role="doc-subtitle" property="schema:alternateName">
+                    - technical report -
+                </p>
+            </header>
+            <meta property="schema:accessibilityFeature" content="alternativeText">
+            <meta property="schema:accessibilityHazard" content="none">
+            <div role="contentinfo">
+                <section typeof="sa:AuthorsList">
+                    <h2>Team - <strong>Tech Army</strong></h2>
+                    <h2>Members </h2>
+                    <ul id="team_list">
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Ciprian">
+                                <meta property="schema:familyName" content="Daniș">
+                                <span property="schema:name">Ciprian Daniș</span>
+                            </span>
+                        </li>
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Diana">
+                                <meta property="schema:additionalName" content="Isabela">
+                                <meta property="schema:familyName" content="Crainic">
+                                <span property="schema:name">Diana-Isabela Crainic</span>
+                            </span>
+                        </li>
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Ioan">
+                                <meta property="schema:familyName" content="Sava">
+                                <span property="schema:name">Ioan Sava</span>
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+            <section role="doc-toc">
+                <h2>Table of Contents</h2>
+                <ol class="nested" role="directory">
+                    <li class="without_number"><a href="#Abstract">Abstract</a></li>
+                    <li class="nested"><a href="#Introduction">Introduction</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#Description">Description</a></li>
+                            <li class="nested"><a href="#Motivation">Motivation</a></li>
+                        </ol>
+                    </li>
+                    <li class="nested"><a href="#Architecture&Design">Architecture &amp; Design</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#Architecture">Architecture</a>
+                                <ol class="nested">
+                                    <li class="nested"><a href="#ArchitectureDescription">Description</a></li>
+                                    <li class="nested"><a href="#Diagram">High-level Diagram</a></li>
+                                </ol>
+                            </li>
+                            <li class="nested"><a href="#Design">Design</a>
+                                <ol class="nested">
+                                    <li class="nested"><a href="#C4Diagrams">C4 Diagrams</a></li>
+                                    <li class="nested"><a href="#Users&UseCases">Users &amp; Use Cases</a></li>
+                                    <li class="nested"><a href="#I/ODataFormats">I/O Data Formats</a></li>
+                                    <li class="nested"><a href="#Data/TaskFlows">Data/Task Flows</a></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li class="nested"><a href="#Data_Sources">Data Sources</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#Internal_Data_Structures/Models">Internal Data
+                                    Structures/Models</a></li>
+                            <li class="nested"><a href="#External_Data_Sources">External Data Sources</a></li>
+                        </ol>
+                    </li>
+                    <li class="nested"><a href="#Linked_Data_Principles">Linked Data Principles</a></li>
+                    <li class="nested"><a href="#Technologies_Used">Used Technologies</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#Node.JS">Node.js</a></li>
+                            <li class="nested"><a href="#React">React</a></li>
+                            <li class="nested"><a href="#AWS">AWS services</a>
+                                <ol class="nested">
+                                    <li class="nested"><a href="#AmazonNeptune">Amazon Neptune</a></li>
+                                    <li class="nested"><a href="#AWSLambda">AWS Lambda</a></li>
+                                    <li class="nested"><a href="#AWSAppSync">AWS AppSync</a></li>
+                                    <li class="nested"><a href="#AmazonS3">Amazon S3</a></li>
+                                    <li class="nested"><a href="#AmazonCloudfront">Amazon Cloudfront</a></li>
+                                    <li class="nested"><a href="#AmazonCognito">Amazon Cognito</a></li>
+                                </ol>
+                            </li>
+                            <li class="nested"><a href="#Libraries">Libraries</a>
+                                <ol class="nested">
+                                    <li class="nested"><a href="#RDF.js">RDF JavaScript Libraries</a>
+                                        <ol class="nested">
+                                            <li class="nested"><a href="#GraphQLToSPARQL">GraphQL to SPARQL</a></li>
+                                            <li class="nested"><a href="#SPARQL-XMLParser">SPARQL/XML Parser</a></li>
+                                        </ol>
+                                    </li>
+                                    <li class="nested"><a href="#AWS-SDK">AWS SDK for JavaScript</a></li>
+                                    <li class="nested"><a href="#ReactApollo">React Apollo</a></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li class="nested"><a href="#Conclusions">Conclusions</a></li>
+                    <li class="nested appendix-li"><a href="#Appendix">Appendix 1 - Task Distribution</a></li>
+                    <li class="nested"><a href="#References">References</a></li>
+                </ol>
+            </section>
+            <section role="doc-abstract">
+                <h2 id="Abstract">Abstract</h2>
+                <div>
+                    <p>
+                        <b>cryk</b> is a crypto application which gives you personalized cryptocurrency information and
+                        news, analytics about the desired cryptocurrencies, to cut short your struggles. It gives vital
+                        details with great accuracy that otherwise
+                        take hours of calculation.
+                    </p>
+                </div>
+            </section>
+            <section role="doc-introduction">
+                <h2 id="Introduction">1 Introduction</h2>
+                <div>
+                    <section>
+                        <h3 id="Description">1.1 Description</h3>
+                        <p>
+                            The cryk (cryptocurrency knowledge manager) application represents a modular Web system
+                            capable to express and manage the knowledge about existing cryptocurrencies and their
+                            (meta-)data. Each functionality will be implemented by a (micro-)service and
+                            all queries will be performed via a SPARQL endpoint. Exposed information will be available
+                            in multiple formats (e.g. HTML+RDFa and JSON-LD). Moreover, multiple visualizations of
+                            interest will be provided.
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="Motivation">1.2 Motivation</h3>
+                        <p>
+                        <p>
+                            Nowadays, cryptocurrency domain is attracting a lot of interest. Cryptocurrency is a
+                            decentralized digital currency stored in an online form that does not fall under governments
+                            and banks control, which was proposed in an attempt to replace the fiat currency.
+                        </p>
+                        <p>
+                            Among thousands of cryptocurrencies, it can be overwhelming to decide which crypto to invest
+                            in. More often than not, people miss the important details and end up mismanaging their
+                            crypto investments. And that's especially true for serious investors with
+                            a widely spread-out portfolio.
+                        </p>
+                        </p>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Architecture&Design">2 Architecture &amp; Design</h2>
+                <div>
+                    <section>
+                        <h3 id="Architecture">2.1 Architecture</h3>
+                        <h4 id="ArchitectureDescription">2.1.1 Description</h4>
+                        <p>
+                            The application architecture is based on microservices, with two microservices:
+                            <i><b>Cryptocurrencies service</b></i> and <i><b>News service</b></i>.
+                        <ol>
+                            <li><i><b>Cryptocurrencies service</b></i> is a service whose responsibility is to manage
+                                cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS
+                                    Lambda</a> function that performs various SPARQL queries (e.g. <code>SELECT</code>,
+                                <code>INSERT</code>, <code>DELETE</code>) on an <a
+                                    href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database. The database
+                                contains RDF triples that model knowledge about existing cryptocurrencies and their
+                                (meta-)data. These RDF triples are loaded into the database through <a
+                                    href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon
+                                    Neptune Bulk Loader</a> (an external file uploaded to an <a
+                                    href="https://aws.amazon.com/s3/">Amazon S3</a> bucket will be loaded). Both the
+                                lambda function and the database runs within the same VPC (security reasons).
+                            </li>
+
+                            <li><i><b>News service</b></i> is a service whose responsibility is to manage news about
+                                cryptocurrencies. It consists of an <a href="https://aws.amazon.com/lambda/">AWS
+                                    Lambda</a> function that performs various SPARQL queries (e.g. <code>SELECT</code>,
+                                <code>INSERT</code>, <code>DELETE</code>) on an <a
+                                    href="https://aws.amazon.com/neptune/">Amazon Neptune</a> database, like
+                                <i><b>Cryptocurrencies service</b></i>. The database contains RDF triples that model
+                                knowledge about crypto news. Both the lambda function and the database runs within the
+                                same VPC (security reasons).
+                            </li>
+                        </ol>
+
+                        <p>The execution of the lambda functions associated with the microservices is triggered by
+                            calling the GraphQL API provided by <a href="https://aws.amazon.com/appsync/">AWS
+                                AppSync</a>. Depending on the query or mutation that was called, the lambda function of
+                            the corresponding microservice will be executed. See <a
+                                href="https://github.com/DianaCrainic/WADe_Project/wiki/GraphQL-API#schema">GraphQL API:
+                                Schema</a> for the schema structure of the GraphQL API.</p>
+
+                        <p>A React client will call the GraphQL API and display the received data in a Single Page
+                            Application. An <a href="https://aws.amazon.com/s3/">Amazon S3</a> bucket is used to store
+                            the static files built from the React application.
+                            The bucket is enabled for static hosting and is made public so the files can be accessed by
+                            the website endpoint. The website is served through an <a
+                                href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> distribution
+                            (a content delivery network (CDN) service built for high performance, security, and
+                            developer convenience).</p>
+
+                        <p>The access to the application's features is controlled using <a
+                                href="https://aws.amazon.com/cognito/">Amazon Cognito</a>. See <a
+                                href="#Users&UseCases">Application-Design: Users & Use Cases</a> to learn more about the
+                            user
+                            types of the application as well as the features they can access.</p>
+                        </p>
+                        <h4 id="Diagram">2.1.2 High-level Diagram</h4>
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/architecture/Architecture.png"
+                            alt="Application Architecture">
+                    </section>
+                    <section>
+                        <h3 id="Design">2.2 Design</h3>
+                        <h4 id="C4Diagrams">2.2.1 C4 Diagrams</h4>
+
+                        <figure>
+                            <img class="c4-diagram"
+                                src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/c4/C4_diagram-Level1.png"
+                                alt="C4 Diagram Level 1">
+                            <figcaption>C4 Diagram - Level 1</figcaption>
+                        </figure>
+
+                        <figure>
+                            <img class="c4-diagram"
+                                src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/c4/C4_diagram-Level2.png"
+                                alt="C4 Diagram Level 2">
+                            <figcaption>C4 Diagram - Level 2</figcaption>
+                        </figure>
+
+                        <figure>
+                            <img class="c4-diagram"
+                                src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/c4/C4_diagram-Level3.png"
+                                alt="C4 Diagram Level 3">
+                            <figcaption>C4 Diagram - Level 3</figcaption>
+                        </figure>
+
+                        <h4 id="Users&UseCases">2.2.2 Users &amp; Use Cases</h4>
+                        <p>
+                            There are 2 types of users: the <b>unauthenticated user</b> and the <b>admin</b> (which it
+                            is an authenticated user with more permissions). <br> The final user, which in this case is
+                            an <b>unauthenticated user</b> can:
+                        <ul>
+                            <li>visualize the list of the existing cryptocurrencies, action which includes the
+                                following:
+                                <ul>
+                                    <li>compare 2 desired cryptocurrencies based on various criteria</li>
+                                    <li>view the volume of the desired cryptocurrency</li>
+                                    <li>view the relevant news about the desired cryptocurrency</li>
+                                </ul>
+                            </li>
+                            <li>export the data in the desired format</li>
+                        </ul>
+
+
+                        The <b>admin</b> can perform the following actions, in addition to those that the
+                        unauthenticated user can do:
+                        <ul>
+                            <li>create a new desired cryptocurrency</li>
+                            <li>update the desired cryptocurrency</li>
+                            <li>delete the desired cryptocurrency</li>
+                            <li>create a piece of news about a cryptocurrency</li>
+                            <li>update a piece of news about a cryptocurrency</li>
+                            <li>delete a piece of news about a cryptocurrency</li>
+                        </ul>
+
+                        </p>
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/use-case/UsersUseCaseDiagram.png"
+                            alt="Use Case Diagram">
+
+                        <h4 id="I/ODataFormats">2.2.3 I/O Data Formats</h4>
+                        <p>
+                            For the Cryptocurrency Service, a file in the format <strong>n-triples</strong> (with
+                            extension <em>.nt</em>) is loaded from an Amazon S3 bucket in Amazon Neptune. The lambdas
+                            query Neptune using <strong>SPARQL</strong> and receive the result as <strong>RDF</strong>
+                            and/or <strong>JSON</strong>. The front-end sends <strong>JSON</strong> with a GraphQL query
+                            to AWS AppSync. AppSync then sends the query further, to the corresponding lambda of the
+                            operation. The lambda sends back to the client <strong>JSON(-LD)</strong>. The webpage
+                            presents to the user data in <strong>JSON-LD</strong>, <strong>RDFa</strong> formats and
+                            allows them to export it as a <em>.csv</em> file.
+                        </p>
+                        <h4 id="Data/TaskFlows">2.2.4 Data/Task Flows</h4>
+                        <p>
+                            The first data flow diagram describes how a user gets to view data about a
+                            cryptocurrency, which was previously created by an admin.
+                        </p>
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/data-flow-diagram/DataFlowDiagram1.png"
+                            alt="DataFlowDiagram1">
+                        <figcaption>Data Flow Diagram 1</figcaption>
+                        <br>
+
+                        <p>
+                            In the second data flow diagram, it can be depicted the process by which a user gets to read
+                            the news associated with a cryptocurrency, news that has been added by an admin.
+                        </p>
+                        <img class="diagram-image"
+                            src="https://raw.githubusercontent.com/DianaCrainic/WADe_Project/main/diagrams/data-flow-diagram/DataFlowDiagram2.png"
+                            alt="DataFlowDiagram2">
+                        <figcaption>Data Flow Diagram 2</figcaption>
+
+
+                    </section>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Data_Sources">3 Data Sources</h2>
+                <div>
+                    <section>
+                        <h3 id="Internal_Data_Structures/Models">3.1 Internal Data Structures/Models</h3>
+                        <p>
+                            Application data can be accessed and manipulated through a GraphQL API. Each query or
+                            mutation call from the API will be directed to the corresponding microservice based on the
+                            data required for the operation, therefore 2 models/entities have been defined:
+                            <em>Cryptocurrency</em>, which describes a cryptocurrency, with all its (meta-)data, and
+                            <em>CryptoNews</em>, which depicts a news article regarding a cryptocurrency. These 2 models
+                            are based on appropiate RDF entities, namely
+                            <a href="https://doacc.github.io/index.html">DOACC</a>'s <a
+                                href="https://doacc.github.io/doacc.xml#Cryptocurrency"><em>Cryptocurrency</em></a> and
+                            Schema.org's <a href="https://schema.org/NewsArticle"><em>NewsArticle</em></a>,
+                            respectively.
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="External_Data_Sources">3.2 External Data Sources</h3>
+                        <p>
+                            Information regarding cryptocurrencies is procured from <strong>DOACC</strong>
+                            (<strong>D</strong>escription <strong>O</strong>f <strong>A</strong>
+                            <strong>C</strong>rypto<strong>C</strong>urrency), a catalogue of published
+                            facts about altcoins (cryptocurrencies other than Bitcoin), like name, trading symbol, total
+                            coins, block target time, hashing algorithm, date launched, URL of the source code
+                            repository, etc. It is published using semantic
+                            web technology, which takes advantage of the attendant power and flexibility of
+                            representation in order to improve ease of re-use.
+                        </p>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Linked_Data_Principles">4 Linked Data Principles</h2>
+                <div>
+                    <p>
+                        The Linked Data principles refer to a set of best practices for publishing structured data on
+                        the Web. The rules, which are as follows:
+                    <ol>
+                        <li>Use URIs as names for things.</li>
+                        <li>Use HTTP URIs so that people can look up those names.</li>
+                        <li>When someone looks up a URI, provide useful information, using the standards (RDF, SPARQL).
+                        </li>
+                        <li>Include links to other URIs. so that they can discover more things.</li>
+                    </ol>
+                    are meant to implement the Semantic Web, which revolves around creating links, so that a person or
+                    machine can explore the web of data.
+                    </p>
+
+                    <p>
+                        To evaluate the data openness and essentially whether these principles are followed closely or
+                        not, a star rating has been designed, known as 5 &starf; Open Data. It is comprised of 5 quality
+                        levels, rewarding from 1 to 5 stars based on how open, public,
+                        easy to use and rich in context is the data offered.
+                    </p>
+
+                    <p>
+                        Our team strives to offer 5 &starf; Open Data, rich in context and easy to be used by people and
+                        machines alike. In order to do so, we provide (meta-)data on cryptocurrencies and news related
+                        to them and make the information available on the Web with
+                        an open license (&starf;). Moreover, the facts are offered as machine-readable structured data
+                        (&starf;&starf;), in a non-proprietary format (&starf;&starf;&starf;) which uses the RDF
+                        standard to identify things (&starf;&starf;&starf;&starf;)
+                        that link to other datasets, according to the linked data initiative
+                        (&starf;&starf;&starf;&starf;&starf;).
+                    </p>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Technologies_Used">5 Used Technologies</h2>
+                <div>
+                    <section>
+                        <h3 id="Node.JS">5.1 Node.js</h3>
+                        <p>
+                            <a href="https://nodejs.org/en/">Node.js</a> is an asynchronous event-driven JavaScript
+                            runtime, which is designed to build scalable network applications. The microservices from
+                            the current application are developed using Node.js.
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="React">5.2 React</h3>
+                        <p>
+                            <a href="https://reactjs.org/">React</a> is a declarative, efficient, and flexible
+                            JavaScript library for building user interfaces. React can be used as a base in the
+                            development of single-page, mobile, or server-rendered applications
+                            with frameworks like Next.js.
+                        </p>
+                        <p>
+                            In this context, a React client will call the GraphQL API and display the received data in a
+                            Single Page Application (the website).
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="AWS">5.3 AWS services</h3>
+                        <h4 id="AmazonNeptune">5.3.1 Amazon Neptune</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> is a fully managed database
+                            service built for the cloud that makes it easier to build and run graph applications.
+                            Neptune provides built-in security, continuous backups,
+                            serverless compute, and integrations with other AWS services. The database contains RDF
+                            triples that model knowledge about existing cryptocurrencies and their (meta-)data and also
+                            about crypto news.
+                        </p>
+                        <h4 id="AWSLambda">5.3.2 AWS Lambda</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> is a serverless, event-driven
+                            compute service where the code is run virtually for any type of application or backend
+                            service without provisioning or managing servers.
+                            It is responsible for managing data from <a href="https://aws.amazon.com/neptune/">Amazon
+                                Neptune</a> database using various SPARQL queries (e.g. <code>SELECT</code>,
+                            <code>INSERT</code>, <code>DELETE</code>).
+
+                        </p>
+                        <h4 id="AWSAppSync">5.3.3 AWS AppSync</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a> creates serverless GraphQL and
+                            Pub/Sub APIs that simplify application development through a single endpoint to securely
+                            query, update, or publish data. The GraphQL API
+                            provided by AWS AppSync is called when the execution of the lambda functions associated with
+                            the microservices is triggered Depending on the query or mutation that was called, the
+                            lambda function of the corresponding microservice
+                            will be executed.
+                        </p>
+                        <h4 id="AmazonS3">5.3.4 Amazon S3</h4>
+                        <p>
+                        <p>
+                            <a href="https://aws.amazon.com/s3/">Amazon Simple Storage Service</a> (Amazon S3) is an
+                            object storage service offering industry-leading scalability, data availability, security,
+                            and performance. Customers of all sizes
+                            and industries can store and protect any amount of data for virtually any use case, such as
+                            data lakes, cloud-native applications, and mobile apps. With cost-effective storage classes
+                            and easy-to-use management features,
+                            you can optimize costs, organize data, and configure fine-tuned access controls to meet
+                            specific business, organizational, and compliance requirements.
+                        </p>
+                        <p>
+                            In this context, Amazon S3 bucket is used to store the static files built from the React
+                            application. The bucket is enabled for static hosting and is made public so the files can be
+                            accessed by the website endpoint. Besides that, an Amazon S3 bucket is
+                            used to upload RDF triples containing knowledge about cryptocurrencies to Amazon Neptune.
+                            The RDF file is stored in the s3 bucket and loading is done through
+                            <a href="https://docs.aws.amazon.com/neptune/latest/userguide/bulk-load.html">Amazon
+                                Neptune Bulk Loader</a>.
+                        </p>
+                        </p>
+                        <h4 id="AmazonCloudfront">5.3.5 Amazon Cloudfront</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a> is a content delivery
+                            network (CDN) service built for high performance, security, and developer convenience. When
+                            a user requests content that is served with
+                            CloudFront, the request is routed to the edge location that provides the lowest latency
+                            (time delay), so that content is delivered with the best possible performance.
+                        </p>
+                        <h4 id="AmazonCognito">5.3.6 Amazon Cognito</h4>
+                        <p>
+                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a> provides an identity store that
+                            provides user sign-up and sign-in features and control access to the web applications. It
+                            scales to millions of users, supports social
+                            and enterprise identity federation, and offers advanced security features to protect the
+                            consumers and business. Built on open identity standards, Amazon Cognito supports various
+                            compliance regulations and integrates with frontend
+                            and backend development resources.
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="Libraries">5.4 Libraries</h3>
+                        <h4 id="RDF.js">5.4.1 RDF JavaScript Libraries</h4>
+                        <h5 id="GraphQLToSPARQL">5.4.1.1 GraphQL to SPARQL</h5>
+                        <p>
+                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a> is a
+                            utility package that allows you to convert GraphQL queries to SPARQL or SPARQL algebra,
+                            using a <a href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a>. Such
+                            queries are also known as GraphQL-LD queries.
+                        </p>
+                        <h5 id="SPARQL-XMLParser">5.4.1.2 SPARQL/XML Parser</h5>
+                        <p>
+                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL-Results+XML Parse</a> is
+                            A utility package that allows you to parse <a
+                                href="https://www.w3.org/TR/rdf-sparql-XMLres/">SPARQL XML</a> results in a convenient
+                            <a href="http://rdf.js.org/">RDFJS</a>-based datastructure.
+                        </p>
+                        <h4 id="AWS-SDK">5.4.2 AWS SDK for JavaScript</h4>
+                        <p>
+                            The <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a>
+                            simpliﬁes use of AWS Services by providing a set of libraries that are consistent and
+                            familiar for JavaScript developers. It provides support for API lifecycle consideration such
+                            as credential management, retries, data marshaling, serialization, and deserialization. The
+                            AWS SDK for JavaScript also supports higher level abstractions for simplified development.
+                        </p>
+                        <p>
+                            Within the project, the library is used within Amazon Lambda functions to establish the
+                            connection to the Amazon Neptune database, as well as to execute SPARQL queries on it.
+                            Also, the library is used within the React client to be able to connect to the AWS AppSync
+                            client.
+                        </p>
+                        <h4 id="ReactApollo">5.4.3 React Apollo</h4>
+                        <p>
+                            <a>React Apollo</a> allows you to fetch data from your GraphQL server and use it in building
+                            complex and reactive UIs using the React framework. React Apollo may be used in any context
+                            that React may be used. In the browser, in React Native, or in Node.js when you want to do
+                            server-side rendering.
+                        </p>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-conclusion">
+                <h2 id="Conclusions">6 Conclusions</h2>
+                <div>
+                    <p>
+                        The <b>cryk (cryptocurrency knowledge manager)</b> application facilitates the access to
+                        knowledge
+                        and verified news about the hottest cryptocurrencies on the market.
+                    </p>
+                    <p>
+                        The Web system provides
+                        multiple
+                        visualizations of interest of the cyrptocurrencies and allows exporting the data in various
+                        formats, which gives the posibility to be used by other entities as well.
+                    </p>
+                </div>
+            </section>
+            <section role="doc-appendix">
+                <h2 id="Appendix-1">7 Appendix 1 - Task Distribution</h2>
+                <div>
+                    <section>
+                        <span typeof="schema:Person">
+                            <meta property="schema:givenName" content="Ciprian">
+                            <meta property="schema:familyName" content="Daniș">
+                            <span property="schema:name">Ciprian Daniș</span>
+                        </span>
+                        <ul>
+                            <li>Created and structured a public GitHub Wiki for recording the project progress.</li>
+                            <li>Contributed to the technical report: C4 diagrams for levels 1, 2 and 3, data sources,
+                                linked data principles, I/O data formats.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <span typeof="schema:Person">
+                            <meta property="schema:givenName" content="Diana">
+                            <meta property="schema:additionalName" content="Isabela">
+                            <meta property="schema:familyName" content="Crainic">
+                            <span property="schema:name">Diana-Isabela Crainic</span>
+                        </span>
+                        <ul>
+                            <li>Created the technical report, designed it, and contributed to the sections: Abstract,
+                                Introduction, Used Technologies, Diagrams, and Conclusions.</li>
+                            <li>Created Use Case Diagram and Data Flow Diagrams.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <span typeof="schema:Person">
+                            <meta property="schema:givenName" content="Ioan">
+                            <meta property="schema:familyName" content="Sava">
+                            <span property="schema:name">Ioan Sava </span>
+                        </span>
+                        <ul>
+                            <li>Designed the service-oriented architecture of the web application to be developed.</li>
+                            <li>Created the schema for the GraphQL API provided by the project, including various usage
+                                examples and pragmatic case studies.</li>
+                            <li>Contributed to the technical report: architecture and libraries.</li>
+                        </ul>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-bibliography">
+                <h2 id="References">7 References</h2>
+                <ul>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html"
+                        property="schema:citation" id="course-site">
+                        <cite property="schema:name">
+                            <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application
+                                Development - linked data & knowledge management on Web</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://nodejs.org/en/"
+                        property="schema:citation" id="nodejs">
+                        <cite property="schema:name">
+                            <a href="https://nodejs.org/en/">Node.js</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://reactjs.org/"
+                        property="schema:citation" id="react">
+                        <cite property="schema:name">
+                            <a href="https://reactjs.org/">React</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/neptune/"
+                        property="schema:citation" id="neptune">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/lambda/"
+                        property="schema:citation" id="lambda">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/appsync/"
+                        property="schema:citation" id="appsync">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/s3/"
+                        property="schema:citation" id="s3">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/s3/">Amazon S3</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cloudfront/"
+                        property="schema:citation" id="cloudfront">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cognito/"
+                        property="schema:citation" id="cognito">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://doacc.github.io/index.html"
+                        property="schema:citation" id="doacc">
+                        <cite property="schema:name">
+                            <a href="https://doacc.github.io/index.html">DOACC</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://rdf.js.org/"
+                        property="schema:citation" id="rdf.js">
+                        <cite property="schema:name">
+                            <a href="https://rdf.js.org/">RDF JavaScript Libraries</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://github.com/rubensworks/graphql-to-sparql.js" property="schema:citation"
+                        id="graphql-to-sparql">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://github.com/rubensworks/sparqlxml-parse.js" property="schema:citation"
+                        id="sparql-xml-parser">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL/XML Parser</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://aws.amazon.com/sdk-for-javascript/" property="schema:citation"
+                        id="aws-sdk-js">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://www.npmjs.com/package/react-apollo" property="schema:citation"
+                        id="react-apollo">
+                        <cite property="schema:name">
+                            <a href="https://www.npmjs.com/package/react-apollo">React Apollo</a>
+                        </cite>
+                    </li>
+                </ul>
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
