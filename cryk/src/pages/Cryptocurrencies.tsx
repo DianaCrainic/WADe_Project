@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import CryptoCard  from "../components/CryptoCard"
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
@@ -20,6 +21,7 @@ export default function Cryptocurrencies() {
                     <h1>Cryptocurrencies</h1>
                 </div>
                 <p>This is the cryptocurrencies page</p>
+                <CryptoCard/>
             </div>
         </>
     );
