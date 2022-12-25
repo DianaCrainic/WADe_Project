@@ -2,7 +2,12 @@
     background-color: #79D5E2;
 }
 
-.nav-link, .navbar-brand {
+.nav-link {
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.navbar-brand {
     font-size: x-large;
     font-weight: 900;
 }

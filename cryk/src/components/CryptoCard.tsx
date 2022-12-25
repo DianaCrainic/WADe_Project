@@ -7,19 +7,26 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import "./css/CryptoCard.css";
 import bitcoinImage from "../static/images/bitcoin.png";
+import { Crypto } from '../models/Crypto';
 
 
-export default function CryptoCard() {
+export default function CryptoCard(props: any) {
+  var cryptoData = props.cryptoData.crypto;
+  // console.log("crypto: ", cryptoData);
+  var name = cryptoData.name.first;
+  var description = cryptoData.email;
+  var picture = cryptoData.picture.large;
+
   return (
     <Card className="crypto-card">
       <CardMedia
-        className="card-media" component="img" image={bitcoinImage} title="Bitcoin" alt="Bitcoin" />
+        className="card-media" component="img" image={picture} title="Bitcoin" alt="Bitcoin" />
       <CardContent>
         <Typography className="card-title" color="textSecondary" gutterBottom>
-          Cryptocurrency name
+          {name}
         </Typography>
         <Typography variant="body2">
-          The description of the cryptocurrency.
+          {description}
         </Typography>
       </CardContent>
       <CardActions>
