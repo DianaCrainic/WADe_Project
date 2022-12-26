@@ -117,6 +117,7 @@ query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
 ```
 
 #### Variables
+
 ```json
 {
     "limit": 2,

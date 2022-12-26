@@ -24,6 +24,14 @@ type Cryptocurrency {
     distributionScheme: DistributionScheme
 }
 
+type ProtectionSchemeInput {
+    id: ID!
+}
+
+type DistributionSchemeInput {
+    id: ID!
+}
+
 input CreateCryptocurrencyInput {
     id: ID!
     symbol: String!
@@ -33,8 +41,8 @@ input CreateCryptocurrencyInput {
     totalCoins: String
     source: String
     website: String
-    protectionScheme: ProtectionScheme
-    distributionScheme: DistributionScheme
+    protectionScheme: ProtectionSchemeInput
+    distributionScheme: DistributionSchemeInput
 }
 
 input UpdateCryptoCurrencyInput {
@@ -45,8 +53,8 @@ input UpdateCryptoCurrencyInput {
     totalCoins: String
     source: String
     website: String
-    protectionScheme: ProtectionScheme
-    distributionScheme: DistributionScheme
+    protectionScheme: ProtectionSchemeInput
+    distributionScheme: DistributionSchemeInput
 }
 
 # https://schema.org/NewsArticle
