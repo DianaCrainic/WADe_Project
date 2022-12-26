@@ -65,17 +65,21 @@ type CryptoNews {
     about: [Cryptocurrency!]!
 }
 
+input CryptocurrencyInput {
+    id: ID!
+}
+
 input CreateCryptoNewsInput {
     title: String!
     body: String!
-    about: [ID!]!
+    about: [CryptocurrencyInput!]!
 }
 
 input UpdateCryptoNewsInput {
     id: ID!
     title: String
     body: String
-    about: [ID!]
+    about: [CryptocurrencyInput!]
 }
 
 type Query {
