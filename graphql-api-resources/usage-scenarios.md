@@ -269,7 +269,6 @@ query GetNewsAboutCryptocurrency($id: ID!) {
         body
         about {
             id
-            symbol
         }
     }
 }
@@ -295,8 +294,7 @@ query GetNewsAboutCryptocurrency($id: ID!) {
                 "body": "Crypto news body",
                 "about": [
                     {
-                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
-                        "symbol": "EDGE"
+                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
                     }
                 ]
             },
@@ -306,8 +304,7 @@ query GetNewsAboutCryptocurrency($id: ID!) {
                 "body": "Breaking news body",
                 "about": [
                     {
-                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
-                        "symbol": "EDGE"
+                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
                     }
                 ]
             }
@@ -328,7 +325,6 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
         body
         about {
             id
-            symbol
         }
     }
 }
@@ -342,7 +338,9 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
         "title": "Crypto news title",
         "body": "Crypto news body",
         "about": [
-            "D0016a183-ba27-4f55-bb91-25a81e70754f"
+            { 
+                "id": "D0016a183-ba27-4f55-bb91-25a81e70754f" 
+            }
         ]
     }
 }
@@ -359,8 +357,7 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
             "body": "Crypto news body",
             "about": [
                 {
-                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
-                    "symbol": "EDGE"
+                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
                 }
             ]
         }
@@ -380,7 +377,6 @@ mutation UpdateCryptoNews($cryptoNews: UpdateCryptoNewsInput!) {
         body
         about {
             id
-            symbol
         }
     }
 }
@@ -408,8 +404,7 @@ mutation UpdateCryptoNews($cryptoNews: UpdateCryptoNewsInput!) {
             "body": "Crypto news body",
             "about": [
                 {
-                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
-                    "symbol": "EDGE"
+                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
                 }
             ]
         }
