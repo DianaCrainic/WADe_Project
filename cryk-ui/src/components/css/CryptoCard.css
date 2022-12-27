@@ -1,0 +1,17 @@
+.crypto-card {
+    margin: 2rem 2rem 2rem 0;
+    padding: 1.5rem;
+    width: 450px;
+    transition: transform .3s ease;
+    cursor: pointer;
+}
+
+.card-title {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.card-media {
+    height: 250px;
+    padding-top: 2%;
+}
