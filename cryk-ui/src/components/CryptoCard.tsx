@@ -6,15 +6,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import "./css/CryptoCard.css";
-import bitcoinImage from "../static/images/bitcoin.png";
-import { Crypto } from '../models/Crypto';
-
 
 export default function CryptoCard(props: any) {
-  var cryptoData = props.cryptoData.crypto;
-  var name = cryptoData.name.first;
-  var description = cryptoData.email;
-  var picture = cryptoData.picture.large;
+  const cryptoData = props.cryptoData.crypto;
+  const name = cryptoData.name.first;
+  const description = cryptoData.email;
+  const picture = cryptoData.picture.large;
 
   return (
     <Card className="crypto-card">
