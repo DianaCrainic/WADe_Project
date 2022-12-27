@@ -32,7 +32,7 @@ export default function Cryptocurrencies() {
             </Helmet>
             <div className="page-container">
                 <div className="title">
-                    <h1>Cryptocurrencies</h1>
+                    <h1>Cryptocurrency Knowledge Manager</h1>
                 </div>
                 <div className="cards-container">
                     {cryptos.map((crypto, index) => (

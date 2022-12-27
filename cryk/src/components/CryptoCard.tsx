@@ -12,7 +12,6 @@ import { Crypto } from '../models/Crypto';
 
 export default function CryptoCard(props: any) {
   var cryptoData = props.cryptoData.crypto;
-  // console.log("crypto: ", cryptoData);
   var name = cryptoData.name.first;
   var description = cryptoData.email;
   var picture = cryptoData.picture.large;
