@@ -3,7 +3,7 @@
     padding: 1.5rem;
     width: 450px;
     transition: transform .3s ease;
-    cursor: pointer;
+    cursor: auto;
 }
 
 .card-title {
@@ -14,4 +14,8 @@
 .card-media {
     height: 250px;
     padding-top: 2%;
+}
+
+.a {
+    color: white;
 }
