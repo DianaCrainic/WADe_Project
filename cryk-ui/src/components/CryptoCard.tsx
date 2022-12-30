@@ -31,7 +31,7 @@ export default function CryptoCard(props: any) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => { navigate(`/cryptos/${id}`) }}>Learn More</Button>
+        <Button className="button-learn-more-crypto" size="large" onClick={() => { navigate(`/cryptos/${id}`) }}>Learn More</Button>
       </CardActions>
     </Card>
   );

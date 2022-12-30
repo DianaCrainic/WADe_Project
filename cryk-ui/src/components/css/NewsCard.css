@@ -18,14 +18,3 @@
     padding-top: 2%;
     cursor: poi;
 }
-
-button a {
-    color: white;
-    background-color: transparent;
-    text-decoration: none;
-}
-
-button {
-    box-shadow: 5px 10px #888888;
-    border: 1px solid black !important;
-}

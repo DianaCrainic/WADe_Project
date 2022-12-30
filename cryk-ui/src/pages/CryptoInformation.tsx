@@ -42,10 +42,10 @@ export default function CryptoInformation(props: any) {
                         <h1>{mockCryptoName}</h1>
                     </div>
                     <p className="crypto-description">
-                        Description: {`${mockCryptoDescription}`}
+                        {mockCryptoDescription}
                     </p>
                     <p className="crypto-website">
-                        Official website: <a href={`${mockWebsite}`}>{mockCryptoName}</a>
+                        Official website: <a href={`${mockWebsite}`}>{`${mockWebsite}`}</a>
                     </p>
                     <p className="crypto-reward">
                         Reward: {`${mockCryptoReward}`}
