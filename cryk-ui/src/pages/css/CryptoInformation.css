@@ -1,0 +1,16 @@
+.page-container {
+    margin-top: 5%;
+}
+
+.news-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+p a {
+    color: white;
+    background-color: transparent;
+}

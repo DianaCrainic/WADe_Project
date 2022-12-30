@@ -1,0 +1,20 @@
+.news-card {
+    margin: 2rem 2rem 2rem 0;
+    padding: 1.5rem;
+    max-width: 450px;
+    transition: transform .3s ease;
+    cursor: auto;
+    font-size: 20px;
+}
+
+.card-title {
+    font-weight: 900 !important;
+    font-size: 2rem;
+    padding-bottom: 8px;
+}
+
+.card-media {
+    height: 250px;
+    padding-top: 2%;
+    cursor: poi;
+}

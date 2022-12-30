@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import CryptoCard from "../components/CryptoCard"
 import "./css/Cryptocurrencies.css";
 
@@ -23,24 +23,23 @@ export default function Cryptocurrencies() {
         })();
     }, []);
 
-
-
     return (
-        <>
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
-            <div className="page-container">
-                <div className="title">
-                    <h1>Cryptocurrency Knowledge Manager</h1>
-                </div>
-                <div className="cards-container">
-                    {cryptos.map((crypto, index) => (
-                        <CryptoCard cryptoData={{ crypto }} key={index} />
-
-                    ))}
+        <HelmetProvider>
+            <div>
+                <Helmet>
+                    <title>{title}</title>
+                </Helmet>
+                <div className="page-container">
+                    <div className="title">
+                        <h1>Cryptocurrency Knowledge Manager</h1>
+                    </div>
+                    <div className="cards-container">
+                        {cryptos.map((crypto, index) => (
+                            <CryptoCard cryptoData={{ crypto }} key={index} />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </>
+        </HelmetProvider>
     );
 }

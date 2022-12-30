@@ -5,6 +5,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { useNavigate } from "react-router-dom";
 import "./css/CryptoCard.css";
 
 export default function CryptoCard(props: any) {
@@ -12,11 +13,14 @@ export default function CryptoCard(props: any) {
   const name = cryptoData.name.first;
   const description = cryptoData.email;
   const picture = cryptoData.picture.large;
+  const id = cryptoData.id.value;
+
+  const navigate = useNavigate();
 
   return (
     <Card className="crypto-card">
       <CardMedia
-        className="card-media" component="img" image={picture} title="Bitcoin" alt="Bitcoin" />
+        className="card-media" component="img" image={picture} />
       <CardContent>
         <Typography className="card-title" color="textSecondary" gutterBottom>
           {name}
@@ -26,7 +30,7 @@ export default function CryptoCard(props: any) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button className="button-learn-more-crypto" size="large" onClick={() => { navigate(`/cryptos/${id}`) }}>Learn More</Button>
       </CardActions>
     </Card>
   );
