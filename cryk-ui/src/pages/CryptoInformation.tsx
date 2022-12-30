@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { useParams } from "react-router-dom";
 import NewsCard from "../components/NewsCard";
 import "./css/CryptoInformation.css";
 
 export default function CryptoInformation(props: any) {
     const title = "Cryptocurrency information";
     const [news, setNews] = useState([]);
-    const id = useParams();
-    console.log("id ", id);
 
     const mockCryptoName = "Bitcoin";
     const mockCryptoDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac nisl sit amet purus iaculis ornare. Nam tristique iaculis nisi, id semper metus egestas quis."
