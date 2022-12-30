@@ -7,11 +7,11 @@ import { SparqlResultLine } from "sparql-result-converter/dist/ArrayUtil";
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint });
 const sparqlResultConverter = new SparqlResultConverter();
 
-const parse = (bindings: any): SparqlResultLine[] => {
+const parseBindings = (bindings: any): SparqlResultLine[] => {
     return bindings.map((row: { [x: string]: any; }) => {
         Object.keys(row).forEach(key => {
             if (Array.isArray(row[key])) {
-                parse(row[key]);
+                parseBindings(row[key]);
             }
 
             if (key === "datatype") {
@@ -81,7 +81,7 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
         throw new Error("Not found");
     }
 
-    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parse(bindings), mappingDefinition).getAll()["cryptocurrency"][0];
+    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrency"][0];
     convertedBindings["protectionScheme"] = convertedBindings["protectionScheme"][0];
     convertedBindings["distributionScheme"] = convertedBindings["distributionScheme"][0];
     return convertedBindings as Cryptocurrency;
