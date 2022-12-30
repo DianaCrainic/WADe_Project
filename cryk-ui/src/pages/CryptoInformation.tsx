@@ -30,7 +30,6 @@ export default function CryptoInformation(props: any) {
         })();
     }, []);
 
-
     return (
         <HelmetProvider>
             <div>
@@ -55,13 +54,11 @@ export default function CryptoInformation(props: any) {
                     <div className="news-cards-container">
                         {news.map((oneNews, index) => (
                             <NewsCard cryptoData={{ oneNews }} key={index} />
-
                         ))}
                     </div>
 
                 </div>
             </div>
         </HelmetProvider>
-
     )
 }

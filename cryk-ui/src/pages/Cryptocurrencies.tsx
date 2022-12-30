@@ -23,8 +23,6 @@ export default function Cryptocurrencies() {
         })();
     }, []);
 
-
-
     return (
         <HelmetProvider>
             <div>
@@ -38,7 +36,6 @@ export default function Cryptocurrencies() {
                     <div className="cards-container">
                         {cryptos.map((crypto, index) => (
                             <CryptoCard cryptoData={{ crypto }} key={index} />
-
                         ))}
                     </div>
                 </div>

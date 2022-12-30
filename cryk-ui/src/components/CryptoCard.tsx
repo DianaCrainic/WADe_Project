@@ -6,7 +6,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useNavigate } from "react-router-dom";
-
 import "./css/CryptoCard.css";
 
 export default function CryptoCard(props: any) {
