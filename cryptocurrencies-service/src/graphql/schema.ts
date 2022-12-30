@@ -2,12 +2,10 @@ import { buildSchema } from 'graphql';
 
 const schema = buildSchema(`
     type ProtectionScheme {
-        id: ID!
         description: String
     }
 
     type DistributionScheme {
-        id: ID!
         description: String
     }
 
@@ -24,14 +22,6 @@ const schema = buildSchema(`
         distributionScheme: DistributionScheme
     }
 
-    input ProtectionSchemeInput {
-        id: ID!
-    }
-
-    input DistributionSchemeInput {
-        id: ID!
-    }
-
     input CreateCryptocurrencyInput {
         id: ID!
         symbol: String!
@@ -41,8 +31,6 @@ const schema = buildSchema(`
         totalCoins: String
         source: String
         website: String
-        protectionScheme: ProtectionSchemeInput
-        distributionScheme: DistributionSchemeInput
     }
 
     input UpdateCryptoCurrencyInput {
@@ -53,8 +41,6 @@ const schema = buildSchema(`
         totalCoins: String
         source: String
         website: String
-        protectionScheme: ProtectionSchemeInput
-        distributionScheme: DistributionSchemeInput
     }
 
     type Query {

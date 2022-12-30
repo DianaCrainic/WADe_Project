@@ -13,3 +13,24 @@ export interface Cryptocurrency {
     protectionScheme?: ProtectionScheme;
     distributionScheme?: DistributionScheme;
 }
+
+export interface CreateCryptocurrencyInput extends Partial<Cryptocurrency> {
+    id: string;
+    symbol: string;
+    description?: string;
+    blockReward?: string;
+    blockTime?: number;
+    totalCoins?: string;
+    source?: string;
+    website?: string;
+}
+
+export interface UpdateCryptocurrencyInput extends Partial<Cryptocurrency> {
+    id: string;
+    description?: string;
+    blockReward?: string;
+    blockTime?: number;
+    totalCoins?: string;
+    source?: string;
+    website?: string;
+}

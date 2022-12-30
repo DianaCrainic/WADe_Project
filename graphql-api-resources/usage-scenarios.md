@@ -16,11 +16,9 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
         source
         website
         protectionScheme {
-            id
             description
         }
         distributionScheme {
-            id
             description
         }
     }
@@ -50,11 +48,9 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
             "source": "https://github.com/EDGE-dev/EDGE",
             "website": null,
             "protectionScheme": {
-                "id": "D77046ffc-8771-4a19-b23d-2118bbfbd901",
                 "description": "Interest"
             },
             "distributionScheme": {
-                "id": "Dc10c93fb-f7ec-40cd-a06e-7890686f6ef8",
                 "description": "Dissemination via proof of work"
             }
         }

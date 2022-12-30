@@ -1,11 +1,12 @@
 import { Cryptocurrency } from "../models/cryptocurrency";
+import { getCryptocurrencyById } from "../services/cryptocurrency-service";
 
 const queries = {
-    cryptocurrency: (id: string): Cryptocurrency => {
-        throw new Error("Not yet implemented");
+    cryptocurrency: async (args: { id: string }, context: any): Promise<Cryptocurrency> => {
+        return await getCryptocurrencyById(args.id);
     },
 
-    cryptocurrencies: (limit: number, offset: number): Cryptocurrency[] => {
+    cryptocurrencies: (args: { limit?: number, offset?: number }, context: any): Cryptocurrency[] => {
         return [];
     }
 };

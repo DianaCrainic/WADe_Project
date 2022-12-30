@@ -1,6 +1,5 @@
 import { Cryptocurrency } from "../models/cryptocurrency";
-import { CreateCryptocurrencyInput } from "../models/create-cryptocurrency-input";
-import { UpdateCryptocurrencyInput } from "../models/update-cryptocurrency-input";
+import { CreateCryptocurrencyInput, UpdateCryptocurrencyInput } from "../models/cryptocurrency";
 
 const mutations = {
     createCryptocurrency: (createCryptocurrencyInput: CreateCryptocurrencyInput): Cryptocurrency => {
