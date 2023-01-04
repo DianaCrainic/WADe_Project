@@ -25,10 +25,10 @@ const parseBindings = (bindings: any): SparqlResultLine[] => {
 
 const mappingDefinition: MappingDefinition[] = [
     {
-        rootName: "cryptocurrency",
+        rootName: "cryptocurrencies",
         propertyToGroup: "symbol",
         name: "symbol",
-        toCollect: ["description", "blockReward", "blockTime", "totalCoins", "source", "website"],
+        toCollect: ["id", "description", "blockReward", "blockTime", "totalCoins", "source", "website"],
         childMappings: [
             {
                 rootName: "protectionScheme",
@@ -48,7 +48,7 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
     const query = `
         PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
 
-        SELECT ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
+        SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
         WHERE { 
             doacc:${id} <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> doacc:Cryptocurrency  ;
                         doacc:symbol                                      ?symbol               ;
@@ -60,6 +60,8 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
             OPTIONAL { doacc:${id} doacc:total-coins                             ?tempTotalCoins  } .
             OPTIONAL { doacc:${id} doacc:source                                  ?tempSource      } .
             OPTIONAL { doacc:${id} doacc:website                                 ?tempWebsite     } .
+
+            BIND("${id}" AS ?id) .
 
             BIND(COALESCE(?tempDescription, "-"      ) AS ?description) .
             BIND(COALESCE(?tempBlockReward, "unknown") AS ?blockReward) .
@@ -81,8 +83,56 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
         throw new Error("Not found");
     }
 
-    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrency"][0];
+    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrencies"][0];
     convertedBindings["protectionScheme"] = convertedBindings["protectionScheme"][0];
     convertedBindings["distributionScheme"] = convertedBindings["distributionScheme"][0];
     return convertedBindings as Cryptocurrency;
-}
+};
+
+export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Cryptocurrency[]> => {
+    const query = `
+        PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
+
+        SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
+        WHERE {
+            ?idWithPrefix <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> doacc:Cryptocurrency  ;
+                        doacc:symbol                                      ?symbol               ;
+                        doacc:protection-scheme                           ?protectionSchemeId   ;
+                        doacc:distribution-scheme                         ?distributionSchemeId .
+            OPTIONAL { ?idWithPrefix <http://purl.org/dc/elements/1.1/description> ?tempDescription } .
+            OPTIONAL { ?idWithPrefix doacc:block-reward                            ?tempBlockReward } .
+            OPTIONAL { ?idWithPrefix doacc:block-time                              ?tempBlockTime   } .
+            OPTIONAL { ?idWithPrefix doacc:total-coins                             ?tempTotalCoins  } .
+            OPTIONAL { ?idWithPrefix doacc:source                                  ?tempSource      } .
+            OPTIONAL { ?idWithPrefix doacc:website                                 ?tempWebsite     } .
+
+            BIND(STRAFTER(STR(?idWithPrefix), "http://purl.org/net/bel-epa/doacc#") AS ?id) .
+
+            BIND(COALESCE(?tempDescription, "-"      ) AS ?description) .
+            BIND(COALESCE(?tempBlockReward, "unknown") AS ?blockReward) .
+            BIND(COALESCE(?tempBlockTime,   -1       ) AS ?blockTime  ) .
+            BIND(COALESCE(?tempTotalCoins,  "unknown") AS ?totalCoins ) .
+            BIND(COALESCE(?tempSource,      "unknown") AS ?source     ) .
+            BIND(COALESCE(?tempWebsite,     "unknown") AS ?website    ) .
+
+            OPTIONAL { ?protectionSchemeId <http://purl.org/dc/elements/1.1/description> ?tempProtectionSchemeDescription } .
+            BIND(COALESCE(?tempProtectionSchemeDescription, "-") AS ?protectionSchemeDescription) .
+
+            OPTIONAL { ?distributionSchemeId <http://purl.org/dc/elements/1.1/description> ?tempDistributionSchemeDescription } .
+            BIND(COALESCE(?tempDistributionSchemeDescription, "-") AS ?distributionSchemeDescription) .
+        }
+        ORDER BY ?symbol
+        LIMIT ${limit}
+        OFFSET ${offset}
+    `;
+
+    const bindings = await sparqlClient.query.select(query);
+
+    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrencies"];
+    convertedBindings.map((binding: any) => {
+        binding["protectionScheme"] = binding["protectionScheme"][0];
+        binding["distributionScheme"] = binding["distributionScheme"][0];
+        return binding;
+    });
+    return convertedBindings as Cryptocurrency[];
+};
