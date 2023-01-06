@@ -4,7 +4,7 @@ import { Cryptocurrency } from "../models/cryptocurrency";
 import { SparqlResultConverter, MappingDefinition } from "sparql-result-converter";
 import { SparqlResultLine } from "sparql-result-converter/dist/ArrayUtil";
 
-const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint });
+const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 const sparqlResultConverter = new SparqlResultConverter();
 
 const parseBindings = (bindings: any): SparqlResultLine[] => {
@@ -80,7 +80,7 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
 
     const bindings = await sparqlClient.query.select(query);
     if (bindings.length === 0) {
-        throw new Error("Not found");
+        throw new Error(`Cryptocurrency with id ${id} not found`);
     }
 
     const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrencies"][0];
@@ -135,4 +135,23 @@ export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Crypt
         return binding;
     });
     return convertedBindings as Cryptocurrency[];
+};
+
+export const removeCryptocurrencyById = async (id: string): Promise<Cryptocurrency> => {
+    const cryptocurrency: Cryptocurrency = await getCryptocurrencyById(id);
+
+    const query = `
+        PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
+
+        DELETE {
+            doacc:${id} ?p ?o
+        }
+        WHERE {
+            doacc:${id} ?p ?o
+        }
+    `;
+
+    await sparqlClient.query.update(query);
+
+    return cryptocurrency;
 };
