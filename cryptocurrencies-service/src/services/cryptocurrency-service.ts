@@ -1,6 +1,6 @@
 import envs from "../envs";
 import ParsingClient from "sparql-http-client/ParsingClient";
-import { Cryptocurrency } from "../models/cryptocurrency";
+import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput } from "../models/cryptocurrency";
 import { SparqlResultConverter, MappingDefinition } from "sparql-result-converter";
 import { SparqlResultLine } from "sparql-result-converter/dist/ArrayUtil";
 
@@ -47,13 +47,14 @@ const mappingDefinition: MappingDefinition[] = [
 export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency> => {
     const query = `
         PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
+        PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
         SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
         WHERE { 
-            doacc:${id} <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> doacc:Cryptocurrency  ;
-                        doacc:symbol                                      ?symbol               ;
-                        doacc:protection-scheme                           ?protectionSchemeId   ;
-                        doacc:distribution-scheme                         ?distributionSchemeId .
+            doacc:${id} rdf:type                  doacc:Cryptocurrency  ;
+                        doacc:symbol              ?symbol               ;
+                        doacc:protection-scheme   ?protectionSchemeId   ;
+                        doacc:distribution-scheme ?distributionSchemeId .
             OPTIONAL { doacc:${id} <http://purl.org/dc/elements/1.1/description> ?tempDescription } .
             OPTIONAL { doacc:${id} doacc:block-reward                            ?tempBlockReward } .
             OPTIONAL { doacc:${id} doacc:block-time                              ?tempBlockTime   } .
@@ -92,13 +93,14 @@ export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency>
 export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Cryptocurrency[]> => {
     const query = `
         PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
+        PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
         SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
         WHERE {
-            ?idWithPrefix <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> doacc:Cryptocurrency  ;
-                        doacc:symbol                                      ?symbol               ;
-                        doacc:protection-scheme                           ?protectionSchemeId   ;
-                        doacc:distribution-scheme                         ?distributionSchemeId .
+            ?idWithPrefix rdf:type                  doacc:Cryptocurrency  ;
+                          doacc:symbol              ?symbol               ;
+                          doacc:protection-scheme   ?protectionSchemeId   ;
+                          doacc:distribution-scheme ?distributionSchemeId .
             OPTIONAL { ?idWithPrefix <http://purl.org/dc/elements/1.1/description> ?tempDescription } .
             OPTIONAL { ?idWithPrefix doacc:block-reward                            ?tempBlockReward } .
             OPTIONAL { ?idWithPrefix doacc:block-time                              ?tempBlockTime   } .
@@ -136,6 +138,36 @@ export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Crypt
     });
     return convertedBindings as Cryptocurrency[];
 };
+
+export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
+    const id = crypto.randomUUID();
+
+    const query = `
+        PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
+        PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+        INSERT DATA {
+            doacc:${id} rdf:type                  doacc:Cryptocurrency                        ;
+                        doacc:symbol              "${cryptocurrency.symbol}"@en               ;
+                        doacc:protection-scheme   doacc:D9758d7c9-6b22-4039-a325-285d680c22fe ;
+                        doacc:distribution-scheme doacc:Dc10c93fb-f7ec-40cd-a06e-7890686f6ef8 .
+            
+            ${cryptocurrency.description ? `doacc:${id} <http://purl.org/dc/elements/1.1/description> "${cryptocurrency.description}"@en                                         .` : ""}
+            ${cryptocurrency.blockReward ? `doacc:${id} doacc:block-reward                            "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
+            ${cryptocurrency.blockTime   ? `doacc:${id} doacc:block-time                              "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.source      ? `doacc:${id} doacc:source                                  <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website     ? `doacc:${id} doacc:website                                 <${cryptocurrency.website}>                                                .` : ""}
+        }
+    `;
+
+    await sparqlClient.query.update(query);
+
+    return await getCryptocurrencyById(id);
+}
+
+export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurrencyInput): Promise<Cryptocurrency> => {
+    throw new Error("Not yet implemented");
+}
 
 export const removeCryptocurrencyById = async (id: string): Promise<Cryptocurrency> => {
     const cryptocurrency: Cryptocurrency = await getCryptocurrencyById(id);

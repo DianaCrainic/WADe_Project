@@ -1,14 +1,14 @@
 import { Cryptocurrency } from "../models/cryptocurrency";
 import { CreateCryptocurrencyInput, UpdateCryptocurrencyInput } from "../models/cryptocurrency";
-import { removeCryptocurrencyById } from "../services/cryptocurrency-service";
+import { createCryptocurrency, removeCryptocurrencyById, updateCryptocurrencyById } from "../services/cryptocurrency-service";
 
 const mutations = {
-    createCryptocurrency: (createCryptocurrencyInput: CreateCryptocurrencyInput): Cryptocurrency => {
-        throw new Error("Not yet implemented");
+    createCryptocurrency: async (args: { createCryptocurrencyInput: CreateCryptocurrencyInput }, context: any): Promise<Cryptocurrency> => {
+        return await createCryptocurrency(args.createCryptocurrencyInput);
     },
 
-    updateCryptocurrency: (updateCryptocurrencyInput: UpdateCryptocurrencyInput): Cryptocurrency => {
-        throw new Error("Not yet implemented");
+    updateCryptocurrency: async (args: { updateCryptocurrencyInput: UpdateCryptocurrencyInput }, context: any): Promise<Cryptocurrency> => {
+        return await updateCryptocurrencyById(args.updateCryptocurrencyInput);
     },
 
     removeCryptocurrency: async (args: { id: string }, context: any): Promise<Cryptocurrency> => {

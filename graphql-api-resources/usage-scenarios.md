@@ -159,7 +159,6 @@ mutation CreateCryptocurrency($cryptocurrency: CreateCryptocurrencyInput!) {
 ```json
 {
     "cryptocurrency": {
-        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
         "symbol": "EDGE",
         "description": "EDGE: A I2P-Centric Gaming Crypto-Currency v.1.0"
     }

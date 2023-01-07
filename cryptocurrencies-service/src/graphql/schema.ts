@@ -23,7 +23,6 @@ const schema = buildSchema(`
     }
 
     input CreateCryptocurrencyInput {
-        id: ID!
         symbol: String!
         description: String
         blockReward: String
