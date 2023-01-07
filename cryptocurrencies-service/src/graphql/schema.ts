@@ -32,7 +32,7 @@ const schema = buildSchema(`
         website: String
     }
 
-    input UpdateCryptoCurrencyInput {
+    input UpdateCryptocurrencyInput {
         id: ID!
         description: String
         blockReward: String
@@ -49,7 +49,7 @@ const schema = buildSchema(`
     
     type Mutation {
         createCryptocurrency(createCryptocurrencyInput: CreateCryptocurrencyInput!): Cryptocurrency!
-        updateCryptoCurrency(updateCryptoCurrencyInput: UpdateCryptoCurrencyInput!): Cryptocurrency!
+        updateCryptocurrency(updateCryptocurrencyInput: UpdateCryptocurrencyInput!): Cryptocurrency!
         removeCryptocurrency(id: ID!): Cryptocurrency!
     }
 `);
