@@ -14,8 +14,7 @@ export interface Cryptocurrency {
     distributionScheme?: DistributionScheme;
 }
 
-export interface CreateCryptocurrencyInput extends Partial<Cryptocurrency> {
-    id: string;
+export interface CreateCryptocurrencyInput {
     symbol: string;
     description?: string;
     blockReward?: string;
@@ -25,7 +24,7 @@ export interface CreateCryptocurrencyInput extends Partial<Cryptocurrency> {
     website?: string;
 }
 
-export interface UpdateCryptocurrencyInput extends Partial<Cryptocurrency> {
+export interface UpdateCryptocurrencyInput {
     id: string;
     description?: string;
     blockReward?: string;
