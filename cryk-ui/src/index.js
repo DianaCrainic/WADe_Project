@@ -1,15 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 const queryClient = new QueryClient();
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <QueryClientProvider client={queryClient} contextSharing={true}>
-    <React.StrictMode>
+ReactDOM.render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
       <App />
-    </React.StrictMode>
-  </QueryClientProvider>
+    </QueryClientProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+
 );
