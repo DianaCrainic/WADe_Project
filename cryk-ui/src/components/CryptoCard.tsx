@@ -10,20 +10,21 @@ import "./css/CryptoCard.css";
 
 export default function CryptoCard(props: any) {
   const cryptoData = props.cryptoData.crypto;
-  const name = cryptoData.name.first;
-  const description = cryptoData.email;
-  const picture = cryptoData.picture.large;
-  const id = cryptoData.id.value;
+  console.log(cryptoData);
+
+  const symbol = cryptoData.symbol;
+  const description = cryptoData.description;
+  const id = cryptoData.id;
 
   const navigate = useNavigate();
 
   return (
     <Card className="crypto-card">
-      <CardMedia
-        className="card-media" component="img" image={picture} />
+      {/* <CardMedia
+        className="card-media" component="img" image={picture} /> */}
       <CardContent>
         <Typography className="card-title" color="textSecondary" gutterBottom>
-          {name}
+          {symbol}
         </Typography>
         <Typography variant="body2">
           {description}
