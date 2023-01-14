@@ -1,27 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import CryptoCard from "../components/CryptoCard"
 import "./css/Cryptocurrencies.css";
+import { gql, useQuery } from "@apollo/client";
+import { Cryptocurrency } from "../models/Cryptocurrency";
+
+const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
+        cryptocurrencies(limit: $limit, offset: $offset) {
+            id
+            symbol
+            description
+            blockReward
+            blockTime
+            totalCoins
+            source
+            website
+        }
+    }
+`;
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
 
-    const [cryptos, setCryptos] = useState([]);
+    const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
+        variables: {
+            // TODO: pagination
+            // these values are provided for testing purposes
+            limit: 5,
+            offset: 1,
+        }
+    });
+
+    const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
 
     useEffect(() => {
-        (async () => {
-            let cryptoData;
-            try {
-                const response = await fetch('https://randomuser.me/api/?results=10');
-                cryptoData = await response.json();
-            } catch (error) {
-                console.log(error);
-                cryptoData = [];
-            }
+        if (data) {
+            setCryptocurrencies(data.cryptocurrencies);
+        }
+    }, [loading, data]);
 
-            setCryptos(cryptoData.results);
-        })();
-    }, []);
+    if (loading) {
+        return (
+            <div>
+                <p>Loading</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div>
+                <p>{error.message}</p>
+            </div>
+        )
+    }
 
     return (
         <HelmetProvider>
@@ -34,8 +67,8 @@ export default function Cryptocurrencies() {
                         <h1>Cryptocurrency Knowledge Manager</h1>
                     </div>
                     <div className="cards-container">
-                        {cryptos.map((crypto, index) => (
-                            <CryptoCard cryptoData={{ crypto }} key={index} />
+                        {cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
+                            <CryptoCard cryptocurrency={cryptocurrency} key={index} />
                         ))}
                     </div>
                 </div>
