@@ -1,16 +1,19 @@
+import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-const queryClient = new QueryClient();
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+
+const graphqlClient = new ApolloClient({
+  uri: "http://localhost:3000/graphql",
+  cache: new InMemoryCache()
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient} contextSharing={true}>
+    <ApolloProvider client={graphqlClient}>
       <App />
-    </QueryClientProvider>
+    </ApolloProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-
+  document.getElementById("root")
 );

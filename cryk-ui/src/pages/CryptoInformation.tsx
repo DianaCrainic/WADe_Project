@@ -1,37 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import NewsCard from "../components/NewsCard";
 import "./css/CryptoInformation.css";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { gql, useQuery } from "@apollo/client";
+import { Cryptocurrency } from "../models/Cryptocurrency";
+import { News } from "../models/News";
 
-
-async function fetchCryptoById(id: any) {
-    console.log("id in fetch: ", id);
-    const response = await fetch('http://localhost:3000/graphql', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: 'query GetSomeDetailsAboutCryptocurrency($id: ID!) { cryptocurrency(id: $id) {symbol description source totalCoins website distributionScheme { description } }}' })
-    });
-    return response.json();
-}
+const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
+    query GetSomeDetailsAboutCryptocurrency($id: ID!) {
+        cryptocurrency(id: $id) {
+            symbol
+            description
+            source
+            totalCoins
+            website
+            blockReward
+            distributionScheme {
+                description
+            }
+        }
+    }
+`;
 
 export default function CryptoInformation(props: any) {
     const title = "Cryptocurrency information";
-    const [news, setNews] = useState([]);
 
-    const { id } = useParams();
-    console.log("id: ", id);
-    const { data, status } = useQuery<any, Error>(['cryptoId', id], () => fetchCryptoById(id));
-    console.log("data: ", data?.errors[0].message);
-    console.log("data: ", data);
+    const { id } = useParams<string>();
 
+    const { data, loading, error } = useQuery(GET_CRYPTOCURRENCY_BY_ID_QUERY, {
+        variables: {
+            id
+        }
+    });
 
+    const [cryptocurrency, setCryptocurrency] = useState<Cryptocurrency>();
+    const [news, setNews] = useState<News[]>([]);
 
-    const mockCryptoName = "Bitcoin";
-    const mockCryptoDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac nisl sit amet purus iaculis ornare. Nam tristique iaculis nisi, id semper metus egestas quis."
-    const mockWebsite = "https://bitcoin.org/en/";
-    const mockCryptoReward = 100;
+    useEffect(() => {
+        if (data) {
+            setCryptocurrency(data.cryptocurrency);
+        }
+    }, [loading, data]);
+
+    if (loading) {
+        return (
+            <div>
+                <p>Loading</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div>
+                <p>{error.message}</p>
+            </div>
+        )
+    }
 
     // useEffect(() => {
     //     (async () => {
@@ -56,22 +82,23 @@ export default function CryptoInformation(props: any) {
                 </Helmet>
                 <div className="page-container">
                     <div className="title">
-                        <h1>{mockCryptoName}</h1>
+                        <h1>{cryptocurrency?.symbol}</h1>
                     </div>
                     <p className="crypto-description">
-                        {mockCryptoDescription}
+                        {cryptocurrency?.description}
                     </p>
-                    <p className="crypto-website">
-                        Official website: <a href={`${mockWebsite}`}>{`${mockWebsite}`}</a>
-                    </p>
+                    {cryptocurrency?.website !== "unknown" &&
+                        <p className="crypto-website">
+                            Official website: <a href={`${cryptocurrency?.website}`}>{`${cryptocurrency?.website}`}</a>
+                        </p>}
                     <p className="crypto-reward">
-                        Reward: {`${mockCryptoReward}`}
+                        Reward: {`${cryptocurrency?.blockReward}`}
                     </p>
 
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
-                        {news.map((oneNews, index) => (
-                            <NewsCard cryptoData={{ oneNews }} key={index} />
+                        {news.map((oneNews: News, index: number) => (
+                            <NewsCard news={oneNews} key={index} />
                         ))}
                     </div>
 

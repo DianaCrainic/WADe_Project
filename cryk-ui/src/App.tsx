@@ -13,7 +13,8 @@ function App() {
       type: "dark"
     }
   });
-  const id = useParams();
+
+  const id = useParams<string>();
 
   return (
     <ThemeProvider theme={darkTheme}>

@@ -1,29 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import CryptoCard from "../components/CryptoCard"
 import "./css/Cryptocurrencies.css";
-import { gql } from "apollo-boost";
-import { useQuery } from "react-query";
+import { gql, useQuery } from "@apollo/client";
+import { Cryptocurrency } from "../models/Cryptocurrency";
 
-
-async function fetchCryptos() {
-    const response = await fetch('http://localhost:3000/graphql', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: 'query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {cryptocurrencies(limit: $limit, offset: $offset) { id symbol description blockReward blockTime totalCoins source website }}' })
-    });
-    return response.json();
-}
+const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
+        cryptocurrencies(limit: $limit, offset: $offset) {
+            id
+            symbol
+            description
+            blockReward
+            blockTime
+            totalCoins
+            source
+            website
+        }
+    }
+`;
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
 
-    const [cryptos, setCryptos] = useState([]);
-    const { data, status } = useQuery<any, Error>('cryptos', fetchCryptos);
-    let cryptoData = data;
-    let cryptosObject = cryptoData?.data?.cryptocurrencies;
+    const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
+        variables: {
+            // TODO: pagination
+            // these values are provided for testing purposes
+            limit: 5,
+            offset: 1,
+        }
+    });
 
-    if (status === 'loading') {
+    const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+
+    useEffect(() => {
+        if (data) {
+            setCryptocurrencies(data.cryptocurrencies);
+        }
+    }, [loading, data]);
+
+    if (loading) {
         return (
             <div>
                 <p>Loading</p>
@@ -31,14 +48,13 @@ export default function Cryptocurrencies() {
         )
     }
 
-    if (status === 'error') {
+    if (error) {
         return (
             <div>
-                <p>There was an error</p>
+                <p>{error.message}</p>
             </div>
         )
     }
-
 
     return (
         <HelmetProvider>
@@ -51,8 +67,8 @@ export default function Cryptocurrencies() {
                         <h1>Cryptocurrency Knowledge Manager</h1>
                     </div>
                     <div className="cards-container">
-                        {Object.values(cryptosObject).map((crypto, index) => (
-                            <CryptoCard cryptoData={{ crypto }} key={index} />
+                        {cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
+                            <CryptoCard cryptocurrency={cryptocurrency} key={index} />
                         ))}
                     </div>
                 </div>
