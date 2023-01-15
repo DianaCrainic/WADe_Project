@@ -1,5 +1,5 @@
 export interface Cryptocurrency {
-    id: number;
+    id: string;
     symbol: string;
     description?: string;
     blockReward?: string;

@@ -100,5 +100,8 @@
     "exclude": [
         "dist",
         ".vscode",
+    ],
+    "include": [
+        "src",
     ]
 }

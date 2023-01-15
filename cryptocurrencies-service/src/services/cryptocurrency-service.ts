@@ -1,148 +1,113 @@
 import envs from "../envs";
 import ParsingClient from "sparql-http-client/ParsingClient";
 import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput } from "../models/cryptocurrency";
-import { SparqlResultConverter, MappingDefinition } from "sparql-result-converter";
-import { SparqlResultLine } from "sparql-result-converter/dist/ArrayUtil";
+import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
-const sparqlResultConverter = new SparqlResultConverter();
 
-const parseBindings = (bindings: any): SparqlResultLine[] => {
-    return bindings.map((row: { [x: string]: any; }) => {
-        Object.keys(row).forEach(key => {
-            if (Array.isArray(row[key])) {
-                parseBindings(row[key]);
-            }
-
-            if (key === "datatype") {
-                row["type"] = row["datatype"]["value"];
-            }
-        })
-
-        return row;
-    });
-}
-
-const mappingDefinition: MappingDefinition[] = [
-    {
-        rootName: "cryptocurrencies",
-        propertyToGroup: "symbol",
-        name: "symbol",
-        toCollect: ["id", "description", "blockReward", "blockTime", "totalCoins", "source", "website"],
-        childMappings: [
-            {
-                rootName: "protectionScheme",
-                propertyToGroup: "protectionSchemeDescription",
-                name: "description"
+export const getCryptocurrencyById = async (id: string): Promise<any> => {
+    const jsonLdQuery = {
+        "@graph": [{
+            "@type": "Cryptocurrency",
+            "id": "?id",
+            "symbol": "$doacc:symbol$required",
+            "decription": "$elements:description",
+            "blockReward": "$doacc:block-reward",
+            "blockTime": "$doacc:block-time",
+            "totalCoins": "$doacc:total-coins",
+            "source": "$doacc:source",
+            "website": "$doacc:website",
+            "protectionScheme": {
+                "@type": "ProtectionScheme",
+                "id": "$doacc:protection-scheme",
+                "description": "$elements:description"
             },
-            {
-                rootName: "distributionScheme",
-                propertyToGroup: "distributionSchemeDescription",
-                name: "description"
+            "distributionScheme": {
+                "@type": "DistributionScheme",
+                "id": "$doacc:distribution-scheme",
+                "description": "$elements:description"
             }
-        ]
-    }
-];
-
-export const getCryptocurrencyById = async (id: string): Promise<Cryptocurrency> => {
-    const query = `
-        PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
-        PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX elements: <http://purl.org/dc/elements/1.1/>
-
-        SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
-        WHERE { 
-            doacc:${id} rdf:type                  doacc:Cryptocurrency  ;
-                        doacc:symbol              ?symbol               ;
-                        doacc:protection-scheme   ?protectionSchemeId   ;
-                        doacc:distribution-scheme ?distributionSchemeId .
-            OPTIONAL { doacc:${id} elements:description ?tempDescription } .
-            OPTIONAL { doacc:${id} doacc:block-reward   ?tempBlockReward } .
-            OPTIONAL { doacc:${id} doacc:block-time     ?tempBlockTime   } .
-            OPTIONAL { doacc:${id} doacc:total-coins    ?tempTotalCoins  } .
-            OPTIONAL { doacc:${id} doacc:source         ?tempSource      } .
-            OPTIONAL { doacc:${id} doacc:website        ?tempWebsite     } .
-
-            BIND("${id}" AS ?id) .
-
-            BIND(COALESCE(?tempDescription, "-"      ) AS ?description) .
-            BIND(COALESCE(?tempBlockReward, "unknown") AS ?blockReward) .
-            BIND(COALESCE(?tempBlockTime,   -1       ) AS ?blockTime  ) .
-            BIND(COALESCE(?tempTotalCoins,  "unknown") AS ?totalCoins ) .
-            BIND(COALESCE(?tempSource,      "unknown") AS ?source     ) .
-            BIND(COALESCE(?tempWebsite,     "unknown") AS ?website    ) .
-
-            OPTIONAL { ?protectionSchemeId elements:description ?tempProtectionSchemeDescription } .
-            BIND(COALESCE(?tempProtectionSchemeDescription, "-") AS ?protectionSchemeDescription) .
-
-            OPTIONAL { ?distributionSchemeId elements:description ?tempDistributionSchemeDescription } .
-            BIND(COALESCE(?tempDistributionSchemeDescription, "-") AS ?distributionSchemeDescription) .
+        }],
+        "$where": [
+            `<${id}> rdf:type doacc:Cryptocurrency`
+        ],
+        "$prefixes": {
+            "doacc": "http://purl.org/net/bel-epa/doacc#",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "elements": "http://purl.org/dc/elements/1.1/"
         }
-    `;
+    };
 
-    const bindings = await sparqlClient.query.select(query);
-    if (bindings.length === 0) {
+    const result = await sparqlTransformer.default(jsonLdQuery, {
+        debug: false,
+        sparqlFunction: async (query: string) => {
+            return {
+                results: { 
+                    bindings: await sparqlClient.query.select(query),
+                } 
+            };
+        }
+    });
+
+    if (result["@graph"].length === 0) {
         throw new Error(`Cryptocurrency with id ${id} not found`);
     }
 
-    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrencies"][0];
-    convertedBindings["protectionScheme"] = convertedBindings["protectionScheme"][0];
-    convertedBindings["distributionScheme"] = convertedBindings["distributionScheme"][0];
-    return convertedBindings as Cryptocurrency;
-};
+    return result["@graph"][0] as Cryptocurrency;
+}
 
 export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Cryptocurrency[]> => {
-    const query = `
-        PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
-        PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX elements: <http://purl.org/dc/elements/1.1/>
-
-        SELECT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins ?source ?website ?protectionSchemeDescription ?distributionSchemeDescription
-        WHERE {
-            ?idWithPrefix rdf:type                  doacc:Cryptocurrency  ;
-                          doacc:symbol              ?symbol               ;
-                          doacc:protection-scheme   ?protectionSchemeId   ;
-                          doacc:distribution-scheme ?distributionSchemeId .
-            OPTIONAL { ?idWithPrefix elements:description ?tempDescription } .
-            OPTIONAL { ?idWithPrefix doacc:block-reward   ?tempBlockReward } .
-            OPTIONAL { ?idWithPrefix doacc:block-time     ?tempBlockTime   } .
-            OPTIONAL { ?idWithPrefix doacc:total-coins    ?tempTotalCoins  } .
-            OPTIONAL { ?idWithPrefix doacc:source         ?tempSource      } .
-            OPTIONAL { ?idWithPrefix doacc:website        ?tempWebsite     } .
-
-            BIND(STRAFTER(STR(?idWithPrefix), "http://purl.org/net/bel-epa/doacc#") AS ?id) .
-
-            BIND(COALESCE(?tempDescription, "-"      ) AS ?description) .
-            BIND(COALESCE(?tempBlockReward, "unknown") AS ?blockReward) .
-            BIND(COALESCE(?tempBlockTime,   -1       ) AS ?blockTime  ) .
-            BIND(COALESCE(?tempTotalCoins,  "unknown") AS ?totalCoins ) .
-            BIND(COALESCE(?tempSource,      "unknown") AS ?source     ) .
-            BIND(COALESCE(?tempWebsite,     "unknown") AS ?website    ) .
-
-            OPTIONAL { ?protectionSchemeId elements:description ?tempProtectionSchemeDescription } .
-            BIND(COALESCE(?tempProtectionSchemeDescription, "-") AS ?protectionSchemeDescription) .
-
-            OPTIONAL { ?distributionSchemeId elements:description ?tempDistributionSchemeDescription } .
-            BIND(COALESCE(?tempDistributionSchemeDescription, "-") AS ?distributionSchemeDescription) .
+    const jsonLdQuery = {
+        "@graph": [{
+            "@type": "Cryptocurrency",
+            "id": "?id",
+            "symbol": "$doacc:symbol$required$var:?symbol",
+            "decription": "$elements:description",
+            "blockReward": "$doacc:block-reward",
+            "blockTime": "$doacc:block-time",
+            "totalCoins": "$doacc:total-coins",
+            "source": "$doacc:source",
+            "website": "$doacc:website",
+            "protectionScheme": {
+                "@type": "ProtectionScheme",
+                "id": "$doacc:protection-scheme",
+                "description": "$elements:description"
+            },
+            "distributionScheme": {
+                "@type": "DistributionScheme",
+                "id": "$doacc:distribution-scheme",
+                "description": "$elements:description"
+            }
+        }],
+        "$where": [
+            "?id rdf:type doacc:Cryptocurrency"
+        ],
+        "$limit": limit,
+        "$offset": offset,
+        "$orderby": "?symbol",
+        "$prefixes": {
+            "doacc": "http://purl.org/net/bel-epa/doacc#",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "elements": "http://purl.org/dc/elements/1.1/"
         }
-        ORDER BY ?symbol
-        LIMIT ${limit}
-        OFFSET ${offset}
-    `;
+    };
 
-    const bindings = await sparqlClient.query.select(query);
-
-    const convertedBindings: any = sparqlResultConverter.convertToDefinition(parseBindings(bindings), mappingDefinition).getAll()["cryptocurrencies"];
-    convertedBindings.map((binding: any) => {
-        binding["protectionScheme"] = binding["protectionScheme"][0];
-        binding["distributionScheme"] = binding["distributionScheme"][0];
-        return binding;
+    const result = await sparqlTransformer.default(jsonLdQuery, {
+        debug: false,
+        sparqlFunction: async (query: string) => {
+            return {
+                results: { 
+                    bindings: await sparqlClient.query.select(query),
+                } 
+            };
+        }
     });
-    return convertedBindings as Cryptocurrency[];
+
+    return result["@graph"] as Cryptocurrency[];
 };
 
 export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
-    const id = crypto.randomUUID();
+    const id = `http://purl.org/net/bel-epa/doacc#${crypto.randomUUID()}`;
 
     const query = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
@@ -150,17 +115,17 @@ export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyI
         PREFIX elements: <http://purl.org/dc/elements/1.1/>
 
         INSERT DATA {
-            doacc:${id} rdf:type                  doacc:Cryptocurrency                        ;
-                        doacc:symbol              "${cryptocurrency.symbol}"@en               ;
-                        doacc:protection-scheme   doacc:D9758d7c9-6b22-4039-a325-285d680c22fe ;
-                        doacc:distribution-scheme doacc:Dc10c93fb-f7ec-40cd-a06e-7890686f6ef8 .
+            <${id}> rdf:type                  doacc:Cryptocurrency                        ;
+                    doacc:symbol              "${cryptocurrency.symbol}"@en               ;
+                    doacc:protection-scheme   doacc:D9758d7c9-6b22-4039-a325-285d680c22fe ;
+                    doacc:distribution-scheme doacc:Dc10c93fb-f7ec-40cd-a06e-7890686f6ef8 .
             
-            ${cryptocurrency.description ? `doacc:${id} elements:description "${cryptocurrency.description}"@en                                         .` : ""}
-            ${cryptocurrency.blockReward ? `doacc:${id} doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime   ? `doacc:${id} doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins  ? `doacc:${id} doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source      ? `doacc:${id} doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website     ? `doacc:${id} doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
+            ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
     `;
 
@@ -177,7 +142,7 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
         ASK {
-            doacc:${id} rdf:type doacc:Cryptocurrency .
+            <${id}> rdf:type doacc:Cryptocurrency .
         }
     `;
 
@@ -192,28 +157,28 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         PREFIX elements: <http://purl.org/dc/elements/1.1/>
 
         DELETE {
-            ${cryptocurrency.description ? `doacc:${id} elements:description ?oldDescription . ` : ""}
-            ${cryptocurrency.blockReward ? `doacc:${id} doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime   ? `doacc:${id} doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins  ? `doacc:${id} doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source      ? `doacc:${id} doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website     ? `doacc:${id} doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
+            ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
         INSERT {
-            ${cryptocurrency.description ? `doacc:${id} elements:description "${cryptocurrency.description}"@en                                         .` : ""}
-            ${cryptocurrency.blockReward ? `doacc:${id} doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime   ? `doacc:${id} doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins  ? `doacc:${id} doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source      ? `doacc:${id} doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website     ? `doacc:${id} doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
+            ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
         WHERE {
-            ${cryptocurrency.description ? `doacc:${id} elements:description ?oldDescription . ` : ""}
-            ${cryptocurrency.blockReward ? `doacc:${id} doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime   ? `doacc:${id} doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins  ? `doacc:${id} doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source      ? `doacc:${id} doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website     ? `doacc:${id} doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
+            ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
     `;
 
@@ -229,10 +194,10 @@ export const removeCryptocurrencyById = async (id: string): Promise<Cryptocurren
         PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
 
         DELETE {
-            doacc:${id} ?p ?o
+            <${id}> ?p ?o
         }
         WHERE {
-            doacc:${id} ?p ?o
+            <${id}> ?p ?o
         }
     `;
 
