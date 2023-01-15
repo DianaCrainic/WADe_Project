@@ -18,7 +18,7 @@
     "express-graphql": "^0.12.0",
     "graphql": "^15.3.0",
     "sparql-http-client": "^2.4.2",
-    "sparql-result-converter": "^3.0.1",
+    "sparql-transformer": "^2.9.0",
     "typescript": "^4.9.4"
   },
   "devDependencies": {

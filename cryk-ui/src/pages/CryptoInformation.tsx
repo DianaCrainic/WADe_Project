@@ -30,7 +30,7 @@ export default function CryptoInformation(props: any) {
 
     const { data, loading, error } = useQuery(GET_CRYPTOCURRENCY_BY_ID_QUERY, {
         variables: {
-            id
+            id: `http://purl.org/net/bel-epa/doacc#${id}`
         }
     });
 
@@ -87,13 +87,13 @@ export default function CryptoInformation(props: any) {
                     <p className="crypto-description">
                         {cryptocurrency?.description}
                     </p>
-                    {cryptocurrency?.website !== "unknown" &&
+                    {cryptocurrency?.website &&
                         <p className="crypto-website">
                             Official website: <a href={`${cryptocurrency?.website}`}>{`${cryptocurrency?.website}`}</a>
                         </p>}
-                    <p className="crypto-reward">
+                    {cryptocurrency?.blockReward && <p className="crypto-reward">
                         Reward: {`${cryptocurrency?.blockReward}`}
-                    </p>
+                    </p>}
 
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">

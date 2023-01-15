@@ -1,5 +1,5 @@
 import { Cryptocurrency } from "../models/cryptocurrency";
-import { getCryptocurrencies, getCryptocurrencyById } from "../services/cryptocurrency-service";
+import { getCryptocurrencyById, getCryptocurrencies } from "../services/cryptocurrency-service";
 
 const queries = {
     cryptocurrency: async (args: { id: string }, context: any): Promise<Cryptocurrency> => {
