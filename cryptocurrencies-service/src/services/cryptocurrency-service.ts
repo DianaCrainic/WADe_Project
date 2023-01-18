@@ -9,7 +9,7 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     const jsonLdQuery = {
         "@graph": [{
             "@type": "Cryptocurrency",
-            "id": "?id",
+            "id": `<${id}>`,
             "symbol": "$doacc:symbol$required",
             "decription": "$elements:description",
             "blockReward": "$doacc:block-reward",
