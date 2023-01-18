@@ -24,6 +24,8 @@ const schema = buildSchema(`
 
     type Query {
         cryptoNews(cryptocurrencyId: ID!): [CryptoNews!]!
+        allCryptoNews(limit: Int, offset: Int): [CryptoNews!]!
+        cryptoNewsById(id: ID!): CryptoNews!
     }
 
     type Mutation {

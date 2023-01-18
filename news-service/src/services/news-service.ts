@@ -83,6 +83,42 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string):
     return result["@graph"] as CryptoNews[];
 }
 
+export const getAllCryptoNews = async (limit = 10, offset = 0): Promise<CryptoNews[]> => {
+    const jsonLdQuery = {
+        "@graph": [{
+            "@type": "CryptoNews",
+            "id": "?id",
+            "title": "$schema:headline$required",
+            "body": "$schema:articleBody",
+            "about": "$elements:subject$required$list"
+        }],
+        "$where": [
+            "?id rdf:type schema:NewsArticle"
+        ],
+        "$limit": limit,
+        "$offset": offset,
+        "$orderby": "?title",
+        "$prefixes": {
+            "schema": "http://schema.org/",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "elements": "http://purl.org/dc/elements/1.1/"
+        }
+    };
+
+    const result = await sparqlTransformer.default(jsonLdQuery, {
+        debug: false,
+        sparqlFunction: async (query: string) => {
+            return {
+                results: { 
+                    bindings: await sparqlClient.query.select(query),
+                } 
+            };
+        }
+    });
+
+    return result["@graph"] as CryptoNews[];
+};
+
 export const createCryptoNews = async (cryptoNews: CreateCryptoNewsInput): Promise<CryptoNews> => {
     const id = `http://schema.org/${crypto.randomUUID()}`;
 
