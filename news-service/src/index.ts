@@ -4,10 +4,14 @@ import envs from "./envs";
 import schema from "./graphql/schema";
 import mutations from "./graphql/mutations";
 import queries from "./graphql/queries";
+import cors from "cors";
 
 const app: Application = express();
 
 app.use(express.json());
+app.use(cors({
+    origin: '*'
+}));
 app.use(envs.graphqlPath, graphqlHTTP({
     schema: schema,
     rootValue: {
