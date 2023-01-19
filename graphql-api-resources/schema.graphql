@@ -45,26 +45,22 @@ input UpdateCryptocurrencyInput {
 # https://schema.org/NewsArticle
 type CryptoNews {
     id: ID!
-    title: String!
+    title: String! # https://schema.org/headline
     body: String! # https://schema.org/articleBody
-    about: [Cryptocurrency!]!
-}
-
-input CryptocurrencyInput {
-    id: ID!
+    about: [ID!]! 
 }
 
 input CreateCryptoNewsInput {
     title: String!
     body: String!
-    about: [CryptocurrencyInput!]!
+    about: [ID!]!
 }
 
 input UpdateCryptoNewsInput {
     id: ID!
     title: String
     body: String
-    about: [CryptocurrencyInput!]
+    about: [ID!]
 }
 
 type Query {

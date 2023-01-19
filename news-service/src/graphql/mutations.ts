@@ -1,18 +1,19 @@
 import { CreateCryptoNewsInput } from "../models/create-crypto-news-input";
 import { CryptoNews } from "../models/crypto-news";
 import { UpdateCryptoNewsInput } from "../models/update-crypto-news-input";
+import { createCryptoNews, updateCryptoNewsById, removeCryptoNewsById } from "../services/news-service";
 
 const mutations = {
-    createCryptoNews: (createCryptoNewsInput: CreateCryptoNewsInput): CryptoNews => {
-        throw new Error("Not yet implemented");
+    createCryptoNews: async ( args: { createCryptoNewsInput: CreateCryptoNewsInput}, context: any ): Promise<CryptoNews> => {
+        return await createCryptoNews(args.createCryptoNewsInput);
     },
 
-    updateCryptoNews: (updateCryptoNewsInput: UpdateCryptoNewsInput): CryptoNews => {
-        throw new Error("Not yet implemented");
+    updateCryptoNews: async (args: { updateCryptoNewsInput: UpdateCryptoNewsInput}, context: any ): Promise<CryptoNews> => {
+        return await updateCryptoNewsById(args.updateCryptoNewsInput);
     },
 
-    removeCryptoNews: (id: string): CryptoNews => {
-        throw new Error("Not yet implemented");
+    removeCryptoNews: async (args: {id: string}, context: any): Promise<CryptoNews> => {
+        return await removeCryptoNewsById(args.id);
     }
 };
 

@@ -9,7 +9,7 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     const jsonLdQuery = {
         "@graph": [{
             "@type": "Cryptocurrency",
-            "id": "?id",
+            "id": `<${id}>`,
             "symbol": "$doacc:symbol$required",
             "decription": "$elements:description",
             "blockReward": "$doacc:block-reward",
@@ -53,7 +53,9 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
         throw new Error(`Cryptocurrency with id ${id} not found`);
     }
 
-    return result["@graph"][0] as Cryptocurrency;
+    const cryptocurrency: Cryptocurrency = result["@graph"][0];
+    cryptocurrency.id = cryptocurrency.id.slice(1, -1);
+    return cryptocurrency;
 }
 
 export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Cryptocurrency[]> => {

@@ -29,7 +29,7 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
 
 ```json
 {
-    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
+    "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
 }
 ```
 
@@ -39,7 +39,7 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
 {
     "data": {
         "cryptocurrency": {
-            "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
+            "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f",
             "symbol": "EDGE",
             "description": "EDGE: A I2P-Centric Gaming Crypto-Currency v.1.0",
             "blockReward": "100",
@@ -78,7 +78,7 @@ query GetSomeDetailsAboutCryptocurrency($id: ID!) {
 
 ```json
 {
-    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
+    "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
 }
 ```
 
@@ -171,7 +171,7 @@ mutation CreateCryptocurrency($cryptocurrency: CreateCryptocurrencyInput!) {
 {
     "data": {
         "createCryptocurrency": {
-            "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
+            "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f",
             "symbol": "EDGE",
             "description": "EDGE: A I2P-Centric Gaming Crypto-Currency v.1.0"
         }
@@ -198,7 +198,7 @@ mutation UpdateCryptocurrency($cryptocurrency: UpdateCryptocurrencyInput!) {
 ```json
 {
     "cryptocurrency": {
-        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
+        "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f",
         "description": "New description"
     }
 }
@@ -210,7 +210,7 @@ mutation UpdateCryptocurrency($cryptocurrency: UpdateCryptocurrencyInput!) {
 {
     "data": {
         "updateCryptocurrency": {
-            "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
+            "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f",
             "symbol": "EDGE",
             "description": "New description"
         }
@@ -235,7 +235,7 @@ mutation RemoveCryptocurrency($id: ID!) {
 
 ```json
 {
-    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
+    "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
 }
 ```
 
@@ -245,7 +245,7 @@ mutation RemoveCryptocurrency($id: ID!) {
 {
     "data": {
         "removeCryptocurrency": {
-            "id": "D0016a183-ba27-4f55-bb91-25a81e70754f",
+            "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f",
             "symbol": "EDGE"
         }
     }
@@ -262,9 +262,7 @@ query GetNewsAboutCryptocurrency($id: ID!) {
         id
         title
         body
-        about {
-            id
-        }
+        about
     }
 }
 ```
@@ -273,7 +271,7 @@ query GetNewsAboutCryptocurrency($id: ID!) {
 
 ```json
 {
-    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
+    "id": "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
 }
 ```
 
@@ -284,23 +282,19 @@ query GetNewsAboutCryptocurrency($id: ID!) {
     "data": {
         "cryptoNews": [
             {
-                "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
+                "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
                 "title": "Crypto news title",
                 "body": "Crypto news body",
                 "about": [
-                    {
-                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
-                    }
+                    "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
                 ]
             },
             {
-                "id": "81f6ad2b-2363-4fae-bc26-c0af072de06f",
+                "id": "http://schema.org/81f6ad2b-2363-4fae-bc26-c0af072de06f",
                 "title": "Breaking news title",
                 "body": "Breaking news body",
                 "about": [
-                    {
-                        "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
-                    }
+                    "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
                 ]
             }
         ]
@@ -333,9 +327,7 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
         "title": "Crypto news title",
         "body": "Crypto news body",
         "about": [
-            { 
-                "id": "D0016a183-ba27-4f55-bb91-25a81e70754f" 
-            }
+            "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
         ]
     }
 }
@@ -347,13 +339,11 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
 {
     "data": {
         "createCryptoNews": {
-            "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
+            "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
             "title": "Crypto news title",
             "body": "Crypto news body",
             "about": [
-                {
-                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
-                }
+                "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
             ]
         }
     }
@@ -382,7 +372,7 @@ mutation UpdateCryptoNews($cryptoNews: UpdateCryptoNewsInput!) {
 ```json
 {
     "cryptoNews": {
-        "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
+        "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
         "title": "New title"
     }
 }
@@ -394,13 +384,11 @@ mutation UpdateCryptoNews($cryptoNews: UpdateCryptoNewsInput!) {
 {
     "data": {
         "updateCryptoNews": {
-            "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
+            "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
             "title": "New title",
             "body": "Crypto news body",
             "about": [
-                {
-                    "id": "D0016a183-ba27-4f55-bb91-25a81e70754f"
-                }
+                "http://purl.org/net/bel-epa/doacc#D0016a183-ba27-4f55-bb91-25a81e70754f"
             ]
         }
     }
@@ -425,7 +413,7 @@ mutation RemoveCryptoNews($id: ID!) {
 
 ```json
 {
-    "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5"
+    "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5"
 }
 ```
 
@@ -435,7 +423,7 @@ mutation RemoveCryptoNews($id: ID!) {
 {
     "data": {
         "removeCryptoNews": {
-            "id": "643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
+            "id": "http://schema.org/643f3c60-30ee-4cbc-ab75-dfd4a3467af5",
             "title": "New title",
             "body": "Crypto news body"
         }

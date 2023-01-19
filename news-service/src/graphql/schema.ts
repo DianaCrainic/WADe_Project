@@ -1,32 +1,25 @@
 import { buildSchema } from 'graphql';
 
 const schema = buildSchema(`
-    type Cryptocurrency {
-        id: ID!
-    }
 
     type CryptoNews {
         id: ID!
         title: String!
         body: String
-        about: [Cryptocurrency!]!
-    }
-
-    input CryptocurrencyInput {
-        id: ID!
+        about: [ID!]!
     }
 
     input CreateCryptoNewsInput {
         title: String!
         body: String!
-        about: [CryptocurrencyInput!]!
+        about: [ID!]!
     }
 
     input UpdateCryptoNewsInput {
         id: ID!
         title: String
         body: String
-        about: [CryptocurrencyInput!]
+        about: [ID!]
     }
 
     type Query {
