@@ -41,7 +41,9 @@ export const getCryptoNewsById = async (id: string): Promise<any> => {
         throw new Error(`CryptoNews with id ${id} not found`);
     }
 
-    return result["@graph"][0] as CryptoNews;
+    const foundNews: CryptoNews = result["@graph"][0] as CryptoNews;
+    foundNews.id = foundNews.id.slice(1, -1);
+    return foundNews;
 }
 
 export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string): Promise<any> => {

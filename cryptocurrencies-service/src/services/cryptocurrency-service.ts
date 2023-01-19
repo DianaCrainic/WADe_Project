@@ -53,7 +53,9 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
         throw new Error(`Cryptocurrency with id ${id} not found`);
     }
 
-    return result["@graph"][0] as Cryptocurrency;
+    const foundCurrency: Cryptocurrency = result["@graph"][0];
+    foundCurrency.id = foundCurrency.id.slice(1, -1);
+    return foundCurrency;
 }
 
 export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Cryptocurrency[]> => {
