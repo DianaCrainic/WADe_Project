@@ -7,7 +7,7 @@ import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 
-export const getCryptoNewsById = async (id: string): Promise<any> => {
+const getCryptoNewsById = async (id: string): Promise<any> => {
     const jsonLdQuery = {
         "@graph": [{
             "@type": "CryptoNews",
@@ -41,9 +41,9 @@ export const getCryptoNewsById = async (id: string): Promise<any> => {
         throw new Error(`CryptoNews with id ${id} not found`);
     }
 
-    const foundNews: CryptoNews = result["@graph"][0] as CryptoNews;
-    foundNews.id = foundNews.id.slice(1, -1);
-    return foundNews;
+    const cryptoNews: CryptoNews = result["@graph"][0] as CryptoNews;
+    cryptoNews.id = cryptoNews.id.slice(1, -1);
+    return cryptoNews;
 }
 
 export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string): Promise<any> => {
