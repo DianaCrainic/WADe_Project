@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import "./css/NewsCard.css";
 import { News } from '../models/News';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
 
 export default function NewsCard(props: { news: News }) {
     const news = props.news;

@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import CryptoCard from "../components/CryptoCard"
-import "./css/Cryptocurrencies.css";
 import { gql, useQuery } from "@apollo/client";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Cryptocurrency } from "../models/Cryptocurrency";
-import { useNavigate } from "react-router-dom";
-import { Alert, Button, CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import { PieChart, Pie, Tooltip } from "recharts";
 
+const MAX_INT = Math.pow(2, 31) - 1;
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
         cryptocurrencies(limit: $limit, offset: $offset) {
             id
             symbol
-            description
+            protectionScheme {
+                description
+            }
         }
     }
 `;
 
-export default function Cryptocurrencies() {
-    const title = "Cryptocurrencies";
+export default function CryptocurrenciesVisualizations() {
+    const title = "Visualizations";
 
-    const navigate = useNavigate();
-
+    // TODO: implement a caching mechanism for this query
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
-            // TODO: pagination
-            // these values are provided for testing purposes
-            limit: 10,
-            offset: 1,
+            limit: MAX_INT,
         }
     });
 
@@ -63,23 +61,9 @@ export default function Cryptocurrencies() {
                 </Helmet>
                 <div className="page-container">
                     <div className="title">
-                        <h1>Cryptocurrency Knowledge Manager</h1>
+                        <h1>Visualizations</h1>
                     </div>
-                    <div className="buttons-container">
-                        <Button
-                            className="visualizations-button"
-                            variant="outlined"
-                            size="large"
-                            onClick={() => { navigate(`/cryptos/visualizations`) }}
-                        >
-                            Visualizations
-                        </Button>
-                    </div>
-                    <div className="cards-container">
-                        {cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
-                            <CryptoCard cryptocurrency={cryptocurrency} key={index} />
-                        ))}
-                    </div>
+                    <p>TODO: insert visualizations here</p>
                 </div>
             </div>
         </HelmetProvider>

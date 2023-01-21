@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { News } from "../models/News";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -45,16 +47,16 @@ export default function CryptoInformation(props: any) {
 
     if (loading) {
         return (
-            <div>
-                <p>Loading</p>
+            <div className="page-container">
+                <CircularProgress size="large" />
             </div>
         )
     }
 
     if (error) {
         return (
-            <div>
-                <p>{error.message}</p>
+            <div className="page-container">
+                <Alert severity="error">{error.message}</Alert>
             </div>
         )
     }
