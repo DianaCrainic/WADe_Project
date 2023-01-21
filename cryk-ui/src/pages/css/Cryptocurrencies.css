@@ -14,6 +14,11 @@
   margin-top: 2%;
 }
 
+.visualizations-button {
+  color: white !important;
+  border: 1px solid white !important;
+}
+
 .crypto-description,
 .crypto-reward,
 .crypto-website {

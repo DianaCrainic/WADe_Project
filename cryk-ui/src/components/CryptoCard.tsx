@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { useNavigate } from "react-router-dom";
 import "./css/CryptoCard.css";
 import { Cryptocurrency } from '../models/Cryptocurrency';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
 
 export default function CryptoCard(props: { cryptocurrency: Cryptocurrency }) {
   const cryptocurrency = props.cryptocurrency;
@@ -24,7 +24,14 @@ export default function CryptoCard(props: { cryptocurrency: Cryptocurrency }) {
         </Typography>}
       </CardContent>
       <CardActions>
-        <Button className="button-learn-more-crypto" size="large" onClick={() => { navigate(`/cryptos/${cryptocurrency.id.split("#")[1]}`) }}>Learn More</Button>
+        <Button
+          className="learn-more-button"
+          size="medium"
+          variant="outlined"
+          onClick={() => { navigate(`/cryptos/${cryptocurrency.id.split("#")[1]}`) }}
+        >
+          Learn More
+        </Button>
       </CardActions>
     </Card>
   );

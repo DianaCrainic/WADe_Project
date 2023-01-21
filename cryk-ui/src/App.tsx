@@ -3,14 +3,15 @@ import './App.css';
 import Cryptocurrencies from './pages/Cryptocurrencies';
 import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
 import CustomNavbar from "./components/CustomNavbar";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import CryptoInformation from "./pages/CryptoInformation";
+import CryptocurrenciesVisualizations from "./pages/CryptocurrenciesVisualizations";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
   const darkTheme = createTheme({
     palette: {
-      type: "dark"
+      mode: "dark"
     }
   });
 
@@ -22,10 +23,17 @@ function App() {
       <Router>
         <CustomNavbar />
         <Routes>
-          <Route path="/" element={<Cryptocurrencies />} />
+          <Route
+            path="/"
+            element={<Cryptocurrencies />}
+          />
           <Route
             path="/cryptos/:id"
             element={<CryptoInformation id={id} />}
+          />
+          <Route
+            path="/cryptos/visualizations"
+            element={<CryptocurrenciesVisualizations />}
           />
         </Routes>
       </Router>

@@ -20,23 +20,7 @@ a {
     color: white;
 }
 
-.button-learn-more-crypto {
-    border-radius: 15px;
-    box-shadow: 0 4px #999;
-    border: 1px solid black !important;
-}
-
-.button-learn-more-crypto:hover {
-    background: #4f4f4f;
-    text-decoration: none;
-    color: white;
-}
-
-.button-learn-more-crypto:active {
-    background-color: #4f4f4f;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
-    color: white;
-    text-decoration: none;
-    box-shadow: none;
+.learn-more-button {
+    color: white !important;
+    border: 1px solid white !important;
 }
