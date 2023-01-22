@@ -8,6 +8,7 @@ export interface Cryptocurrency {
     blockReward?: string;
     blockTime?: number;
     totalCoins?: string;
+    dateFounded?: string;
     source?: string;
     website?: string;
     protectionScheme?: ProtectionScheme;

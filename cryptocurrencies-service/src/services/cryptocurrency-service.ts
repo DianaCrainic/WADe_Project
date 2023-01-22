@@ -5,6 +5,13 @@ import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 
+const convertDateToStandardFormat = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month > 9 ? month : `0${month}`}-${day}`;
+}
+
 export const getCryptocurrencyById = async (id: string): Promise<any> => {
     const jsonLdQuery = {
         "@graph": [{
@@ -15,6 +22,7 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
             "blockReward": "$doacc:block-reward",
             "blockTime": "$doacc:block-time",
             "totalCoins": "$doacc:total-coins",
+            "dateFounded": "$doacc:date-founded",
             "source": "$doacc:source",
             "website": "$doacc:website",
             "protectionScheme": {
@@ -68,6 +76,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Crypt
             "blockReward": "$doacc:block-reward",
             "blockTime": "$doacc:block-time",
             "totalCoins": "$doacc:total-coins",
+            "dateFounded": "$doacc:date-founded",
             "source": "$doacc:source",
             "website": "$doacc:website",
             "protectionScheme": {
@@ -125,6 +134,14 @@ export const getCryptocurrenciesInfo = async (): Promise<CryptocurrenciesInfo> =
 export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
     const id = `http://purl.org/net/bel-epa/doacc#${crypto.randomUUID()}`;
 
+    if (cryptocurrency.dateFounded) {
+        const dateFounded = new Date(cryptocurrency.dateFounded);
+        if (!(dateFounded instanceof Date) || isNaN(dateFounded.valueOf())) {
+            throw new Error("Invalid date (dateFounded)");
+        }
+        cryptocurrency.dateFounded = convertDateToStandardFormat(dateFounded);
+    }
+
     const query = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -138,10 +155,11 @@ export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyI
             
             ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   "${cryptocurrency.dateFounded}"^^<http://www.w3.org/2001/XMLSchema#date>   .` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
     `;
 
@@ -167,6 +185,14 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         throw new Error(`Cryptocurrency with id ${id} not found`);
     }
 
+    if (cryptocurrency.dateFounded) {
+        const dateFounded = new Date(cryptocurrency.dateFounded);
+        if (!(dateFounded instanceof Date) || isNaN(dateFounded.valueOf())) {
+            throw new Error("Invalid date (dateFounded)");
+        }
+        cryptocurrency.dateFounded = convertDateToStandardFormat(dateFounded);
+    }
+
     const updateQuery = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -175,26 +201,29 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         DELETE {
             ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source ? `<${id}> doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   ?oldDateFounded . ` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
         INSERT {
             ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   "${cryptocurrency.dateFounded}"^^<http://www.w3.org/2001/XMLSchema#date>   .` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
         WHERE {
             ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source ? `<${id}> doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   ?oldDateFounded . ` : ""}
+            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
     `;
 

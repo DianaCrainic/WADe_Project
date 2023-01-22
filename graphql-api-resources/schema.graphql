@@ -16,6 +16,7 @@ type Cryptocurrency {
     blockReward: String
     blockTime: Int
     totalCoins: String
+    dateFounded: String
     source: String
     website: String
     protectionScheme: ProtectionScheme
@@ -28,6 +29,7 @@ input CreateCryptocurrencyInput {
     blockReward: String
     blockTime: Int
     totalCoins: String
+    dateFounded: String
     source: String
     website: String
 }
@@ -38,6 +40,7 @@ input UpdateCryptocurrencyInput {
     blockReward: String
     blockTime: Int
     totalCoins: String
+    dateFounded: String
     source: String
     website: String
 }

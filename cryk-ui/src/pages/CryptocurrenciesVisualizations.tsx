@@ -4,7 +4,7 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import { PieChart, Pie, Tooltip } from "recharts";
+import { PieChart, Pie, Tooltip, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis, LineChart, Line } from "recharts";
 import "./css/CryptocurrenciesVisualizations.css";
 
 const MAX_INT = Math.pow(2, 31) - 1;
@@ -13,6 +13,7 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
         cryptocurrencies(limit: $limit, offset: $offset) {
             id
             symbol
+            dateFounded
             protectionScheme {
                 description
             }
@@ -43,6 +44,23 @@ const getProtectionSchemeStatsForCryptocurrencies = (cryptocurrencies: Cryptocur
     return filtertedCountedCryptocurrenciesByProtectionScheme;
 }
 
+const getDateFoundedStatsForCryptocurrencies = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
+    const groupedCryptocurrenciesByDateFounded = cryptocurrencies.reduce((previousValue, currentValue: Cryptocurrency) => {
+        if (currentValue.dateFounded) {
+            const dateFounded = currentValue.dateFounded.substring(0, 7); // YYYY-MM
+            previousValue[dateFounded] = previousValue[dateFounded] || [];
+            previousValue[dateFounded].push(currentValue);
+        }
+        return previousValue;
+    }, Object.create(null));
+
+    console.log(Object.keys(groupedCryptocurrenciesByDateFounded).sort());
+
+    return Object.keys(groupedCryptocurrenciesByDateFounded).sort().map((key: string) => {
+        return { name: key, value: groupedCryptocurrenciesByDateFounded[key].length };
+    });
+}
+
 export default function CryptocurrenciesVisualizations() {
     const title = "Visualizations";
 
@@ -53,17 +71,17 @@ export default function CryptocurrenciesVisualizations() {
         }
     });
 
-    const [cryptocurrencies, _setCryptocurrencies] = useState<Cryptocurrency[]>([]);
     const [protectionSchemeStats, setProtectionSchemeStats] = useState<{ name: string, value: number }[]>();
+    const [dateFoundedStats, setDateFoundedStats] = useState<{ name: string, value: number }[]>([]);
 
-    const setCryptocurrencies = (cryptocurrencies: Cryptocurrency[]) => {
-        _setCryptocurrencies(cryptocurrencies);
+    const setCryptocurrenciesStats = (cryptocurrencies: Cryptocurrency[]) => {
         setProtectionSchemeStats(getProtectionSchemeStatsForCryptocurrencies(cryptocurrencies));
+        setDateFoundedStats(getDateFoundedStatsForCryptocurrencies(cryptocurrencies));
     };
 
     useEffect(() => {
         if (data) {
-            setCryptocurrencies(data.cryptocurrencies);
+            setCryptocurrenciesStats(data.cryptocurrencies);
         }
     }, [loading, data]);
 
@@ -94,7 +112,13 @@ export default function CryptocurrenciesVisualizations() {
                         <h1>Visualizations</h1>
                     </div>
                     <h2>Number of cryptocurrencies by protection scheme</h2>
-                    <PieChart width={2000} height={300}>
+                    <PieChart
+                        width={2000}
+                        height={300}
+                        margin={{
+                            top: 40,
+                            bottom: 40,
+                        }}>
                         <Pie
                             dataKey="value"
                             isAnimationActive={true}
@@ -105,6 +129,39 @@ export default function CryptocurrenciesVisualizations() {
                         />
                         <Tooltip />
                     </PieChart>
+                    <h2>Number of cryptocurrencies by founded date</h2>
+                    <ResponsiveContainer width="90%" height={500}>
+                        <LineChart
+                            width={500}
+                            height={300}
+                            data={dateFoundedStats}
+                            margin={{
+                                top: 40,
+                                right: 30,
+                                left: 30,
+                                bottom: 40,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip
+                                contentStyle={{
+                                    color: "black",
+                                }}
+                                itemStyle={{
+                                    color: "black",
+                                }}
+                            />
+                            <Legend />
+                            <Line
+                                dataKey="value"
+                                stroke="white"
+                                type="monotone"
+                                activeDot={{ r: 8 }}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
         </HelmetProvider>

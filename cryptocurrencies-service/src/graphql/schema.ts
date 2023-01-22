@@ -16,6 +16,7 @@ const schema = buildSchema(`
         blockReward: String
         blockTime: Int
         totalCoins: String
+        dateFounded: String
         source: String
         website: String
         protectionScheme: ProtectionScheme
@@ -32,6 +33,7 @@ const schema = buildSchema(`
         blockReward: String
         blockTime: Int
         totalCoins: String
+        dateFounded: String
         source: String
         website: String
     }
@@ -42,6 +44,7 @@ const schema = buildSchema(`
         blockReward: String
         blockTime: Int
         totalCoins: String
+        dateFounded: String
         source: String
         website: String
     }
