@@ -1,3 +1,6 @@
+import { DistributionScheme } from "./DistributionScheme";
+import { ProtectionScheme } from "./ProtectionScheme";
+
 export interface Cryptocurrency {
     id: string;
     symbol: string;
@@ -7,4 +10,6 @@ export interface Cryptocurrency {
     totalCoins?: string;
     source?: string;
     website?: string;
+    protectionScheme?: ProtectionScheme;
+    distributionScheme?: DistributionScheme;
 }

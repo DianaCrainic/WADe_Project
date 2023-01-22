@@ -5,6 +5,7 @@ import { Cryptocurrency } from "../models/Cryptocurrency";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import { PieChart, Pie, Tooltip } from "recharts";
+import "./css/CryptocurrenciesVisualizations.css";
 
 const MAX_INT = Math.pow(2, 31) - 1;
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
@@ -19,6 +20,29 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     }
 `;
 
+const getProtectionSchemeStatsForCryptocurrencies = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
+    const groupedCryptocurrenciesByProtectionScheme = cryptocurrencies.reduce((previousValue, currentValue: Cryptocurrency) => {
+        const currentProtectionSchemeDescription = currentValue.protectionScheme?.description;
+        if (currentProtectionSchemeDescription) {
+            previousValue[currentProtectionSchemeDescription] = previousValue[currentProtectionSchemeDescription] || [];
+            previousValue[currentProtectionSchemeDescription].push(currentValue);
+        }
+        return previousValue;
+    }, Object.create(null));
+    const countedCryptocurrenciesByProtectionScheme = Object.keys(groupedCryptocurrenciesByProtectionScheme).map((key: string) => {
+        return { name: key, value: groupedCryptocurrenciesByProtectionScheme[key].length };
+    });
+    const otherCountedCryptocurrenciesByProtectionScheme =
+        countedCryptocurrenciesByProtectionScheme.filter(element => element.value <= 10);
+    const numberOfOtherCryptocurrenciesByProtectionScheme = otherCountedCryptocurrenciesByProtectionScheme.reduce((accumulator, object) => {
+        return accumulator + object.value;
+    }, 0);
+    const filtertedCountedCryptocurrenciesByProtectionScheme =
+        countedCryptocurrenciesByProtectionScheme.filter(element => element.value > 10);
+    filtertedCountedCryptocurrenciesByProtectionScheme.splice(1, 0, { name: "Other", value: numberOfOtherCryptocurrenciesByProtectionScheme });
+    return filtertedCountedCryptocurrenciesByProtectionScheme;
+}
+
 export default function CryptocurrenciesVisualizations() {
     const title = "Visualizations";
 
@@ -29,7 +53,13 @@ export default function CryptocurrenciesVisualizations() {
         }
     });
 
-    const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+    const [cryptocurrencies, _setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+    const [protectionSchemeStats, setProtectionSchemeStats] = useState<{ name: string, value: number }[]>();
+
+    const setCryptocurrencies = (cryptocurrencies: Cryptocurrency[]) => {
+        _setCryptocurrencies(cryptocurrencies);
+        setProtectionSchemeStats(getProtectionSchemeStatsForCryptocurrencies(cryptocurrencies));
+    };
 
     useEffect(() => {
         if (data) {
@@ -40,7 +70,7 @@ export default function CryptocurrenciesVisualizations() {
     if (loading) {
         return (
             <div className="page-container">
-                <CircularProgress size="large" />
+                <CircularProgress color="inherit" />
             </div>
         )
     }
@@ -63,7 +93,18 @@ export default function CryptocurrenciesVisualizations() {
                     <div className="title">
                         <h1>Visualizations</h1>
                     </div>
-                    <p>TODO: insert visualizations here</p>
+                    <h2>Number of cryptocurrencies by protection scheme</h2>
+                    <PieChart width={2000} height={300}>
+                        <Pie
+                            dataKey="value"
+                            isAnimationActive={true}
+                            data={protectionSchemeStats}
+                            outerRadius={100}
+                            fill="#9E9E9E"
+                            label
+                        />
+                        <Tooltip />
+                    </PieChart>
                 </div>
             </div>
         </HelmetProvider>
