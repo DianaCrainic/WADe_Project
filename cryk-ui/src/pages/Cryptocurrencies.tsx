@@ -25,15 +25,16 @@ const CURRENT_PAGE = 1;
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
-    const [cryptosPerPage, setCryptosPerPage] = useState(CRYPTOS_PER_PAGE);
     const [currentPage, setCurrentPage] = useState(CURRENT_PAGE);
+    const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
+
 
     const navigate = useNavigate();
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
-            limit: cryptosPerPage,
-            offset: (currentPage - 1) * cryptosPerPage,
+            limit: CRYPTOS_PER_PAGE,
+            offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
         }
     });
 
@@ -42,6 +43,7 @@ export default function Cryptocurrencies() {
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
+            setTotalNumberOfCryptocurrencies(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
         }
     }, [loading, data]);
 
@@ -60,12 +62,6 @@ export default function Cryptocurrencies() {
             </div>
         )
     }
-
-    const handleChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const count =  Math.ceil(data.cryptocurrenciesInfo.totalCount / cryptosPerPage);
 
     return (
         <HelmetProvider>
@@ -93,12 +89,12 @@ export default function Cryptocurrencies() {
                         ))}
                     </div>
                     <Pagination className="pagination"
-                        count={count}
+                        count={totalNumberOfCryptocurrencies}
                         color="primary"
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(event, value) => handleChange(value)} />
+                        onChange={(event, value) => setCurrentPage(value)} />
                 </div>
             </div>
         </HelmetProvider>
