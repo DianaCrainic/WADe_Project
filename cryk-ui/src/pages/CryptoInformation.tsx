@@ -61,21 +61,6 @@ export default function CryptoInformation(props: any) {
         )
     }
 
-    // useEffect(() => {
-    //     (async () => {
-    //         let newsData;
-    //         try {
-    //             const response = await fetch('https://randomuser.me/api/?results=5');
-    //             newsData = await response.json();
-    //         } catch (error) {
-    //             console.log(error);
-    //             newsData = [];
-    //         }
-
-    //         setNews(newsData.results);
-    //     })();
-    // }, []);
-
     return (
         <HelmetProvider>
             <div>

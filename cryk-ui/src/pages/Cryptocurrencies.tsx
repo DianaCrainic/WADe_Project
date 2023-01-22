@@ -5,7 +5,7 @@ import "./css/Cryptocurrencies.css";
 import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, CircularProgress } from "@mui/material";
+import { Alert, Button, CircularProgress, Pagination } from "@mui/material";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -14,20 +14,25 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             symbol
             description
         }
+        cryptocurrenciesInfo {
+            totalCount
+        }
     }
 `;
 
+const CRYPTOS_PER_PAGE = 10;
+
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
 
     const navigate = useNavigate();
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
-            // TODO: pagination
-            // these values are provided for testing purposes
-            limit: 10,
-            offset: 1,
+            limit: CRYPTOS_PER_PAGE,
+            offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
         }
     });
 
@@ -36,6 +41,7 @@ export default function Cryptocurrencies() {
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
+            setTotalNumberOfCryptocurrencies(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
         }
     }, [loading, data]);
 
@@ -80,6 +86,13 @@ export default function Cryptocurrencies() {
                             <CryptoCard cryptocurrency={cryptocurrency} key={index} />
                         ))}
                     </div>
+                    <Pagination className="pagination"
+                        count={totalNumberOfCryptocurrencies}
+                        color="primary"
+                        size="large"
+                        page={currentPage}
+                        variant="outlined"
+                        onChange={(event, value) => setCurrentPage(value)} />
                 </div>
             </div>
         </HelmetProvider>
