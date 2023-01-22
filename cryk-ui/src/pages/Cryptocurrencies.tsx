@@ -6,6 +6,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress, Pagination } from "@mui/material";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -13,6 +14,8 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             id
             symbol
             description
+            blockTime
+            totalCoins
         }
         cryptocurrenciesInfo {
             totalCount
@@ -21,6 +24,61 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
 `;
 
 const CRYPTOS_PER_PAGE = 10;
+
+const getTotalCoinsStats = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
+    const mappedCryptocurrencies = cryptocurrencies.map(cryptocurrency => {
+        return {
+            name: cryptocurrency.symbol,
+            value: cryptocurrency.totalCoins ? Number.parseFloat(cryptocurrency.totalCoins) : -1,
+        };
+    });
+
+    return mappedCryptocurrencies.filter(element => element.value !== -1);
+}
+
+const getBlockTimeStats = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
+    const mappedCryptocurrencies = cryptocurrencies.map(cryptocurrency => {
+        return {
+            name: cryptocurrency.symbol,
+            value: cryptocurrency.blockTime ? cryptocurrency.blockTime : -1,
+        };
+    });
+
+    return mappedCryptocurrencies.filter(element => element.value !== -1);
+}
+
+const getBarChart = (data: { name: string, value: number }[]): any => {
+    return (<ResponsiveContainer width="90%" height={500} >
+        <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+                top: 40,
+                right: 30,
+                left: 30,
+                bottom: 40,
+            }}
+        >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip
+                contentStyle={{
+                    color: "black",
+                }}
+                itemStyle={{
+                    color: "black",
+                }}
+            />
+            <Legend />
+            <Bar
+                dataKey="value"
+                fill="white"
+            />
+        </BarChart>
+    </ResponsiveContainer>);
+}
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
@@ -37,11 +95,15 @@ export default function Cryptocurrencies() {
     });
 
     const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+    const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
+    const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
 
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
             setTotalNumberOfCryptocurrencies(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
+            setTotalCoinsStats(getTotalCoinsStats(data.cryptocurrencies));
+            setBlockTimeStats(getBlockTimeStats(data.cryptocurrencies));
         }
     }, [loading, data]);
 
@@ -93,6 +155,16 @@ export default function Cryptocurrencies() {
                         page={currentPage}
                         variant="outlined"
                         onChange={(event, value) => setCurrentPage(value)} />
+                    {totalCoinsStats.length > 0 &&
+                        <>
+                            <h2>Total coins</h2>
+                            {getBarChart(totalCoinsStats)}
+                        </>}
+                    {blockTimeStats.length > 0 &&
+                        <>
+                            <h2>Block time</h2>
+                            {getBarChart(blockTimeStats)}
+                        </>}
                 </div>
             </div>
         </HelmetProvider>
