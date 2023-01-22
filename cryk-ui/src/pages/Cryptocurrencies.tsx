@@ -21,11 +21,10 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
 `;
 
 const CRYPTOS_PER_PAGE = 10;
-const CURRENT_PAGE = 1;
 
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
-    const [currentPage, setCurrentPage] = useState(CURRENT_PAGE);
+    const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
 
 
