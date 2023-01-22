@@ -54,8 +54,6 @@ const getDateFoundedStatsForCryptocurrencies = (cryptocurrencies: Cryptocurrency
         return previousValue;
     }, Object.create(null));
 
-    console.log(Object.keys(groupedCryptocurrenciesByDateFounded).sort());
-
     return Object.keys(groupedCryptocurrenciesByDateFounded).sort().map((key: string) => {
         return { name: key, value: groupedCryptocurrenciesByDateFounded[key].length };
     });
