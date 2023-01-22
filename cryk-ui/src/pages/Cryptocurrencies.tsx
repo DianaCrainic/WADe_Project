@@ -27,7 +27,6 @@ export default function Cryptocurrencies() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
 
-
     const navigate = useNavigate();
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
