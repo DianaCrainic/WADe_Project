@@ -1,6 +1,6 @@
 import envs from "../envs";
 import ParsingClient from "sparql-http-client/ParsingClient";
-import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput } from "../models/cryptocurrency";
+import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput, CryptocurrenciesInfo } from "../models/cryptocurrency";
 import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
@@ -42,9 +42,9 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
         debug: false,
         sparqlFunction: async (query: string) => {
             return {
-                results: { 
+                results: {
                     bindings: await sparqlClient.query.select(query),
-                } 
+                }
             };
         }
     });
@@ -98,14 +98,28 @@ export const getCryptocurrencies = async (limit = 10, offset = 0): Promise<Crypt
         debug: false,
         sparqlFunction: async (query: string) => {
             return {
-                results: { 
+                results: {
                     bindings: await sparqlClient.query.select(query),
-                } 
+                }
             };
         }
     });
 
     return result["@graph"] as Cryptocurrency[];
+};
+
+export const getCryptocurrenciesInfo = async (): Promise<CryptocurrenciesInfo> => {
+    const query = `
+        PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
+        PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        SELECT (COUNT(?id) AS ?totalCount)
+        WHERE {
+            ?id rdf:type doacc:Cryptocurrency 
+        }
+    `;
+    const result = await sparqlClient.query.select(query);
+
+    return { totalCount: parseInt(result[0].totalCount.value) };
 };
 
 export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
@@ -124,10 +138,10 @@ export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyI
             
             ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.source ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
     `;
 
@@ -161,26 +175,26 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         DELETE {
             ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.source ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
         INSERT {
             ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
-            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
-            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
-            ${cryptocurrency.source      ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
-            ${cryptocurrency.website     ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.source ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
         }
         WHERE {
             ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
             ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
-            ${cryptocurrency.blockTime   ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
-            ${cryptocurrency.totalCoins  ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
-            ${cryptocurrency.source      ? `<${id}> doacc:source         ?oldSource      . ` : ""}
-            ${cryptocurrency.website     ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
+            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+            ${cryptocurrency.source ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+            ${cryptocurrency.website ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
         }
     `;
 

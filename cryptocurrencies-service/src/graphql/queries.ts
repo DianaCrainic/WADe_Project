@@ -1,5 +1,5 @@
-import { Cryptocurrency } from "../models/cryptocurrency";
-import { getCryptocurrencyById, getCryptocurrencies } from "../services/cryptocurrency-service";
+import { Cryptocurrency, CryptocurrenciesInfo } from "../models/cryptocurrency";
+import { getCryptocurrencyById, getCryptocurrencies, getCryptocurrenciesInfo } from "../services/cryptocurrency-service";
 
 const queries = {
     cryptocurrency: async (args: { id: string }, context: any): Promise<Cryptocurrency> => {
@@ -8,6 +8,10 @@ const queries = {
 
     cryptocurrencies: async (args: { limit?: number, offset?: number }, context: any): Promise<Cryptocurrency[]> => {
         return await getCryptocurrencies(args.limit, args.offset);
+    },
+
+    cryptocurrenciesInfo: async (): Promise<CryptocurrenciesInfo> => {
+        return await getCryptocurrenciesInfo();
     }
 };
 

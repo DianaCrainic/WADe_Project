@@ -5,7 +5,7 @@ import "./css/Cryptocurrencies.css";
 import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, CircularProgress } from "@mui/material";
+import { Alert, Button, CircularProgress, Pagination } from "@mui/material";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -14,20 +14,26 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             symbol
             description
         }
+        cryptocurrenciesInfo {
+            totalCount
+        }
     }
 `;
 
+const CRYPTOS_PER_PAGE = 10;
+const CURRENT_PAGE = 1;
+
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
+    const [cryptosPerPage, setCryptosPerPage] = useState(CRYPTOS_PER_PAGE);
+    const [currentPage, setCurrentPage] = useState(CURRENT_PAGE);
 
     const navigate = useNavigate();
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
-            // TODO: pagination
-            // these values are provided for testing purposes
-            limit: 10,
-            offset: 1,
+            limit: cryptosPerPage,
+            offset: (currentPage - 1) * cryptosPerPage,
         }
     });
 
@@ -55,6 +61,12 @@ export default function Cryptocurrencies() {
         )
     }
 
+    const handleChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const count =  Math.ceil(data.cryptocurrenciesInfo.totalCount / cryptosPerPage);
+
     return (
         <HelmetProvider>
             <div>
@@ -80,6 +92,13 @@ export default function Cryptocurrencies() {
                             <CryptoCard cryptocurrency={cryptocurrency} key={index} />
                         ))}
                     </div>
+                    <Pagination className="pagination"
+                        count={count}
+                        color="primary"
+                        size="large"
+                        page={currentPage}
+                        variant="outlined"
+                        onChange={(event, value) => handleChange(value)} />
                 </div>
             </div>
         </HelmetProvider>

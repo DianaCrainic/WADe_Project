@@ -22,6 +22,10 @@ const schema = buildSchema(`
         distributionScheme: DistributionScheme
     }
 
+    type CryptocurrenciesInfo {
+        totalCount: Int
+    }
+
     input CreateCryptocurrencyInput {
         symbol: String!
         description: String
@@ -45,6 +49,7 @@ const schema = buildSchema(`
     type Query {
         cryptocurrency(id: ID!): Cryptocurrency!
         cryptocurrencies(limit: Int, offset: Int): [Cryptocurrency!]!
+        cryptocurrenciesInfo: CryptocurrenciesInfo
     }
     
     type Mutation {

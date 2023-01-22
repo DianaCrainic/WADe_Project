@@ -33,3 +33,7 @@ export interface UpdateCryptocurrencyInput {
     source?: string;
     website?: string;
 }
+
+export interface CryptocurrenciesInfo {
+    totalCount: number;
+}
