@@ -13,6 +13,7 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
         blockReward
         blockTime
         totalCoins
+        dateFounded
         source
         website
         protectionScheme {
@@ -45,6 +46,7 @@ query GetAllDetailsAboutCryptocurrency($id: ID!) {
             "blockReward": "100",
             "blockTime": 60,
             "totalCoins": "1000000",
+            "dateFounded": "2015-06-07",
             "source": "https://github.com/EDGE-dev/EDGE",
             "website": null,
             "protectionScheme": {

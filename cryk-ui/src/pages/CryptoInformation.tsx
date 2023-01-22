@@ -48,7 +48,7 @@ export default function CryptoInformation(props: any) {
     if (loading) {
         return (
             <div className="page-container">
-                <CircularProgress size="large" />
+                <CircularProgress color="inherit" />
             </div>
         )
     }

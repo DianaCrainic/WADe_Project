@@ -10,6 +10,7 @@ export interface Cryptocurrency {
     totalCoins?: string;
     source?: string;
     website?: string;
+    dateFounded?: string;
     protectionScheme?: ProtectionScheme;
     distributionScheme?: DistributionScheme;
 }
@@ -22,6 +23,7 @@ export interface CreateCryptocurrencyInput {
     totalCoins?: string;
     source?: string;
     website?: string;
+    dateFounded?: string;
 }
 
 export interface UpdateCryptocurrencyInput {
@@ -30,6 +32,7 @@ export interface UpdateCryptocurrencyInput {
     blockReward?: string;
     blockTime?: number;
     totalCoins?: string;
+    dateFounded?: string;
     source?: string;
     website?: string;
 }
