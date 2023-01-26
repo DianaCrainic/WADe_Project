@@ -106,9 +106,9 @@ export default function CryptocurrenciesVisualizations() {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container">
+                <div className="page-container" vocab="http://schema.org/">
                     <div className="title">
-                        <h1>Visualizations</h1>
+                        <h1 property="name">Visualizations</h1>
                     </div>
                     <h2>Number of cryptocurrencies by protection scheme</h2>
                     <PieChart

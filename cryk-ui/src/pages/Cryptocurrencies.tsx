@@ -130,9 +130,9 @@ export default function Cryptocurrencies() {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container">
+                <div className="page-container" vocab="http://schema.org/">
                     <div className="title">
-                        <h1>Cryptocurrency Knowledge Manager</h1>
+                        <h1 property="name">Cryptocurrency Knowledge Manager</h1>
                     </div>
                     <div className="buttons-container">
                         <Button
