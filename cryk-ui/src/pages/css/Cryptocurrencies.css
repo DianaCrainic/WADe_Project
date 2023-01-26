@@ -21,10 +21,17 @@
 
 .crypto-description,
 .crypto-reward,
-.crypto-website {
-    font-size: 30px;
-    padding-left: 10%;
-    padding-right: 10%;
+.crypto-website,
+.crypto-source,
+.crypto-coins {
+  font-size: 30px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.news-title {
+  font-size: 50px;
+  padding-top: 4%;
 }
 
 .pagination {

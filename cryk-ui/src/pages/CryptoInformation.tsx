@@ -11,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { RefetchInput } from "../models/RefetchInput";
+import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -150,26 +151,42 @@ export default function CryptoInformation(props: any) {
         )
     }
 
+    const symbol = cryptocurrency?.symbol;
+    const description = cryptocurrency?.description;
+    const website = cryptocurrency?.website;
+    const source = cryptocurrency?.source;
+    const reward = cryptocurrency?.blockReward;
+    const coins = cryptocurrency?.totalCoins;
+
     return (
         <HelmetProvider>
             <div>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container">
-                    <div className="title">
-                        <h1>{cryptocurrency?.symbol}</h1>
+                <div className="page-container" vocab="http://schema.org/">
+                    <div className="title" property="symbol">
+                        <h1 property="name">{symbol}</h1>
                     </div>
-                    <p className="crypto-description">
-                        {cryptocurrency?.description}
+                    <p className="crypto-description" property="description" typeof="https://schema.org/description">
+                        {description}
                     </p>
-                    {cryptocurrency?.website &&
-                        <p className="crypto-website">
-                            Official website: <a href={`${cryptocurrency?.website}`}>{`${cryptocurrency?.website}`}</a>
-                        </p>}
-                    {cryptocurrency?.blockReward && <p className="crypto-reward">
-                        Reward: {`${cryptocurrency?.blockReward}`}
-                    </p>}
+                    <p className="crypto-website" property="website" typeof="https://schema.org/WebSite">
+                        <span property="name">Official website:</span>
+                        {website ? <a href={website} property="url">{website}</a> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-source" property="source">
+                        <span property="name">Source:</span>
+                        {source ? <a href={source} property="url">{source}</a> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-reward" property="reward" typeof="https://schema.org/MonetaryAmount">
+                        <span property="name">Reward:</span>
+                        {reward ? <span property="value">{reward}</span> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-coins" property="coins" typeof="https://schema.org/QuantitativeValue">
+                        <span property="name">Total Coins:</span>
+                        {coins ? <span property="value">{coins}</span> : UNKNOWN_MESSAGE}
+                    </p>
 
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
