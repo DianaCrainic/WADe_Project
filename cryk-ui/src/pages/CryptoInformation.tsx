@@ -155,8 +155,8 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
-    const reward = Number(cryptocurrency?.blockReward);
-    const coins = Number(cryptocurrency?.totalCoins);
+    const reward = Number(cryptocurrency?.blockReward) < 0 ? null: Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null: Number(cryptocurrency?.totalCoins);
 
     return (
         <HelmetProvider>
