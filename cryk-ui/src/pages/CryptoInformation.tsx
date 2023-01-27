@@ -164,28 +164,33 @@ export default function CryptoInformation(props: any) {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container" vocab="http://schema.org/">
-                    <div className="title" property="symbol">
-                        <h1 property="name">{symbol}</h1>
+                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
+                    <div className="title" property="http://purl.org/net/bel-epa/doacc#title" 
+                    about="http://purl.org/net/bel-epa/doacc#{id}">
+                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol">{symbol}</h1>
                     </div>
-                    <p className="crypto-description" property="description" typeof="https://schema.org/description">
+                    <p className="crypto-description" property="http://purl.org/net/bel-epa/doacc#description"
+                        typeof="http://purl.org/net/bel-epa/doacc#description">
                         {description}
                     </p>
-                    <p className="crypto-website" property="website" typeof="https://schema.org/WebSite">
-                        <span property="name">Official website:</span>
-                        {website ? <a href={website} property="url">{website}</a> : UNKNOWN_MESSAGE}
+                    <p className="crypto-website" property="http://purl.org/net/bel-epa/doacc#website"
+                        typeof="http://purl.org/net/bel-epa/doacc#WebSite">
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Official website:</span>
+                        {website ? <a href={website} property="http://purl.org/net/bel-epa/doacc#url">{website}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-source" property="source">
-                        <span property="name">Source:</span>
-                        {source ? <a href={source} property="url">{source}</a> : UNKNOWN_MESSAGE}
+                    <p className="crypto-source" property="http://purl.org/net/bel-epa/doacc#source">
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Source:</span>
+                        {source ? <a href={source} property="http://purl.org/net/bel-epa/doacc#url">{source}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-reward" property="reward" typeof="https://schema.org/MonetaryAmount">
-                        <span property="name">Reward:</span>
-                        {reward ? <span property="value">{reward}</span> : UNKNOWN_MESSAGE}
+                    <p className="crypto-reward" property="http://purl.org/net/bel-epa/doacc#reward"
+                        typeof="http://purl.org/net/bel-epa/doacc#MonetaryAmount">
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Reward:</span>
+                        {reward ? <span property="http://purl.org/net/bel-epa/doacc#value">{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-coins" property="coins" typeof="https://schema.org/QuantitativeValue">
-                        <span property="name">Total Coins:</span>
-                        {coins ? <span property="value">{coins}</span> : UNKNOWN_MESSAGE}
+                    <p className="crypto-coins" property="http://purl.org/net/bel-epa/doacc#coins"
+                        typeof="http://purl.org/net/bel-epa/doacc#QuantitativeValue">
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Total Coins:</span>
+                        {coins ? <span property="http://purl.org/net/bel-epa/doacc#value">{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
 
                     <h2 className="news-title">News</h2>
