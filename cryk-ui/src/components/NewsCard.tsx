@@ -8,12 +8,13 @@ import AlertDialog from './AlertDialog';
 import { DocumentNode } from 'graphql';
 import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
 import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
+import { GetPaginatedCryptocurrenciesInput } from '../models/GetPaginatedCryptocurrenciesInput';
+import { RefetchInput } from '../models/RefetchInput';
 
-export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput, queryEndpoint: string }) {
+export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput|GetPaginatedCryptocurrenciesInput> }) {
     const news = props.news;
 
-    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchQuery: props.refetchQuery, 
-        refetchVars: props.refetchVars, queryEndpoint: props.queryEndpoint }
+    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchInput: props.refetchInput };
 
     return (
         <Card className="news-card">
@@ -28,7 +29,7 @@ export default function NewsCard(props: { news: News, cryptocurrencyId: string, 
             <CardContent className="news-card-buttons-container">
                 <CreateUpdateNewsCardDialog 
                     operationType="update" dialogQuery={props.queryUpdate} 
-                    refetchQuery={props.refetchQuery} refetchVars={props.refetchVars} 
+                    refetchInput={props.refetchInput}
                     cryptocurrencyId={props.cryptocurrencyId} news={news}
                 />
                 <AlertDialog {...alertParams}/>

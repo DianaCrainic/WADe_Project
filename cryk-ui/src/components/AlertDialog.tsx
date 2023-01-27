@@ -9,14 +9,17 @@ import { DocumentNode } from 'graphql';
 import { useMutation } from '@apollo/client';
 import "./css/AlertDialog.css";
 import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
+import { RefetchInput } from '../models/RefetchInput';
+import { GetPaginatedCryptocurrenciesInput } from '../models/GetPaginatedCryptocurrenciesInput';
 
 
-export default function AlertDialog(props: {id: string, alertQuery: DocumentNode, refetchQuery: DocumentNode, refetchVars: GetPaginatedCryptoNewsInput, queryEndpoint: string}) {
+export default function AlertDialog(props: {id: string, alertQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput|GetPaginatedCryptocurrenciesInput>}) {
   const [open, setOpen] = React.useState(false);
+  const refetchInput = props.refetchInput
 
   const [ removeNewsEntry ] = useMutation(props.alertQuery, {
-    context: {clientName: props.queryEndpoint},
-    refetchQueries: [ {query: props.refetchQuery, context: {clientName: props.queryEndpoint}, variables: props.refetchVars} ]
+    context: {clientName: refetchInput.context},
+    refetchQueries: [ {query: refetchInput.query, context: {clientName: refetchInput.context}, variables: refetchInput.variables} ]
   });
 
   const handleClickOpen = () => {

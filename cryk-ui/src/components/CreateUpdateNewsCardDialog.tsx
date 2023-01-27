@@ -20,6 +20,8 @@ import { UpdateCryptoNewsInput } from "../models/UpdateCryptoNewsInput";
 import { useMutation } from "@apollo/client";
 import "./css/CreateUpdateNewsCardDialog.css";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
+import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
+import { RefetchInput } from "../models/RefetchInput";
 
 const newsCardSchema = object({
     title: string({
@@ -41,7 +43,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
   
-export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput, cryptocurrencyId: string, news?: News}) {
+export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput|GetPaginatedCryptocurrenciesInput>, cryptocurrencyId: string, news?: News}) {
   const [open, setOpen] = React.useState(false);
 
   const {
@@ -68,9 +70,11 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
     setOpen(false);
   };
 
+  const refetchInput = props.refetchInput
+
   const [ createUpdateNewsEntry ] = useMutation(props.dialogQuery, {
-    context: {clientName: 'endpoint2'},
-    refetchQueries: [ {query: props.refetchQuery, context: {clientName: 'endpoint2'}, variables: props.refetchVars} ]
+    context: {clientName: refetchInput.context},
+    refetchQueries: [ {query: refetchInput.query, context: {clientName: refetchInput.context}, variables: refetchInput.variables} ]
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {

@@ -10,6 +10,7 @@ import { News } from "../models/News";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
+import { RefetchInput } from "../models/RefetchInput";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -77,7 +78,7 @@ export default function CryptoInformation(props: any) {
     const [totalNumberOfCryptoNews, setTotalNumberOfCryptoNews] = useState(Number);
 
     const { id } = useParams<string>();
-    const ownerId = `http://purl.org/net/bel-epa/doacc#${id}`;
+    const currencyId = `http://purl.org/net/bel-epa/doacc#${id}`;
 
     const { data: currencyData, loading: currencyLoading, error: currencyError } = useQuery(GET_CRYPTOCURRENCY_BY_ID_QUERY, {
         variables: {
@@ -90,6 +91,12 @@ export default function CryptoInformation(props: any) {
         cryptocurrencyId: `http://purl.org/net/bel-epa/doacc#${id}`,
         limit: NEWS_PER_PAGE,
         offset: (currentPage - 1) * NEWS_PER_PAGE
+    }
+
+    const refetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
+        context: "endpoint2",
+        query: GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY,
+        variables: getPaginatedNewsInput
     }
 
     const { data: newsData, loading: newsLoading, error: newsError } = useQuery(GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY, {
@@ -170,12 +177,10 @@ export default function CryptoInformation(props: any) {
                     <div className="news-cards-container">
                         {news ?
                         (news.map((oneNews: News, index: number) => (
-                            <NewsCard news={oneNews} cryptocurrencyId={ownerId}
+                            <NewsCard news={oneNews} cryptocurrencyId={currencyId}
                             queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
                             queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                            refetchQuery={GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                            refetchVars={getPaginatedNewsInput} 
-                            queryEndpoint="endpoint2" key={index} />)))
+                            refetchInput={refetchInput} key={index} />)))
                         : null
                         }
                     </div>
@@ -188,8 +193,7 @@ export default function CryptoInformation(props: any) {
                         onChange={(event, value) => setCurrentPage(value)} />
                     <CreateUpdateNewsCardDialog 
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                        refetchQuery={GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                        refetchVars={getPaginatedNewsInput} cryptocurrencyId={ownerId}
+                        refetchInput={refetchInput} cryptocurrencyId={currencyId}
                     />
                 </div>
             </div>
