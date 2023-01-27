@@ -155,8 +155,8 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
-    const reward = cryptocurrency?.blockReward;
-    const coins = cryptocurrency?.totalCoins;
+    const reward = Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins);
 
     return (
         <HelmetProvider>
@@ -175,21 +175,21 @@ export default function CryptoInformation(props: any) {
                     </p>
                     <p className="crypto-website" property="http://purl.org/net/bel-epa/doacc#website"
                         typeof="http://purl.org/net/bel-epa/doacc#WebSite">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Official website:</span>
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Official website: </span>
                         {website ? <a href={website} property="http://purl.org/net/bel-epa/doacc#url">{website}</a> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-source" property="http://purl.org/net/bel-epa/doacc#source">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Source:</span>
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Source: </span>
                         {source ? <a href={source} property="http://purl.org/net/bel-epa/doacc#url">{source}</a> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-reward" property="http://purl.org/net/bel-epa/doacc#reward"
                         typeof="http://purl.org/net/bel-epa/doacc#MonetaryAmount">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Reward:</span>
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Reward: </span>
                         {reward ? <span property="http://purl.org/net/bel-epa/doacc#value">{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-coins" property="http://purl.org/net/bel-epa/doacc#coins"
                         typeof="http://purl.org/net/bel-epa/doacc#QuantitativeValue">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Total Coins:</span>
+                        <span property="http://purl.org/net/bel-epa/doacc#name">Total Coins: </span>
                         {coins ? <span property="http://purl.org/net/bel-epa/doacc#value">{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
 
