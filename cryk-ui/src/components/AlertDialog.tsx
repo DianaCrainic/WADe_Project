@@ -11,12 +11,12 @@ import "./css/AlertDialog.css";
 import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
 
 
-export default function AlertDialog(props: {id: string, alertQuery: DocumentNode, refetchQuery: DocumentNode, refetchVars: GetPaginatedCryptoNewsInput}) {
+export default function AlertDialog(props: {id: string, alertQuery: DocumentNode, refetchQuery: DocumentNode, refetchVars: GetPaginatedCryptoNewsInput, queryEndpoint: string}) {
   const [open, setOpen] = React.useState(false);
 
   const [ removeNewsEntry ] = useMutation(props.alertQuery, {
-    context: {clientName: 'endpoint2'},
-    refetchQueries: [ {query: props.refetchQuery, context: {clientName: 'endpoint2'}, variables: props.refetchVars} ]
+    context: {clientName: props.queryEndpoint},
+    refetchQueries: [ {query: props.refetchQuery, context: {clientName: props.queryEndpoint}, variables: props.refetchVars} ]
   });
 
   const handleClickOpen = () => {

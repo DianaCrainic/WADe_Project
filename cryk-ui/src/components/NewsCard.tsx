@@ -9,10 +9,11 @@ import { DocumentNode } from 'graphql';
 import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
 import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
 
-export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput }) {
+export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput, queryEndpoint: string }) {
     const news = props.news;
 
-    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchQuery: props.refetchQuery, refetchVars: props.refetchVars }
+    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchQuery: props.refetchQuery, 
+        refetchVars: props.refetchVars, queryEndpoint: props.queryEndpoint }
 
     return (
         <Card className="news-card">

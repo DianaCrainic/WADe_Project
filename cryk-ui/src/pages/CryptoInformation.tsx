@@ -174,7 +174,8 @@ export default function CryptoInformation(props: any) {
                             queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
                             queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                             refetchQuery={GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                            refetchVars={getPaginatedNewsInput} key={index} />)))
+                            refetchVars={getPaginatedNewsInput} 
+                            queryEndpoint="endpoint2" key={index} />)))
                         : null
                         }
                     </div>
