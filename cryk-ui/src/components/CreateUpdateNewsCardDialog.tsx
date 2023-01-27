@@ -59,8 +59,7 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
     if (isSubmitSuccessful) {
       reset();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   const handleClickOpen = () => {
     setOpen(true);
