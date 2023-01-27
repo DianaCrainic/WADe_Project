@@ -16,11 +16,11 @@ export default function NewsCard(props: { news: News, cryptocurrencyId: string, 
 
     return (
         <Card className="news-card">
-            <CardContent>
-                <Typography className="card-title" color="textSecondary" gutterBottom>
+            <CardContent vocab="http://schema.org/" typeof="NewsArticle" resource={news.id}>
+                <Typography className="card-title" color="textSecondary" gutterBottom property="http://schema.org/headline">
                     {news.title}
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" property="http://schema.org/articleBody">
                     {news.body}
                 </Typography>
             </CardContent>
