@@ -7,11 +7,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DocumentNode } from 'graphql';
 import { useMutation } from '@apollo/client';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
 import "./css/AlertDialog.css";
 
-export default function AlertDialog(props: {newsId: string, alertGql: DocumentNode}) {
+export default function AlertDialog(props: {id: string, alertGql: DocumentNode}) {
   const [open, setOpen] = React.useState(false);
 
   const [ removeNewsEntry ] = useMutation(props.alertGql, {
@@ -30,7 +28,7 @@ export default function AlertDialog(props: {newsId: string, alertGql: DocumentNo
     e.preventDefault();
     e.stopPropagation();
     removeNewsEntry({
-      variables: {id: props.newsId}
+      variables: {id: props.id}
     }).then(() => {
       window.location.reload();
       setOpen(false);

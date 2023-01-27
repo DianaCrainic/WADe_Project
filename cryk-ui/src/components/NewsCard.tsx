@@ -11,7 +11,7 @@ import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
 export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode }) {
     const news = props.news;
 
-    const alertParams = { newsId: news.id, alertGql: props.queryDelete }
+    const alertParams = { id: news.id, alertGql: props.queryDelete }
 
     return (
         <Card className="news-card">
