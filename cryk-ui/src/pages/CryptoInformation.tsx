@@ -9,6 +9,7 @@ import { Cryptocurrency } from "../models/Cryptocurrency";
 import { News } from "../models/News";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Pagination } from "@mui/material";
+import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -85,12 +86,14 @@ export default function CryptoInformation(props: any) {
         context: {clientName: 'endpoint1'}
     });
 
+    const getPaginatedNewsInput: GetPaginatedCryptoNewsInput = {
+        cryptocurrencyId: `http://purl.org/net/bel-epa/doacc#${id}`,
+        limit: NEWS_PER_PAGE,
+        offset: (currentPage - 1) * NEWS_PER_PAGE
+    }
+
     const { data: newsData, loading: newsLoading, error: newsError } = useQuery(GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY, {
-        variables: {
-            cryptocurrencyId: `http://purl.org/net/bel-epa/doacc#${id}`,
-            limit: NEWS_PER_PAGE,
-            offset: (currentPage - 1) * NEWS_PER_PAGE
-        },
+        variables: getPaginatedNewsInput,
         context: {clientName: 'endpoint2'}
     });
 
@@ -169,8 +172,9 @@ export default function CryptoInformation(props: any) {
                         (news.map((oneNews: News, index: number) => (
                             <NewsCard news={oneNews} cryptocurrencyId={ownerId}
                             queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                            queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                            key={index} />)))
+                            queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                            refetchQuery={GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                            refetchVars={getPaginatedNewsInput} key={index} />)))
                         : null
                         }
                     </div>
@@ -181,7 +185,11 @@ export default function CryptoInformation(props: any) {
                         page={currentPage}
                         variant="outlined"
                         onChange={(event, value) => setCurrentPage(value)} />
-                    <CreateUpdateNewsCardDialog operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} cryptocurrencyId={ownerId} />
+                    <CreateUpdateNewsCardDialog 
+                        operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
+                        refetchQuery={GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                        refetchVars={getPaginatedNewsInput} cryptocurrencyId={ownerId}
+                    />
                 </div>
             </div>
         </HelmetProvider>

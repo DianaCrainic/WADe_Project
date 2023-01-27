@@ -8,12 +8,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { DocumentNode } from 'graphql';
 import { useMutation } from '@apollo/client';
 import "./css/AlertDialog.css";
+import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
 
-export default function AlertDialog(props: {id: string, alertGql: DocumentNode}) {
+
+export default function AlertDialog(props: {id: string, alertQuery: DocumentNode, refetchQuery: DocumentNode, refetchVars: GetPaginatedCryptoNewsInput}) {
   const [open, setOpen] = React.useState(false);
 
-  const [ removeNewsEntry ] = useMutation(props.alertGql, {
-    context: {clientName: 'endpoint2'}
+  const [ removeNewsEntry ] = useMutation(props.alertQuery, {
+    context: {clientName: 'endpoint2'},
+    refetchQueries: [ {query: props.refetchQuery, context: {clientName: 'endpoint2'}, variables: props.refetchVars} ]
   });
 
   const handleClickOpen = () => {
@@ -29,11 +32,8 @@ export default function AlertDialog(props: {id: string, alertGql: DocumentNode})
     e.stopPropagation();
     removeNewsEntry({
       variables: {id: props.id}
-    }).then(() => {
-      window.location.reload();
-      setOpen(false);
     });
-    // setOpen(false);
+    setOpen(false);
   }
 
   return (

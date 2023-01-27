@@ -19,6 +19,7 @@ import { CreateCryptoNewsInput } from "../models/CreateCryptoNewsInput";
 import { UpdateCryptoNewsInput } from "../models/UpdateCryptoNewsInput";
 import { useMutation } from "@apollo/client";
 import "./css/CreateUpdateNewsCardDialog.css";
+import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 
 const newsCardSchema = object({
     title: string({
@@ -40,7 +41,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
   
-export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, cryptocurrencyId: string, news?: News}) {
+export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput, cryptocurrencyId: string, news?: News}) {
   const [open, setOpen] = React.useState(false);
 
   const {
@@ -68,7 +69,8 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
   };
 
   const [ createUpdateNewsEntry ] = useMutation(props.dialogQuery, {
-    context: {clientName: 'endpoint2'}
+    context: {clientName: 'endpoint2'},
+    refetchQueries: [ {query: props.refetchQuery, context: {clientName: 'endpoint2'}, variables: props.refetchVars} ]
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
@@ -76,20 +78,15 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
       const operationInput: CreateCryptoNewsInput = {title: values.title, body: values.body, about: [ props.cryptocurrencyId ]};
       createUpdateNewsEntry({
         variables: {createCryptoNewsInput: operationInput}
-      }).then(() => {
-        window.location.reload();
-        setOpen(false);
       }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
     }
     else {
       const operationInput: UpdateCryptoNewsInput = {id: (props.news ? props.news.id : ""), title: values.title, body: values.body};
       createUpdateNewsEntry({
         variables: {updateCryptoNewsInput: operationInput}
-      }).then(() => {
-        window.location.reload();
-        setOpen(false);
       }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
     }
+    setOpen(false);
   };
 
   return (

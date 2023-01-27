@@ -7,11 +7,12 @@ import Card from '@mui/material/Card';
 import AlertDialog from './AlertDialog';
 import { DocumentNode } from 'graphql';
 import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
+import { GetPaginatedCryptoNewsInput } from '../models/GetPaginatedCryptoNewsInput';
 
-export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode }) {
+export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchQuery: DocumentNode,  refetchVars: GetPaginatedCryptoNewsInput }) {
     const news = props.news;
 
-    const alertParams = { id: news.id, alertGql: props.queryDelete }
+    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchQuery: props.refetchQuery, refetchVars: props.refetchVars }
 
     return (
         <Card className="news-card">
@@ -24,7 +25,11 @@ export default function NewsCard(props: { news: News, cryptocurrencyId: string, 
                 </Typography>
             </CardContent>
             <CardContent className="news-card-buttons-container">
-                <CreateUpdateNewsCardDialog operationType="update" dialogQuery={props.queryUpdate} cryptocurrencyId={props.cryptocurrencyId} news={news} />
+                <CreateUpdateNewsCardDialog 
+                    operationType="update" dialogQuery={props.queryUpdate} 
+                    refetchQuery={props.refetchQuery} refetchVars={props.refetchVars} 
+                    cryptocurrencyId={props.cryptocurrencyId} news={news}
+                />
                 <AlertDialog {...alertParams}/>
             </CardContent>
         </Card>
