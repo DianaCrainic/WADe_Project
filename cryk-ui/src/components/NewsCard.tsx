@@ -4,22 +4,28 @@ import { News } from '../models/News';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
+import AlertDialog from './AlertDialog';
+import { DocumentNode } from 'graphql';
+import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
 
-export default function NewsCard(props: { news: News }) {
+export default function NewsCard(props: { news: News, ownerId: string, gqlUpdate: DocumentNode, gqlDelete: DocumentNode }) {
     const news = props.news;
 
-    const newsName = "2 Bitcoin Mining Pools Command More Than 53% of BTC's Total Hashrate";
-    const contentPart = "Bitcoin's hashrate has jumped from the low 170 exahash per second (EH/s) recorded this week, to above the 300 exahash range after a number of bitcoin mining operations from Texas temporarily went offline on Dec. 25, 2022. Furthermore, three-day hashrate distribution statistics recorded on Dec. 29, 2022 indicate that two mining pools command more than 50% of the global hashrate."
+    const alertParams = { newsId: news.id, alertGql: props.gqlDelete }
 
     return (
         <Card className="news-card">
             <CardContent>
                 <Typography className="card-title" color="textSecondary" gutterBottom>
-                    {newsName}
+                    {news.title}
                 </Typography>
                 <Typography variant="body1">
-                    {contentPart}
+                    {news.body}
                 </Typography>
+            </CardContent>
+            <CardContent>
+                <CreateUpdateNewsCardDialog operationType="update" dialogGql={props.gqlUpdate} ownerId={props.ownerId} news={news} />
+                <AlertDialog {...alertParams}/>
             </CardContent>
         </Card>
     );

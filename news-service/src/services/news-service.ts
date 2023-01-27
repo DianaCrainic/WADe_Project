@@ -3,6 +3,7 @@ import ParsingClient from "sparql-http-client/ParsingClient";
 import { CreateCryptoNewsInput } from "../models/create-crypto-news-input";
 import { CryptoNews } from "../models/crypto-news";
 import { UpdateCryptoNewsInput } from "../models/update-crypto-news-input";
+import { CryptoNewsInfo } from "../models/crypto-news-info";
 import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
@@ -46,7 +47,7 @@ const getCryptoNewsById = async (id: string): Promise<any> => {
     return cryptoNews;
 }
 
-export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string): Promise<any> => {
+export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, limit = 10, offset = 0): Promise<CryptoNews[]> => {
     const jsonLdQuery = {
         "@graph": [{
             "@type": "CryptoNews",
@@ -59,6 +60,8 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string):
             "?id rdf:type schema:NewsArticle",
             `?id elements:subject <${cryptocurrencyId}>`
         ],
+        "$limit": limit,
+        "$offset": offset,
         "$orderby": "?title",
         "$prefixes": {
             "schema": "http://schema.org/",
@@ -78,12 +81,28 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string):
         }
     });
 
-    if (result["@graph"].length === 0) {
-        throw new Error(`No CryptoNews for Cryptocurrency with id ${cryptocurrencyId} found`);
-    }
+    // if (result["@graph"].length === 0) {
+    //     throw new Error(`No CryptoNews for Cryptocurrency with id ${cryptocurrencyId} found`);
+    // }
 
     return result["@graph"] as CryptoNews[];
 }
+
+export const getCryptoNewsInfoForCryptocurrency = async (cryptocurrencyId: string): Promise<CryptoNewsInfo> => {
+    const query = `
+        PREFIX schema:   <http://schema.org/>
+        PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX elements: <http://purl.org/dc/elements/1.1/>
+        SELECT (COUNT(?id) AS ?totalCount)
+        WHERE {
+            ?id rdf:type schema:NewsArticle .
+            ?id elements:subject <${cryptocurrencyId}>
+        }
+    `;
+    const result = await sparqlClient.query.select(query);
+
+    return { totalCount: parseInt(result[0].totalCount.value) };
+};
 
 export const createCryptoNews = async (cryptoNews: CreateCryptoNewsInput): Promise<CryptoNews> => {
     const id = `http://schema.org/${crypto.randomUUID()}`;

@@ -9,6 +9,10 @@ const schema = buildSchema(`
         about: [ID!]!
     }
 
+    type CryptoNewsInfo {
+        totalCount: Int
+    }
+
     input CreateCryptoNewsInput {
         title: String!
         body: String!
@@ -23,7 +27,8 @@ const schema = buildSchema(`
     }
 
     type Query {
-        cryptoNews(cryptocurrencyId: ID!): [CryptoNews!]!
+        cryptoNews(cryptocurrencyId: ID!, limit: Int, offset: Int): [CryptoNews!]!
+        cryptoNewsInfo(cryptocurrencyId: ID!): CryptoNewsInfo
     }
 
     type Mutation {
