@@ -1,7 +1,7 @@
 .news-card {
     margin: 2rem 2rem 2rem 0;
     padding: 1.5rem;
-    max-width: 450px;
+    width: 450px;
     transition: transform .3s ease;
     cursor: auto;
     font-size: 20px;
@@ -17,4 +17,11 @@
     height: 250px;
     padding-top: 2%;
     cursor: poi;
+}
+
+.news-card-buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    gap: 15px;
 }

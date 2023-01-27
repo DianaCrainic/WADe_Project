@@ -1,0 +1,22 @@
+.alert-dialog-button {
+    color: white !important;
+    border: 1px solid white !important;
+}
+
+.alert-title {
+    font-size: larger !important;
+    font-weight: bold !important;
+    font-family: "Lato", sans-serif !important;
+}
+
+.alert-text {
+    font-family: "Lato", sans-serif !important;
+}
+
+.alert-option-button {
+    color: white !important;
+    border: 1px solid white !important;
+    margin-right: 10px !important;
+    margin-bottom: 5px !important;
+    font-family: "Lato", sans-serif !important;
+}

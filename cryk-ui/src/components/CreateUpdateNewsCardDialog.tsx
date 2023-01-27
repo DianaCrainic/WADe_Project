@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { Alert, Box, CircularProgress } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import FormInput from "./FormInput";
 import { DocumentNode } from "graphql";
 import { News } from "../models/News";
 import { CreateCryptoNewsInput } from "../models/CreateCryptoNewsInput";
 import { UpdateCryptoNewsInput } from "../models/UpdateCryptoNewsInput";
 import { useMutation } from "@apollo/client";
+import "./css/CreateUpdateNewsCardDialog.css";
 
 const newsCardSchema = object({
-    title: string().min(1, {message: "News card title is required"}),
-    body: string().min(1, {message: "News card body is required"})
+    title: string({
+      required_error: "News card title is required"
+    }).min(1, { message: "News card title is required" }),
+    body: string({
+      required_error: "News card body is required"
+    }).min(1, { message: "News card body is required" })
 });
 
 type NewsCardInput = TypeOf<typeof newsCardSchema>;
@@ -41,18 +40,17 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
   
-export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogGql: DocumentNode, ownerId: string, news?: News}) {
+export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, cryptocurrencyId: string, news?: News}) {
   const [open, setOpen] = React.useState(false);
-  
-  const methods = useForm<NewsCardInput>({
-    resolver: zodResolver(newsCardSchema),
-  });
 
   const {
     reset,
+    register,
     handleSubmit,
     formState: { isSubmitSuccessful, errors },
-  } = methods;
+  } = useForm<NewsCardInput>({
+    resolver: zodResolver(newsCardSchema),
+  });
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -69,18 +67,18 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
     setOpen(false);
   };
 
-  const [ createUpdateNewsEntry, { data, loading, error } ] = useMutation(props.dialogGql, {
+  const [ createUpdateNewsEntry ] = useMutation(props.dialogQuery, {
     context: {clientName: 'endpoint2'}
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
-    // console.log(values);
     if (props.operationType === "create"){
-      const operationInput: CreateCryptoNewsInput = {title: values.title, body: values.body, about: [ props.ownerId ]};
+      const operationInput: CreateCryptoNewsInput = {title: values.title, body: values.body, about: [ props.cryptocurrencyId ]};
       createUpdateNewsEntry({
         variables: {createCryptoNewsInput: operationInput}
       }).then(() => {
         window.location.reload();
+        setOpen(false);
       }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
     }
     else {
@@ -89,30 +87,19 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
         variables: {updateCryptoNewsInput: operationInput}
       }).then(() => {
         window.location.reload();
+        setOpen(false);
       }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
     }
-    setOpen(false);
   };
-
-  // if (loading) {
-  //   return (
-  //       <div className="page-container">
-  //           <CircularProgress color="inherit" />
-  //       </div>
-  //   )
-  // }
-
-  // if (error) {
-  //   return (
-  //       <div className="page-container">
-  //           <Alert severity="error">{error.message}</Alert>
-  //       </div>
-  //   )
-  // }
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button 
+        className={props.operationType === "create" ? "news-card-create-button" : "news-card-update-button"}
+        variant="outlined"
+        size={props.operationType === "create" ? "large" : "medium"}
+        onClick={handleClickOpen}
+      >
         {props.operationType === "create" ? "Create News Card" : "Update"}
       </Button>
       <Dialog
@@ -121,66 +108,63 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar className="toolbar-style">
             <IconButton
               edge="start"
               color="inherit"
               onClick={handleClose}
               aria-label="close"
+              size="medium"
             >
-              <CloseIcon />
+              <CloseIcon fontSize="large"/>
             </IconButton>
-            <DialogTitle>
+            <DialogTitle className="news-dialog-title">
               {props.operationType === "create" ? "Create News Card" : "Update News Card"}
             </DialogTitle>
           </Toolbar>
         </AppBar>
-        <DialogContent>
-          <FormProvider {...methods}>
-            <Box
-              component='form'
-              noValidate
-              autoComplete='off'
-              onSubmit={handleSubmit(onSubmitHandler)}
+        <DialogContent className="news-dialog-content">
+          <Box
+            className='form-wrapper'
+            component='form'
+            noValidate
+            autoComplete='off'
+            onSubmit={handleSubmit(onSubmitHandler)}
+          >
+            <TextField
+              required
+              fullWidth
+              label='Title'
+              type='text'
+              defaultValue={props.operationType === "create" ? null : props.news?.title}
+              error={!!errors['title']}
+              helperText={errors['title'] ? errors['title'].message : ''}
+              {...register('title')}
+            />
+
+            <TextField
+              required
+              fullWidth
+              multiline
+              rows={10}
+              label='Body'
+              type='text'
+              defaultValue={props.operationType === "create" ? null : props.news?.body}
+              error={!!errors['body']}
+              helperText={errors['body'] ? errors['body'].message : ''}
+              {...register('body')}
+            />
+
+            <Button
+              type="submit"
+              className="submit-form-button"
+              size="large"
+              variant="outlined"
             >
-              <FormInput
-                name='title'
-                required
-                fullWidth
-                label='Title'
-                type='text'
-                value={props.operationType === "create" ? null : props.news?.title}
-                // sx={{ mb: 2 }}
-              />
-
-              <FormInput
-                name='body'
-                required
-                fullWidth
-                multiline
-                rows={10}
-                label='Body'
-                type='text'
-                value={props.operationType === "create" ? null : props.news?.body}
-                // sx={{ mb: 2 }}
-              />
-
-              <Button
-                type="submit"
-                className="learn-more-button"
-                size="large"
-                variant="outlined"
-                // variant='contained'
-                // fullWidth
-                // type='submit'
-                // loading={loading}
-                // sx={{ py: '0.8rem', mt: '1rem' }}
-              >
-                Save
-              </Button>
-            </Box>
-          </FormProvider>
+              Save
+            </Button>
+          </Box>
         </DialogContent>          
       </Dialog>
     </div>

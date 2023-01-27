@@ -9,29 +9,14 @@ import { DocumentNode } from 'graphql';
 import { useMutation } from '@apollo/client';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import "./css/AlertDialog.css";
 
 export default function AlertDialog(props: {newsId: string, alertGql: DocumentNode}) {
   const [open, setOpen] = React.useState(false);
 
-  const [ removeNewsEntry, { data, loading, error } ] = useMutation(props.alertGql, {
+  const [ removeNewsEntry ] = useMutation(props.alertGql, {
     context: {clientName: 'endpoint2'}
   });
-
-  if (loading) {
-    return (
-        <div className="page-container">
-            <CircularProgress color="inherit" />
-        </div>
-    )
-  }
-
-  if (error) {
-    return (
-        <div className="page-container">
-            <Alert severity="error">{error.message}</Alert>
-        </div>
-    )
-  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,13 +33,14 @@ export default function AlertDialog(props: {newsId: string, alertGql: DocumentNo
       variables: {id: props.newsId}
     }).then(() => {
       window.location.reload();
+      setOpen(false);
     });
-    setOpen(false);
+    // setOpen(false);
   }
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button className='alert-dialog-button' variant="outlined" onClick={handleClickOpen}>
         Delete
       </Button>
       <Dialog
@@ -63,17 +49,17 @@ export default function AlertDialog(props: {newsId: string, alertGql: DocumentNo
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle id="alert-dialog-title" className='alert-title'>
           {"Are you sure?"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description" className='alert-text'>
             This action is irreversible. Do you wish to continue?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleAgree} autoFocus>
+          <Button className='alert-option-button' onClick={handleClose}>Disagree</Button>
+          <Button className='alert-option-button' onClick={handleAgree} autoFocus>
             Agree
           </Button>
         </DialogActions>

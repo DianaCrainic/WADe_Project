@@ -81,10 +81,6 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, 
         }
     });
 
-    // if (result["@graph"].length === 0) {
-    //     throw new Error(`No CryptoNews for Cryptocurrency with id ${cryptocurrencyId} found`);
-    // }
-
     return result["@graph"] as CryptoNews[];
 }
 

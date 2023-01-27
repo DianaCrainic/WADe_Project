@@ -4,11 +4,9 @@ import NewsCard from "../components/NewsCard";
 import CreateUpdateNewsCardDialog from "../components/CreateUpdateNewsCardDialog";
 import "./css/CryptoInformation.css";
 import { useParams } from "react-router-dom";
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { News } from "../models/News";
-import { CreateCryptoNewsInput } from "../models/CreateCryptoNewsInput";
-import { UpdateCryptoNewsInput } from "../models/UpdateCryptoNewsInput";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Pagination } from "@mui/material";
 
@@ -169,9 +167,9 @@ export default function CryptoInformation(props: any) {
                     <div className="news-cards-container">
                         {news ?
                         (news.map((oneNews: News, index: number) => (
-                            <NewsCard news={oneNews} ownerId={ownerId}
-                            gqlUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                            gqlDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
+                            <NewsCard news={oneNews} cryptocurrencyId={ownerId}
+                            queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
+                            queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
                             key={index} />)))
                         : null
                         }
@@ -183,7 +181,7 @@ export default function CryptoInformation(props: any) {
                         page={currentPage}
                         variant="outlined"
                         onChange={(event, value) => setCurrentPage(value)} />
-                    <CreateUpdateNewsCardDialog operationType="create" dialogGql={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} ownerId={ownerId} />
+                    <CreateUpdateNewsCardDialog operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} cryptocurrencyId={ownerId} />
                 </div>
             </div>
         </HelmetProvider>

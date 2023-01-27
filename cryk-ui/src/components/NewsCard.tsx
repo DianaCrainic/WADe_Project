@@ -8,10 +8,10 @@ import AlertDialog from './AlertDialog';
 import { DocumentNode } from 'graphql';
 import CreateUpdateNewsCardDialog from './CreateUpdateNewsCardDialog';
 
-export default function NewsCard(props: { news: News, ownerId: string, gqlUpdate: DocumentNode, gqlDelete: DocumentNode }) {
+export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode }) {
     const news = props.news;
 
-    const alertParams = { newsId: news.id, alertGql: props.gqlDelete }
+    const alertParams = { newsId: news.id, alertGql: props.queryDelete }
 
     return (
         <Card className="news-card">
@@ -23,8 +23,8 @@ export default function NewsCard(props: { news: News, ownerId: string, gqlUpdate
                     {news.body}
                 </Typography>
             </CardContent>
-            <CardContent>
-                <CreateUpdateNewsCardDialog operationType="update" dialogGql={props.gqlUpdate} ownerId={props.ownerId} news={news} />
+            <CardContent className="news-card-buttons-container">
+                <CreateUpdateNewsCardDialog operationType="update" dialogQuery={props.queryUpdate} cryptocurrencyId={props.cryptocurrencyId} news={news} />
                 <AlertDialog {...alertParams}/>
             </CardContent>
         </Card>
