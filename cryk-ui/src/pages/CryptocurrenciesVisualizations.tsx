@@ -117,7 +117,8 @@ export default function CryptocurrenciesVisualizations() {
                         margin={{
                             top: 40,
                             bottom: 40,
-                        }}>
+                        }}
+                    >
                         <Pie
                             dataKey="value"
                             isAnimationActive={true}

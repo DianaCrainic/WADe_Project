@@ -11,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { RefetchInput } from "../models/RefetchInput";
+import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -150,26 +151,54 @@ export default function CryptoInformation(props: any) {
         )
     }
 
+    const symbol = cryptocurrency?.symbol;
+    const description = cryptocurrency?.description;
+    const website = cryptocurrency?.website;
+    const source = cryptocurrency?.source;
+    const reward = Number(cryptocurrency?.blockReward) < 0 ? null : Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null : Number(cryptocurrency?.totalCoins);
+
     return (
         <HelmetProvider>
             <div>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container">
-                    <div className="title">
-                        <h1>{cryptocurrency?.symbol}</h1>
+                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
+                    <div className="title"
+                        about={cryptocurrencyId}>
+                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol"
+                            typeof="http://www.w3.org/2001/XMLSchema#string">{symbol}</h1>
                     </div>
-                    <p className="crypto-description">
-                        {cryptocurrency?.description}
+                    <p className="crypto-description"
+                        property="<http://purl.org/dc/elements/1.1/description"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        {description}
                     </p>
-                    {cryptocurrency?.website &&
-                        <p className="crypto-website">
-                            Official website: <a href={`${cryptocurrency?.website}`}>{`${cryptocurrency?.website}`}</a>
-                        </p>}
-                    {cryptocurrency?.blockReward && <p className="crypto-reward">
-                        Reward: {`${cryptocurrency?.blockReward}`}
-                    </p>}
+                    <p className="crypto-website"
+                        property="http://purl.org/net/bel-epa/doacc#website"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        <span>Official website: </span>
+                        {website ? <a href={website}>{website}</a> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-source"
+                        property="http://purl.org/net/bel-epa/doacc#source"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        <span>Source: </span>
+                        {source ? <a href={source}>{source}</a> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-reward"
+                        property="http://purl.org/net/bel-epa/doacc#block-reward"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        <span>Reward: </span>
+                        {reward ? <span>{reward}</span> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-coins"
+                        property="http://purl.org/net/bel-epa/doacc#total-coins"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        <span>Total Coins: </span>
+                        {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
+                    </p>
 
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
