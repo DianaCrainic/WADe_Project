@@ -19,3 +19,9 @@ p a {
     color: white;
     background-color: transparent;
 }
+
+.export-button {
+    color: white !important;
+    border: 1px solid white !important;
+    margin-top: 10px !important;
+}

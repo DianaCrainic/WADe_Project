@@ -23,7 +23,7 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     }
 `;
 
-const CRYPTOS_PER_PAGE = 10;
+const CRYPTOS_PER_PAGE = 12;
 
 const getTotalCoinsStats = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
     const mappedCryptocurrencies = cryptocurrencies.map(cryptocurrency => {

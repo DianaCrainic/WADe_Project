@@ -42,8 +42,8 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
   operationPropertiesMap.set("create", {
     "button-class": "news-card-create-button",
     "button-size": "large",
-    "button-text": "Create News Card",
-    "dialog-title": "Create News Card",
+    "button-text": "Create News",
+    "dialog-title": "Create News",
     "title-default-value": null,
     "body-default-value": null
   });
@@ -51,7 +51,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     "button-class": "news-card-update-button",
     "button-size": "medium",
     "button-text": "Update",
-    "dialog-title": "Update News Card",
+    "dialog-title": "Update News",
     "title-default-value": props.news?.title,
     "body-default-value": props.news?.body
   });
