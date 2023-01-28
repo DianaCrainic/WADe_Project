@@ -130,9 +130,9 @@ export default function Cryptocurrencies() {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
+                <div className="page-container">
                     <div className="title">
-                        <h1 property="http://purl.org/net/bel-epa/doacc#name">Cryptocurrency Knowledge Manager</h1>
+                        <h1>Cryptocurrency Knowledge Manager</h1>
                     </div>
                     <div className="buttons-container">
                         <Button
@@ -140,13 +140,11 @@ export default function Cryptocurrencies() {
                             variant="outlined"
                             size="large"
                             onClick={() => { navigate(`/cryptos/visualizations`) }}
-                            property="http://purl.org/net/bel-epa/doacc#visualizations"
                         >
                             Visualizations
                         </Button>
                     </div>
-                    <div className="cards-container" property="http://purl.org/net/bel-epa/doacc#cryptocurrency"
-                        typeof="http://purl.org/net/bel-epa/doacc#Cryptocurrency">
+                    <div className="cards-container">
                         {cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
                             <CryptoCard cryptocurrency={cryptocurrency} key={index} />
                         ))}
@@ -157,16 +155,15 @@ export default function Cryptocurrencies() {
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(event, value) => setCurrentPage(value)}
-                        property="http://purl.org/net/bel-epa/doacc#pagination" />
+                        onChange={(event, value) => setCurrentPage(value)} />
                     {totalCoinsStats.length > 0 &&
                         <>
-                            <h2 property="http://purl.org/net/bel-epa/doacc#totalCoins">Total coins</h2>
+                            <h2>Total coins</h2>
                             {getBarChart(totalCoinsStats)}
                         </>}
                     {blockTimeStats.length > 0 &&
                         <>
-                            <h2 property="http://purl.org/net/bel-epa/doacc#totalCoins">Block time</h2>
+                            <h2>Block time</h2>
                             {getBarChart(blockTimeStats)}
                         </>}
                 </div>

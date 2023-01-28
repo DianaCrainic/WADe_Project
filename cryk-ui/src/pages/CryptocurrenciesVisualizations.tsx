@@ -106,11 +106,11 @@ export default function CryptocurrenciesVisualizations() {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Visualization">
+                <div className="page-container">
                     <div className="title">
-                        <h1 property="http://purl.org/net/bel-epa/doacc#name">Visualizations</h1>
+                        <h1>Visualizations</h1>
                     </div>
-                    <h2 property="http://purl.org/net/bel-epa/doacc#name">Number of cryptocurrencies by protection scheme</h2>
+                    <h2>Number of cryptocurrencies by protection scheme</h2>
                     <PieChart
                         width={2000}
                         height={300}
@@ -129,7 +129,7 @@ export default function CryptocurrenciesVisualizations() {
                         />
                         <Tooltip />
                     </PieChart>
-                    <h2 property="http://purl.org/net/bel-epa/doacc#name">Number of cryptocurrencies by founded date</h2>
+                    <h2>Number of cryptocurrencies by founded date</h2>
                     <ResponsiveContainer width="90%" height={500}>
                         <LineChart
                             width={500}

@@ -155,8 +155,8 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
-    const reward = Number(cryptocurrency?.blockReward) < 0 ? null: Number(cryptocurrency?.blockReward);
-    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null: Number(cryptocurrency?.totalCoins);
+    const reward = Number(cryptocurrency?.blockReward) < 0 ? null : Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null : Number(cryptocurrency?.totalCoins);
 
     return (
         <HelmetProvider>
@@ -165,32 +165,28 @@ export default function CryptoInformation(props: any) {
                     <title>{title}</title>
                 </Helmet>
                 <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
-                    <div className="title" property="http://purl.org/net/bel-epa/doacc#title" 
-                    about="http://purl.org/net/bel-epa/doacc#{id}">
+                    <div className="title"
+                        about={cryptocurrencyId}>
                         <h1 property="http://purl.org/net/bel-epa/doacc#symbol">{symbol}</h1>
                     </div>
-                    <p className="crypto-description" property="http://purl.org/net/bel-epa/doacc#description"
-                        typeof="http://purl.org/net/bel-epa/doacc#description">
+                    <p className="crypto-description" property="<http://purl.org/dc/elements/1.1/description">
                         {description}
                     </p>
-                    <p className="crypto-website" property="http://purl.org/net/bel-epa/doacc#website"
-                        typeof="http://purl.org/net/bel-epa/doacc#WebSite">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Official website: </span>
-                        {website ? <a href={website} property="http://purl.org/net/bel-epa/doacc#url">{website}</a> : UNKNOWN_MESSAGE}
+                    <p className="crypto-website" property="http://purl.org/net/bel-epa/doacc#website">
+                        <span>Official website: </span>
+                        {website ? <a href={website}>{website}</a> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-source" property="http://purl.org/net/bel-epa/doacc#source">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Source: </span>
-                        {source ? <a href={source} property="http://purl.org/net/bel-epa/doacc#url">{source}</a> : UNKNOWN_MESSAGE}
+                        <span>Source: </span>
+                        {source ? <a href={source}>{source}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-reward" property="http://purl.org/net/bel-epa/doacc#reward"
-                        typeof="http://purl.org/net/bel-epa/doacc#MonetaryAmount">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Reward: </span>
-                        {reward ? <span property="http://purl.org/net/bel-epa/doacc#value">{reward}</span> : UNKNOWN_MESSAGE}
+                    <p className="crypto-reward" property="http://purl.org/net/bel-epa/doacc#block-reward">
+                        <span>Reward: </span>
+                        {reward ? <span>{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-coins" property="http://purl.org/net/bel-epa/doacc#coins"
-                        typeof="http://purl.org/net/bel-epa/doacc#QuantitativeValue">
-                        <span property="http://purl.org/net/bel-epa/doacc#name">Total Coins: </span>
-                        {coins ? <span property="http://purl.org/net/bel-epa/doacc#value">{coins}</span> : UNKNOWN_MESSAGE}
+                    <p className="crypto-coins" property="http://purl.org/net/bel-epa/doacc#total-coins">
+                        <span>Total Coins: </span>
+                        {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
 
                     <h2 className="news-title">News</h2>
