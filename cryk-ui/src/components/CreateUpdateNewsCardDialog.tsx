@@ -91,13 +91,13 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
       const operationInput: CreateCryptoNewsInput = { title: values.title, body: values.body, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({
         variables: { createCryptoNewsInput: operationInput }
-      }).catch((error) => { console.log(JSON.stringify(error, null, 2)) });
+      }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
     else {
       const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: values.title, body: values.body };
       createUpdateNewsEntry({
         variables: { updateCryptoNewsInput: operationInput }
-      }).catch((error) => { console.log(JSON.stringify(error, null, 2)) });
+      }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
     setIsOpen(false);
   };
