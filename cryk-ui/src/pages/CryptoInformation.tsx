@@ -167,24 +167,35 @@ export default function CryptoInformation(props: any) {
                 <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
                     <div className="title"
                         about={cryptocurrencyId}>
-                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol">{symbol}</h1>
+                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol"
+                            typeof="http://www.w3.org/2001/XMLSchema#string">{symbol}</h1>
                     </div>
-                    <p className="crypto-description" property="<http://purl.org/dc/elements/1.1/description">
+                    <p className="crypto-description"
+                        property="<http://purl.org/dc/elements/1.1/description"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
                         {description}
                     </p>
-                    <p className="crypto-website" property="http://purl.org/net/bel-epa/doacc#website">
+                    <p className="crypto-website"
+                        property="http://purl.org/net/bel-epa/doacc#website"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Official website: </span>
                         {website ? <a href={website}>{website}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-source" property="http://purl.org/net/bel-epa/doacc#source">
+                    <p className="crypto-source"
+                        property="http://purl.org/net/bel-epa/doacc#source"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Source: </span>
                         {source ? <a href={source}>{source}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-reward" property="http://purl.org/net/bel-epa/doacc#block-reward">
+                    <p className="crypto-reward"
+                        property="http://purl.org/net/bel-epa/doacc#block-reward"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Reward: </span>
                         {reward ? <span>{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-coins" property="http://purl.org/net/bel-epa/doacc#total-coins">
+                    <p className="crypto-coins"
+                        property="http://purl.org/net/bel-epa/doacc#total-coins"
+                        typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Total Coins: </span>
                         {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
