@@ -8,7 +8,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import { News } from "../models/News";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Alert, Pagination } from "@mui/material";
+import { Alert, Button, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { RefetchInput } from "../models/RefetchInput";
 import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
@@ -16,13 +16,19 @@ import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
         cryptocurrency(id: $id) {
+            id
             symbol
             description
-            source
-            totalCoins
-            website
             blockReward
+            blockTime
+            totalCoins
+            dateFounded
+            source
+            website
             distributionScheme {
+                description
+            }
+            protectionScheme {
                 description
             }
         }
@@ -71,6 +77,55 @@ const DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
         }
     }
 `;
+
+const convertCryptocurrencyInformationToJsonLd = (cryptocurrency: Cryptocurrency | undefined): object => {
+    return {
+        "@context": {
+            symbol: "http://purl.org/net/bel-epa/doacc#symbol",
+            description: "http://purl.org/dc/elements/1.1/description",
+            blockReward: "http://purl.org/net/bel-epa/doacc#block-reward",
+            blockTime: "http://purl.org/net/bel-epa/doacc#block-time",
+            totalCoins: "http://purl.org/net/bel-epa/doacc#total-coins",
+            dateFounded: "http://purl.org/net/bel-epa/doacc#date-founded",
+            source: "http://purl.org/net/bel-epa/doacc#source",
+            website: "http://purl.org/net/bel-epa/doacc#website",
+            distributionScheme: {
+                "@type": "http://purl.org/net/bel-epa/doacc#DistributionScheme",
+            },
+            protectionScheme: {
+                "@type": "http://purl.org/net/bel-epa/doacc#ProtectionScheme",
+            }
+        },
+        "@type": "http://purl.org/net/bel-epa/doacc#Cryptocurrency",
+        "@id": cryptocurrency?.id,
+        symbol: cryptocurrency?.symbol,
+        description: cryptocurrency?.description,
+        blockReward: cryptocurrency?.blockReward,
+        blockTime: cryptocurrency?.blockTime,
+        totalCoins: cryptocurrency?.totalCoins,
+        dateFounded: cryptocurrency?.dateFounded,
+        source: cryptocurrency?.source,
+        website: cryptocurrency?.website,
+        distributionScheme: {
+            "@type": "http://purl.org/net/bel-epa/doacc#DistributionScheme",
+            description: cryptocurrency?.distributionScheme?.description,
+        },
+        protectionScheme: {
+            "@type": "http://purl.org/net/bel-epa/doacc#ProtectionScheme",
+            description: cryptocurrency?.protectionScheme?.description,
+        },
+    };
+}
+
+const downloadJsonLdFile = (filename: string, jsonLdContent: object): void => {
+    const fileData = JSON.stringify(jsonLdContent, null, 2);
+    const blob = new Blob([fileData], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = url;
+    link.click();
+}
 
 export default function CryptoInformation(props: any) {
     const title = "Cryptocurrency information";
@@ -199,7 +254,14 @@ export default function CryptoInformation(props: any) {
                         <span>Total Coins: </span>
                         {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
-
+                    <Button
+                        className="export-button"
+                        variant="outlined"
+                        size="large"
+                        onClick={() => { downloadJsonLdFile(`${cryptocurrency?.symbol}-ld.json`, convertCryptocurrencyInformationToJsonLd(cryptocurrency)) }}
+                    >
+                        Export as JSON-LD
+                    </Button>
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
                         {news ?
@@ -217,7 +279,7 @@ export default function CryptoInformation(props: any) {
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(event, value) => setCurrentPage(value)} />
+                        onChange={(_event, value) => setCurrentPage(value)} />
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                         refetchInput={refetchInput} cryptocurrencyId={cryptocurrencyId}
