@@ -1,3 +1,3 @@
 export interface ProtectionScheme {
-    description?: string;
+  description?: string;
 }

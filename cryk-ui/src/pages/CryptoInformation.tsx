@@ -28,7 +28,7 @@ const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     }
 `;
 
-const NEWS_PER_PAGE = 2;
+const NEWS_PER_PAGE = 5;
 
 const GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
     query GetCryptoNewsForCryptocurrency($cryptocurrencyId: ID!, $limit: Int = 10, $offset: Int = 0) {
@@ -67,7 +67,6 @@ const DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
     mutation DeleteCryptoNews($id: ID!) {
         removeCryptoNews(id: $id) {
             id
-            title
         }
     }
 `;
@@ -78,49 +77,48 @@ export default function CryptoInformation(props: any) {
     const [totalNumberOfCryptoNews, setTotalNumberOfCryptoNews] = useState(Number);
 
     const { id } = useParams<string>();
-    const currencyId = `http://purl.org/net/bel-epa/doacc#${id}`;
+    const cryptocurrencyId = `http://purl.org/net/bel-epa/doacc#${id}`;
 
-    const { data: currencyData, loading: currencyLoading, error: currencyError } = useQuery(GET_CRYPTOCURRENCY_BY_ID_QUERY, {
+    const { data: cryptocurrencyData, loading: cryptocurrencyLoading, error: cryptocurrencyError } = useQuery(GET_CRYPTOCURRENCY_BY_ID_QUERY, {
         variables: {
             id: `http://purl.org/net/bel-epa/doacc#${id}`
         },
-        context: {clientName: 'endpoint1'}
+        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const getPaginatedNewsInput: GetPaginatedCryptoNewsInput = {
-        cryptocurrencyId: `http://purl.org/net/bel-epa/doacc#${id}`,
+        cryptocurrencyId: cryptocurrencyId,
         limit: NEWS_PER_PAGE,
         offset: (currentPage - 1) * NEWS_PER_PAGE
     }
 
     const refetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
-        context: "endpoint2",
+        context: "newsGraphqlEndpoint",
         query: GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY,
         variables: getPaginatedNewsInput
     }
 
     const { data: newsData, loading: newsLoading, error: newsError } = useQuery(GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY, {
         variables: getPaginatedNewsInput,
-        context: {clientName: 'endpoint2'}
+        context: { clientName: "newsGraphqlEndpoint" }
     });
 
     const [cryptocurrency, setCryptocurrency] = useState<Cryptocurrency>();
     const [news, setNews] = useState<News[]>([]);
 
     useEffect(() => {
-        if (currencyData) {
-            setCryptocurrency(currencyData.cryptocurrency);
+        if (cryptocurrencyData) {
+            setCryptocurrency(cryptocurrencyData.cryptocurrency);
         }
-    }, [currencyLoading, currencyData]);
+    }, [cryptocurrencyLoading, cryptocurrencyData]);
     useEffect(() => {
         if (newsData) {
-            console.log(newsData.cryptoNews)
             setNews(newsData.cryptoNews);
             setTotalNumberOfCryptoNews(Math.ceil(newsData.cryptoNewsInfo.totalCount / NEWS_PER_PAGE));
         }
     }, [newsLoading, newsData]);
 
-    if (currencyLoading) {
+    if (cryptocurrencyLoading) {
         return (
             <div className="page-container">
                 <CircularProgress color="inherit" />
@@ -128,10 +126,10 @@ export default function CryptoInformation(props: any) {
         )
     }
 
-    if (currencyError) {
+    if (cryptocurrencyError) {
         return (
             <div className="page-container">
-                <Alert severity="error">{currencyError.message}</Alert>
+                <Alert severity="error">{cryptocurrencyError.message}</Alert>
             </div>
         )
     }
@@ -176,12 +174,12 @@ export default function CryptoInformation(props: any) {
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
                         {news ?
-                        (news.map((oneNews: News, index: number) => (
-                            <NewsCard news={oneNews} cryptocurrencyId={currencyId}
-                            queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                            queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                            refetchInput={refetchInput} key={index} />)))
-                        : null
+                            (news.map((oneNews: News, index: number) => (
+                                <NewsCard news={oneNews} cryptocurrencyId={cryptocurrencyId}
+                                    queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                                    queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                                    refetchInput={refetchInput} key={index} />)))
+                            : null
                         }
                     </div>
                     <Pagination className="pagination"
@@ -191,9 +189,9 @@ export default function CryptoInformation(props: any) {
                         page={currentPage}
                         variant="outlined"
                         onChange={(event, value) => setCurrentPage(value)} />
-                    <CreateUpdateNewsCardDialog 
-                        operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY} 
-                        refetchInput={refetchInput} cryptocurrencyId={currencyId}
+                    <CreateUpdateNewsCardDialog
+                        operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
+                        refetchInput={refetchInput} cryptocurrencyId={cryptocurrencyId}
                     />
                 </div>
             </div>

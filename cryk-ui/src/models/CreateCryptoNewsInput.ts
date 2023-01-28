@@ -1,5 +1,5 @@
 export interface CreateCryptoNewsInput {
-    title: string;
-    body: string;
-    about: string[];
+  title: string;
+  body: string;
+  about: string[];
 }

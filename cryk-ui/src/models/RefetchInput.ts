@@ -1,7 +1,7 @@
-import { DocumentNode } from "graphql"
+import { DocumentNode } from "graphql";
 
 export interface RefetchInput<T> {
-    context: string
-    query: DocumentNode
-    variables: T
+  context: string;
+  query: DocumentNode;
+  variables: T;
 }

@@ -1,5 +1,5 @@
 export interface GetPaginatedCryptoNewsInput {
-    cryptocurrencyId: string,
-    limit?: number,
-    offset?: number
+  cryptocurrencyId: string;
+  limit?: number;
+  offset?: number;
 }

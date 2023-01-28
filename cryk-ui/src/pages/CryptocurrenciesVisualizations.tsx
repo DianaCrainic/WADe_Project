@@ -67,7 +67,7 @@ export default function CryptocurrenciesVisualizations() {
         variables: {
             limit: MAX_INT,
         },
-        context: {clientName: 'endpoint1'}
+        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const [protectionSchemeStats, setProtectionSchemeStats] = useState<{ name: string, value: number }[]>();

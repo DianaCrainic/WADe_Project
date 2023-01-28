@@ -1,50 +1,60 @@
 import React, { useEffect } from "react";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import { Box, TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { object, string, TypeOf } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { DocumentNode } from "graphql";
 import { News } from "../models/News";
+import "./css/CreateUpdateNewsCardDialog.css";
+import { useMutation } from "@apollo/client";
+import { object, string, TypeOf } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RefetchInput } from "../models/RefetchInput";
+import { useForm, SubmitHandler } from "react-hook-form";
+import CloseIcon from "@mui/icons-material/Close";
+import { TransitionProps } from "@mui/material/transitions";
 import { CreateCryptoNewsInput } from "../models/CreateCryptoNewsInput";
 import { UpdateCryptoNewsInput } from "../models/UpdateCryptoNewsInput";
-import { useMutation } from "@apollo/client";
-import "./css/CreateUpdateNewsCardDialog.css";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
-import { RefetchInput } from "../models/RefetchInput";
+import { AppBar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Slide, TextField, Toolbar } from "@mui/material";
 
 const newsCardSchema = object({
-    title: string({
-      required_error: "News card title is required"
-    }).min(1, { message: "News card title is required" }),
-    body: string({
-      required_error: "News card body is required"
-    }).min(1, { message: "News card body is required" })
+  title: string({
+    required_error: "News card title is required"
+  }).min(1, { message: "News card title is required" }),
+  body: string({
+    required_error: "News card body is required"
+  }).min(1, { message: "News card body is required" })
 });
 
 type NewsCardInput = TypeOf<typeof newsCardSchema>;
 
-const Transition = React.forwardRef(function Transition(
+const Transition = React.forwardRef((
   props: TransitionProps & {
     children: React.ReactElement;
   },
   ref: React.Ref<unknown>,
-) {
+) => {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-  
-export default function CreateUpdateNewsCardDialog(props: {operationType: string, dialogQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput|GetPaginatedCryptocurrenciesInput>, cryptocurrencyId: string, news?: News}) {
-  const [open, setOpen] = React.useState(false);
+
+export default function CreateUpdateNewsCardDialog(props: { operationType: string, dialogQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput | GetPaginatedCryptocurrenciesInput>, cryptocurrencyId: string, news?: News }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const operationPropertiesMap = new Map();
+  operationPropertiesMap.set("create", {
+    "button-class": "news-card-create-button",
+    "button-size": "large",
+    "button-text": "Create News Card",
+    "dialog-title": "Create News Card",
+    "title-default-value": null,
+    "body-default-value": null
+  });
+  operationPropertiesMap.set("update", {
+    "button-class": "news-card-update-button",
+    "button-size": "medium",
+    "button-text": "Update",
+    "dialog-title": "Update News Card",
+    "title-default-value": props.news?.title,
+    "body-default-value": props.news?.body
+  });
 
   const {
     reset,
@@ -62,49 +72,49 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
   }, [isSubmitSuccessful, reset]);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setIsOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
   };
 
   const refetchInput = props.refetchInput
 
-  const [ createUpdateNewsEntry ] = useMutation(props.dialogQuery, {
-    context: {clientName: refetchInput.context},
-    refetchQueries: [ {query: refetchInput.query, context: {clientName: refetchInput.context}, variables: refetchInput.variables} ]
+  const [createUpdateNewsEntry] = useMutation(props.dialogQuery, {
+    context: { clientName: refetchInput.context },
+    refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
-    if (props.operationType === "create"){
-      const operationInput: CreateCryptoNewsInput = {title: values.title, body: values.body, about: [ props.cryptocurrencyId ]};
+    if (props.operationType === "create") {
+      const operationInput: CreateCryptoNewsInput = { title: values.title, body: values.body, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({
-        variables: {createCryptoNewsInput: operationInput}
-      }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
+        variables: { createCryptoNewsInput: operationInput }
+      }).catch((error) => { console.log(JSON.stringify(error, null, 2)) });
     }
     else {
-      const operationInput: UpdateCryptoNewsInput = {id: (props.news ? props.news.id : ""), title: values.title, body: values.body};
+      const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: values.title, body: values.body };
       createUpdateNewsEntry({
-        variables: {updateCryptoNewsInput: operationInput}
-      }).catch((e) => {console.log(JSON.stringify(e, null, 2))});
+        variables: { updateCryptoNewsInput: operationInput }
+      }).catch((error) => { console.log(JSON.stringify(error, null, 2)) });
     }
-    setOpen(false);
+    setIsOpen(false);
   };
 
   return (
     <div>
-      <Button 
-        className={props.operationType === "create" ? "news-card-create-button" : "news-card-update-button"}
+      <Button
+        className={operationPropertiesMap.get(props.operationType)["button-class"]}
         variant="outlined"
-        size={props.operationType === "create" ? "large" : "medium"}
+        size={operationPropertiesMap.get(props.operationType)["button-size"]}
         onClick={handleClickOpen}
       >
-        {props.operationType === "create" ? "Create News Card" : "Update"}
+        {operationPropertiesMap.get(props.operationType)["button-text"]}
       </Button>
       <Dialog
         fullScreen
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
@@ -117,30 +127,30 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
               aria-label="close"
               size="medium"
             >
-              <CloseIcon fontSize="large"/>
+              <CloseIcon fontSize="large" />
             </IconButton>
             <DialogTitle className="news-dialog-title">
-              {props.operationType === "create" ? "Create News Card" : "Update News Card"}
+              {operationPropertiesMap.get(props.operationType)["dialog-title"]}
             </DialogTitle>
           </Toolbar>
         </AppBar>
         <DialogContent className="news-dialog-content">
           <Box
-            className='form-wrapper'
-            component='form'
+            className="form-wrapper"
+            component="form"
             noValidate
-            autoComplete='off'
+            autoComplete="off"
             onSubmit={handleSubmit(onSubmitHandler)}
           >
             <TextField
               required
               fullWidth
-              label='Title'
-              type='text'
-              defaultValue={props.operationType === "create" ? null : props.news?.title}
-              error={!!errors['title']}
-              helperText={errors['title'] ? errors['title'].message : ''}
-              {...register('title')}
+              label="Title"
+              type="text"
+              defaultValue={operationPropertiesMap.get(props.operationType)["title-default-value"]}
+              error={!!errors["title"]}
+              helperText={errors["title"] ? errors["title"].message : ""}
+              {...register("title")}
             />
 
             <TextField
@@ -148,12 +158,12 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
               fullWidth
               multiline
               rows={10}
-              label='Body'
-              type='text'
-              defaultValue={props.operationType === "create" ? null : props.news?.body}
-              error={!!errors['body']}
-              helperText={errors['body'] ? errors['body'].message : ''}
-              {...register('body')}
+              label="Body"
+              type="text"
+              defaultValue={operationPropertiesMap.get(props.operationType)["body-default-value"]}
+              error={!!errors["body"]}
+              helperText={errors["body"] ? errors["body"].message : ""}
+              {...register("body")}
             />
 
             <Button
@@ -165,7 +175,7 @@ export default function CreateUpdateNewsCardDialog(props: {operationType: string
               Save
             </Button>
           </Box>
-        </DialogContent>          
+        </DialogContent>
       </Dialog>
     </div>
   );
