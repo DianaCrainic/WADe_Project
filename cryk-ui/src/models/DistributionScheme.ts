@@ -1,3 +1,3 @@
 export interface DistributionScheme {
-    description?: string;
+  description?: string;
 }

@@ -91,7 +91,8 @@ export default function Cryptocurrencies() {
         variables: {
             limit: CRYPTOS_PER_PAGE,
             offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        }
+        },
+        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);

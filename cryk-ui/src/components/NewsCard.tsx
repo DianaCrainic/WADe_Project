@@ -1,25 +1,38 @@
-import * as React from 'react';
+import * as React from "react";
 import "./css/NewsCard.css";
-import { News } from '../models/News';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
+import { News } from "../models/News";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import AlertDialog from "./AlertDialog";
+import { DocumentNode } from "graphql";
+import CreateUpdateNewsCardDialog from "./CreateUpdateNewsCardDialog";
+import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
+import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
+import { RefetchInput } from "../models/RefetchInput";
 
-export default function NewsCard(props: { news: News }) {
+export default function NewsCard(props: { news: News, cryptocurrencyId: string, queryUpdate: DocumentNode, queryDelete: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput | GetPaginatedCryptocurrenciesInput> }) {
     const news = props.news;
 
-    const newsName = "2 Bitcoin Mining Pools Command More Than 53% of BTC's Total Hashrate";
-    const contentPart = "Bitcoin's hashrate has jumped from the low 170 exahash per second (EH/s) recorded this week, to above the 300 exahash range after a number of bitcoin mining operations from Texas temporarily went offline on Dec. 25, 2022. Furthermore, three-day hashrate distribution statistics recorded on Dec. 29, 2022 indicate that two mining pools command more than 50% of the global hashrate."
+    const alertParams = { id: news.id, alertQuery: props.queryDelete, refetchInput: props.refetchInput };
 
     return (
         <Card className="news-card">
-            <CardContent>
-                <Typography className="card-title" color="textSecondary" gutterBottom>
-                    {newsName}
+            <CardContent vocab="http://schema.org/" typeof="NewsArticle" resource={news.id}>
+                <Typography className="card-title" color="textSecondary" gutterBottom property="http://schema.org/headline">
+                    {news.title}
                 </Typography>
-                <Typography variant="body1">
-                    {contentPart}
+                <Typography variant="body1" property="http://schema.org/articleBody">
+                    {news.body}
                 </Typography>
+            </CardContent>
+            <CardContent className="news-card-buttons-container">
+                <CreateUpdateNewsCardDialog
+                    operationType="update" dialogQuery={props.queryUpdate}
+                    refetchInput={props.refetchInput}
+                    cryptocurrencyId={props.cryptocurrencyId} news={news}
+                />
+                <AlertDialog {...alertParams} />
             </CardContent>
         </Card>
     );

@@ -1,38 +1,33 @@
 .page-container {
-  margin-top: 5%;
+    margin-top: 5%;
 }
 
 .cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-left: 5%;
-  margin-right: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .title {
-  margin-top: 2%;
+    margin-top: 2%;
 }
 
 .visualizations-button {
-  color: white !important;
-  border: 1px solid white !important;
+    color: white !important;
+    border: 1px solid white !important;
 }
 
 .crypto-description,
 .crypto-reward,
 .crypto-website {
-  font-size: 30px;
-  padding-left: 10%;
-  padding-right: 10%;
-}
-
-.news-title {
-  font-size: 50px;
-  padding-top: 4%;
+    font-size: 30px;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .pagination {
-  padding-bottom: 3%;
-  padding-top: 3%;
+    padding-bottom: 3%;
+    padding-top: 3%;
 }

@@ -66,7 +66,8 @@ export default function CryptocurrenciesVisualizations() {
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
             limit: MAX_INT,
-        }
+        },
+        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const [protectionSchemeStats, setProtectionSchemeStats] = useState<{ name: string, value: number }[]>();

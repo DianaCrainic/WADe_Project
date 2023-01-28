@@ -1,6 +1,6 @@
 import React from "react";
-import './App.css';
-import Cryptocurrencies from './pages/Cryptocurrencies';
+import "./App.css";
+import Cryptocurrencies from "./pages/Cryptocurrencies";
 import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
 import CustomNavbar from "./components/CustomNavbar";
 import CryptoInformation from "./pages/CryptoInformation";

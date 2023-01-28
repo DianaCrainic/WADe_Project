@@ -314,9 +314,7 @@ mutation CreateCryptoNews($cryptoNews: CreateCryptoNewsInput!) {
         id
         title
         body
-        about {
-            id
-        }
+        about
     }
 }
 ```
@@ -362,9 +360,7 @@ mutation UpdateCryptoNews($cryptoNews: UpdateCryptoNewsInput!) {
         id
         title
         body
-        about {
-            id
-        }
+        about
     }
 }
 ```
