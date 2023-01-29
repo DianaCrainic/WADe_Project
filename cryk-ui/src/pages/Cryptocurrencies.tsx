@@ -7,6 +7,9 @@ import { Cryptocurrency } from "../models/Cryptocurrency";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress, Pagination } from "@mui/material";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import CreateUpdateCryptocurrencyCardDialog from "../components/CreateUpdateCryptocurrencyCardDialog";
+import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
+import { RefetchInput } from "../models/RefetchInput";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -21,6 +24,43 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             totalCount
         }
     }
+`;
+
+const CREATE_CRYPTOCURRENCY = gql`
+mutation CreateCryptocurrency($createCryptocurrencyInput: CreateCryptocurrencyInput!) {
+    createCryptocurrency(createCryptocurrencyInput: $createCryptocurrencyInput) {
+        id
+        symbol
+        description
+        blockReward
+        totalCoins
+        source
+        website
+    }
+}
+`;
+
+const UPDATE_CRYPTOCURRENCY = gql`
+mutation UpdateCryptocurrency($updateCryptocurrencyInput: UpdateCryptocurrencyInput!) {
+    updateCryptocurrency(updateCryptocurrencyInput: $updateCryptocurrencyInput) {
+        id
+        symbol
+        description
+        blockReward
+        totalCoins
+        source
+        website
+    }
+}
+`;
+
+const DELETE_CRYPTOCURRENCY = gql`
+mutation RemoveCryptocurrencyById($id: ID!) {
+    removeCryptocurrency(id: $id) {
+        id
+        symbol
+    }
+}
 `;
 
 const CRYPTOS_PER_PAGE = 12;
@@ -87,13 +127,21 @@ export default function Cryptocurrencies() {
 
     const navigate = useNavigate();
 
+    const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
+        limit: CRYPTOS_PER_PAGE,
+        offset: (currentPage - 1) * CRYPTOS_PER_PAGE
+    }
+
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
-        variables: {
-            limit: CRYPTOS_PER_PAGE,
-            offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        },
+        variables: getPaginatedCryptocurrenciesInput,
         context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
+
+    const refetchInput: RefetchInput<GetPaginatedCryptocurrenciesInput> = {
+        context: "cryptocurrenciesGraphqlEndpoint",
+        query: GET_PAGINATED_CRYPTOCURRENCIES_QUERY,
+        variables: getPaginatedCryptocurrenciesInput
+    }
 
     const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
     const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
@@ -145,10 +193,21 @@ export default function Cryptocurrencies() {
                         </Button>
                     </div>
                     <div className="cards-container">
-                        {cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
-                            <CryptoCard cryptocurrency={cryptocurrency} key={index} />
-                        ))}
+                        {cryptocurrencies ?
+                            cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
+                                <CryptoCard cryptocurrency={cryptocurrency}
+                                    queryUpdate={UPDATE_CRYPTOCURRENCY}
+                                    queryDelete={DELETE_CRYPTOCURRENCY}
+                                    refetchInput={refetchInput} key={index} />))
+                            : null
+                        }
                     </div>
+
+                    <CreateUpdateCryptocurrencyCardDialog
+                        operationType="create" dialogQuery={CREATE_CRYPTOCURRENCY}
+                        refetchInput={refetchInput}
+                    />
+
                     <Pagination className="pagination"
                         count={totalNumberOfCryptocurrencies}
                         color="primary"

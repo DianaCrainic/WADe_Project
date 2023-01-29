@@ -9,9 +9,8 @@ import { DocumentNode } from "graphql";
 import { useMutation } from "@apollo/client";
 import "./css/AlertDialog.css";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
-import { RefetchInput } from "../models/RefetchInput";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
-
+import { RefetchInput } from "../models/RefetchInput";
 
 export default function AlertDialog(props: { id: string, alertQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput | GetPaginatedCryptocurrenciesInput> }) {
   const [isOpen, setIsOpen] = React.useState(false);
