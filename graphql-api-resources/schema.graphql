@@ -23,6 +23,10 @@ type Cryptocurrency {
     distributionScheme: DistributionScheme
 }
 
+type CryptocurrenciesInfo {
+	totalCount: Int
+}
+
 input CreateCryptocurrencyInput {
     symbol: String!
     description: String
@@ -53,6 +57,10 @@ type CryptoNews {
     about: [ID!]! 
 }
 
+type CryptoNewsInfo {
+	totalCount: Int
+}
+
 input CreateCryptoNewsInput {
     title: String!
     body: String!
@@ -69,8 +77,10 @@ input UpdateCryptoNewsInput {
 type Query {
     cryptocurrency(id: ID!): Cryptocurrency!
     cryptocurrencies(limit: Int, offset: Int): [Cryptocurrency!]!
+    cryptocurrenciesInfo: CryptocurrenciesInfo
 
-    cryptoNews(cryptocurrencyId: ID!): [CryptoNews!]!
+    cryptoNews(cryptocurrencyId: ID!, limit: Int, offset: Int): [CryptoNews!]!
+    cryptoNewsInfo(cryptocurrencyId: ID!): CryptoNewsInfo
 }
 
 type Mutation {
