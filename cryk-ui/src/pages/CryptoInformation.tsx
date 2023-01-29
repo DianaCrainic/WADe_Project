@@ -178,7 +178,6 @@ export default function CryptoInformation(props: any) {
         variables: {
             id: `http://purl.org/net/bel-epa/doacc#${id}`
         },
-        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const getPaginatedNewsInput: GetPaginatedCryptoNewsInput = {
@@ -188,18 +187,15 @@ export default function CryptoInformation(props: any) {
     }
 
     const getPaginatedNewsRefetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
-        context: "newsGraphqlEndpoint",
         query: GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY,
         variables: getPaginatedNewsInput
     }
 
     const { data: newsData, loading: newsLoading, error: newsError } = useQuery(GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY, {
         variables: getPaginatedNewsInput,
-        context: { clientName: "newsGraphqlEndpoint" }
     });
 
     const getCryptoByIdRefetchInput: RefetchInput<CryptocurrencyInput> = {
-        context: "cryptocurrenciesGraphqlEndpoint",
         query: GET_CRYPTOCURRENCY_BY_ID_QUERY,
         variables: {
             id: cryptocurrencyId

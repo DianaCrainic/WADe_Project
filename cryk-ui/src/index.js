@@ -2,23 +2,29 @@ import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { ApolloClient, ApolloLink, ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  HttpLink,
+} from "@apollo/client";
+import AppSyncConfig from "./aws-exports";
 
-const cryptocurrenciesGraphqlEndpoint = new HttpLink({
-  uri: "http://localhost:3000/graphql"
-})
-
-const newsGraphqlEndpoint = new HttpLink ({
-  uri: "http://localhost:4000/graphql"
-})
-
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "X-Api-Key": AppSyncConfig.aws_appsync_apiKey,
+    },
+  }
+});
+const httpLink = new HttpLink({
+  uri: AppSyncConfig.aws_appsync_graphqlEndpoint,
+});
 const graphqlClient = new ApolloClient({
-  link: ApolloLink.split(
-    operation => operation.getContext().clientName === "newsGraphqlEndpoint",
-    newsGraphqlEndpoint, //if above 
-    cryptocurrenciesGraphqlEndpoint
-  ),
-  cache: new InMemoryCache()
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.render(

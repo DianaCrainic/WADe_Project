@@ -209,11 +209,9 @@ export default function Cryptocurrencies() {
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: getPaginatedCryptocurrenciesInput,
-        context: { clientName: "cryptocurrenciesGraphqlEndpoint" }
     });
 
     const refetchInput: RefetchInput<GetPaginatedCryptocurrenciesInput> = {
-        context: "cryptocurrenciesGraphqlEndpoint",
         query: GET_PAGINATED_CRYPTOCURRENCIES_QUERY,
         variables: getPaginatedCryptocurrenciesInput
     }

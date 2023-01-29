@@ -18,8 +18,7 @@ export default function AlertDialog(props: { id: string, alertQuery: DocumentNod
   const refetchInput = props.refetchInput
 
   const [removeEntry] = useMutation(props.alertQuery, {
-    context: { clientName: refetchInput.context },
-    refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
+    refetchQueries: [{ query: refetchInput.query, variables: refetchInput.variables }]
   });
 
   const handleClickOpen = () => {

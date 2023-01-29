@@ -85,8 +85,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
   const refetchInput = props.refetchInput
 
   const [createUpdateNewsEntry] = useMutation(props.dialogQuery, {
-    context: { clientName: refetchInput.context },
-    refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
+    refetchQueries: [{ query: refetchInput.query, variables: refetchInput.variables }]
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
