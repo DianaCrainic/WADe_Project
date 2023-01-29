@@ -1,4 +1,5 @@
 import envs from "../envs";
+import crypto from "crypto";
 import ParsingClient from "sparql-http-client/ParsingClient";
 import { CreateCryptoNewsInput } from "../models/create-crypto-news-input";
 import { CryptoNews } from "../models/crypto-news";
@@ -57,7 +58,7 @@ const getCryptoNewsById = async (id: string): Promise<any> => {
     const cryptoNews: CryptoNews = result["@graph"][0] as CryptoNews;
     cryptoNews.id = cryptoNews.id.slice(1, -1);
     return cryptoNews;
-}
+};
 
 export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, limit = 10, offset = 0): Promise<CryptoNews[]> => {
     const jsonLdQuery = {
@@ -96,7 +97,7 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, 
     });
 
     return result["@graph"] as CryptoNews[];
-}
+};
 
 export const getCryptoNewsInfoForCryptocurrency = async (cryptocurrencyId: string): Promise<CryptoNewsInfo> => {
     const query = `
@@ -150,7 +151,7 @@ export const createCryptoNews = async (cryptoNews: CreateCryptoNewsInput): Promi
     await sparqlClient.query.update(query);
 
     return await getCryptoNewsById(id);
-}
+};
 
 export const updateCryptoNewsById = async (cryptoNews: UpdateCryptoNewsInput): Promise<CryptoNews> => {
     const id = cryptoNews.id;
@@ -222,7 +223,7 @@ export const updateCryptoNewsById = async (cryptoNews: UpdateCryptoNewsInput): P
     await sparqlClient.query.update(updateQuery);
 
     return await getCryptoNewsById(id);
-}
+};
 
 export const removeCryptoNewsById = async (id: string): Promise<CryptoNews> => {
     const newsArticle: CryptoNews = await getCryptoNewsById(id);
