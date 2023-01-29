@@ -1,23 +1,29 @@
-import express, { Application } from "express";
-import { graphqlHTTP } from "express-graphql";
-import envs from "./envs";
-import schema from "./graphql/schema";
-import mutations from "./graphql/mutations";
-import queries from "./graphql/queries";
-import cors from "cors";
+import { createCryptocurrency, getCryptocurrencies, getCryptocurrenciesInfo, getCryptocurrencyById, removeCryptocurrencyById, updateCryptocurrencyById } from "./services/cryptocurrency-service";
 
-const app: Application = express();
+export const handler = async (event: any, context: any, callback: any) => {
+    console.log("Received event {}", JSON.stringify(event, null, 2));
 
-app.use(express.json());
-app.use(cors({
-    origin: '*'
-}));
-app.use(envs.graphqlPath, graphqlHTTP({
-    schema: schema,
-    rootValue: {
-        ...queries, ...mutations,
-    },
-    graphiql: true
-}));
-
-app.listen(envs.port, () => console.log(`Express GraphQL server now running on port ${envs.port}`));
+    switch (event.field) {
+        case "cryptocurrency":
+            callback(null, await getCryptocurrencyById(event.arguments.id));
+            break;
+        case "cryptocurrencies":
+            callback(null, await getCryptocurrencies(event.arguments.limit, event.arguments.offset));
+            break;
+        case "cryptocurrenciesInfo":
+            callback(null, await getCryptocurrenciesInfo());
+            break;
+        case "createCryptocurrency":
+            callback(null, await createCryptocurrency(event.arguments.createCryptocurrencyInput));
+            break;
+        case "updateCryptocurrency":
+            callback(null, await updateCryptocurrencyById(event.arguments.updateCryptocurrencyInput));
+            break;
+        case "removeCryptocurrency":
+            callback(null, await removeCryptocurrencyById(event.arguments.id))
+            break;
+        default:
+            callback(`Unknown field "${event.field}, unable to resolve`, null);
+            break;
+    }
+};
