@@ -8,6 +8,7 @@ import { PieChart, Pie, Tooltip, CartesianGrid, Legend, ResponsiveContainer, XAx
 import "./css/CryptocurrenciesVisualizations.css";
 
 const COLORS = ["#0088FE", "#00C49F", "#FF8042"];
+const CRYPTOCURRENCIES_LOCAL_STORAGE_KEY = "cryptos";
 const MAX_INT = Math.pow(2, 31) - 1;
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -55,11 +56,11 @@ const getDateFoundedStatsForCryptocurrencies = (cryptocurrencies: Cryptocurrency
 export default function CryptocurrenciesVisualizations() {
     const title = "Visualizations";
 
-    // TODO: implement a caching mechanism for this query
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
         variables: {
             limit: MAX_INT,
-        }
+        },
+        skip: localStorage.getItem(CRYPTOCURRENCIES_LOCAL_STORAGE_KEY) != null
     });
 
     const [protectionSchemeStats, setProtectionSchemeStats] = useState<{ name: string, value: number }[]>();
@@ -72,7 +73,13 @@ export default function CryptocurrenciesVisualizations() {
 
     useEffect(() => {
         if (data) {
+            localStorage.setItem(CRYPTOCURRENCIES_LOCAL_STORAGE_KEY, JSON.stringify(data.cryptocurrencies));
             setCryptocurrenciesStats(data.cryptocurrencies);
+        } else {
+            const cryptocurrenciesFromLocalStorage = localStorage.getItem(CRYPTOCURRENCIES_LOCAL_STORAGE_KEY);
+            if (cryptocurrenciesFromLocalStorage != null) {
+                setCryptocurrenciesStats(JSON.parse(cryptocurrenciesFromLocalStorage));
+            }
         }
     }, [loading, data]);
 
