@@ -10,9 +10,10 @@ import { useMutation } from "@apollo/client";
 import "./css/AlertDialog.css";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
+import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
 import { RefetchInput } from "../models/RefetchInput";
 
-export default function AlertDialog(props: { id: string, alertQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput | GetPaginatedCryptocurrenciesInput> }) {
+export default function AlertDialog(props: { id: string, alertQuery: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptoNewsInput | GetPaginatedCryptocurrenciesInput | CryptocurrencyInput> }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const refetchInput = props.refetchInput
 

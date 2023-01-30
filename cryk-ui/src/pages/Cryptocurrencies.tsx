@@ -7,7 +7,7 @@ import { Cryptocurrency } from "../models/Cryptocurrency";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress, Pagination } from "@mui/material";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import CreateUpdateCryptocurrencyCardDialog from "../components/CreateUpdateCryptocurrencyCardDialog";
+import CreateCryptocurrencyCardDialog from "../components/CreateCryptocurrencyCardDialog";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
 
@@ -18,7 +18,10 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             symbol
             description
             blockTime
+            blockReward
             totalCoins
+            source
+            website
         }
         cryptocurrenciesInfo {
             totalCount
@@ -29,20 +32,6 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
 const CREATE_CRYPTOCURRENCY = gql`
 mutation CreateCryptocurrency($createCryptocurrencyInput: CreateCryptocurrencyInput!) {
     createCryptocurrency(createCryptocurrencyInput: $createCryptocurrencyInput) {
-        id
-        symbol
-        description
-        blockReward
-        totalCoins
-        source
-        website
-    }
-}
-`;
-
-const UPDATE_CRYPTOCURRENCY = gql`
-mutation UpdateCryptocurrency($updateCryptocurrencyInput: UpdateCryptocurrencyInput!) {
-    updateCryptocurrency(updateCryptocurrencyInput: $updateCryptocurrencyInput) {
         id
         symbol
         description
@@ -196,14 +185,13 @@ export default function Cryptocurrencies() {
                         {cryptocurrencies ?
                             cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
                                 <CryptoCard cryptocurrency={cryptocurrency}
-                                    queryUpdate={UPDATE_CRYPTOCURRENCY}
                                     queryDelete={DELETE_CRYPTOCURRENCY}
                                     refetchInput={refetchInput} key={index} />))
                             : null
                         }
                     </div>
 
-                    <CreateUpdateCryptocurrencyCardDialog
+                    <CreateCryptocurrencyCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />

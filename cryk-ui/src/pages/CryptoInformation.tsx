@@ -12,6 +12,8 @@ import { Alert, Button, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { RefetchInput } from "../models/RefetchInput";
 import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
+import UpdateCryptocurrencyCardDialog from "../components/UpdateCryptocurrencyCardDialog";
+import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -33,6 +35,20 @@ const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
             }
         }
     }
+`;
+
+const UPDATE_CRYPTOCURRENCY = gql`
+mutation UpdateCryptocurrency($updateCryptocurrencyInput: UpdateCryptocurrencyInput!) {
+    updateCryptocurrency(updateCryptocurrencyInput: $updateCryptocurrencyInput) {
+        id
+        symbol
+        description
+        blockReward
+        totalCoins
+        source
+        website
+    }
+}
 `;
 
 const NEWS_PER_PAGE = 5;
@@ -159,6 +175,14 @@ export default function CryptoInformation(props: any) {
         context: { clientName: "newsGraphqlEndpoint" }
     });
 
+    const refetchInput2: RefetchInput<CryptocurrencyInput> = {
+        context: "cryptocurrenciesGraphqlEndpoint",
+        query: GET_CRYPTOCURRENCY_BY_ID_QUERY,
+        variables: {
+            id: cryptocurrencyId
+        }
+    }
+
     const [cryptocurrency, setCryptocurrency] = useState<Cryptocurrency>();
     const [news, setNews] = useState<News[]>([]);
 
@@ -254,6 +278,12 @@ export default function CryptoInformation(props: any) {
                         <span>Total Coins: </span>
                         {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
+                    <UpdateCryptocurrencyCardDialog
+                        operationType="update" 
+                        queryUpdate={UPDATE_CRYPTOCURRENCY}
+                        refetchInput={refetchInput2}
+                        cryptocurrency={cryptocurrency}
+                    />
                     <Button
                         className="export-button"
                         variant="outlined"

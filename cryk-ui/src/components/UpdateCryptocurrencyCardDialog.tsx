@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DocumentNode } from "graphql";
 import "./css/CreateUpdateCryptocurrencyCardDialog.css";
 import { useMutation } from "@apollo/client";
@@ -8,16 +8,13 @@ import { RefetchInput } from "../models/RefetchInput";
 import { useForm, SubmitHandler } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
 import { TransitionProps } from "@mui/material/transitions";
-import { CreateCryptocurrencyInput } from "../models/CreateCryptocurrencyInput";
 import { UpdateCryptocurrencyInput } from "../models/UpdateCryptocurrencyInput";
-import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { AppBar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Slide, TextField, Toolbar } from "@mui/material";
 import { Cryptocurrency } from "../models/Cryptocurrency";
+import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
 
 const cryptocurrencyCardSchema = object({
-    symbol: string({
-        required_error: "Cryptocurrency card symbol is required"
-    }).min(1, { message: "Cryptocurrency card symbol is required" }),
+    symbol: string(),
     description: string({
         required_error: "Cryptocurrency card description is required"
     }).min(1, { message: "Cryptocurrency card description is required" }),
@@ -38,28 +35,16 @@ const Transition = React.forwardRef((
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateUpdateCryptocurrencyCardDialog(props: {
+export default function UpdateCryptocurrencyCardDialog(props: {
     operationType: string,
-    dialogQuery: DocumentNode,
-    refetchInput: RefetchInput<GetPaginatedCryptocurrenciesInput>,
+    queryUpdate: DocumentNode,
+    refetchInput: RefetchInput<CryptocurrencyInput>,
     cryptocurrency?: Cryptocurrency
 }) {
     const [isOpen, setIsOpen] = React.useState(false);
+    const refresh = () => window.location.reload()
 
     const operationPropertiesMap = new Map();
-    operationPropertiesMap.set("create", {
-        "button-class": "cryptocurrency-card-create-button",
-        "button-size": "large",
-        "button-text": "Create Cryptocurrency",
-        "dialog-symbol": "Create Cryptocurrency",
-        "disable-symbol-filling": false,
-        "symbol-default-value": null,
-        "description-default-value": null,
-        "blockReward-default-value": null,
-        "totalCoins-default-value": null,
-        "source-default-value": null,
-        "website-default-value": null
-    });
     operationPropertiesMap.set("update", {
         "button-class": "cryptocurrency-card-update-button",
         "button-size": "medium",
@@ -73,7 +58,7 @@ export default function CreateUpdateCryptocurrencyCardDialog(props: {
         "source-default-value": props.cryptocurrency?.source,
         "website-default-value": props.cryptocurrency?.website,
     });
-    
+
     const {
         reset,
         register,
@@ -99,38 +84,24 @@ export default function CreateUpdateCryptocurrencyCardDialog(props: {
 
     const refetchInput = props.refetchInput
 
-    const [createUpdateCryptocurrencyEntry] = useMutation(props.dialogQuery, {
+    const [updateCryptocurrencyEntry] = useMutation(props.queryUpdate, {
         context: { clientName: refetchInput.context },
         refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
     });
 
     const onSubmitHandler: SubmitHandler<CryptocurrencyCardInput> = (values) => {
-        if (props.operationType === "create") {
-            const operationInput: CreateCryptocurrencyInput = {
-                symbol: values.symbol,
-                description: values.description,
-                blockReward: values.blockReward,
-                totalCoins: values.totalCoins,
-                source: values.source,
-                website: values.website
-            };
-            createUpdateCryptocurrencyEntry({
-                variables: { createCryptocurrencyInput: operationInput }
-            }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
-        }
-        else {
-            const operationInput: UpdateCryptocurrencyInput = {
-                id: (props.cryptocurrency ? props.cryptocurrency.id : ""),
-                description: values.description,
-                blockReward: values.blockReward,
-                totalCoins: values.totalCoins,
-                source: values.source,
-                website: values.website
-            };
-            createUpdateCryptocurrencyEntry({
-                variables: { updateCryptocurrencyInput: operationInput }
-            }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
-        }
+        const operationInput: UpdateCryptocurrencyInput = {
+            id: (props.cryptocurrency ? props.cryptocurrency.id : ""),
+            description: values.description,
+            blockReward: values.blockReward,
+            totalCoins: values.totalCoins,
+            source: values.source,
+            website: values.website
+        };
+        updateCryptocurrencyEntry({
+            variables: { updateCryptocurrencyInput: operationInput }
+        }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
+
         setIsOpen(false);
     };
 
@@ -203,6 +174,26 @@ export default function CreateUpdateCryptocurrencyCardDialog(props: {
 
                         <TextField
                             fullWidth
+                            label="Website"
+                            type="text"
+                            defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
+                            error={!!errors["website"]}
+                            helperText={errors["website"] ? errors["website"].message : ""}
+                            {...register("website")}
+                        />
+
+                        <TextField
+                            fullWidth
+                            label="Source"
+                            type="text"
+                            defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
+                            error={!!errors["source"]}
+                            helperText={errors["source"] ? errors["source"].message : ""}
+                            {...register("source")}
+                        />
+
+                        <TextField
+                            fullWidth
                             label="Block Reward"
                             type="text"
                             defaultValue={operationPropertiesMap.get(props.operationType)["blockReward-default-value"]}
@@ -221,31 +212,12 @@ export default function CreateUpdateCryptocurrencyCardDialog(props: {
                             {...register("totalCoins")}
                         />
 
-                        <TextField
-                            fullWidth
-                            label="Source"
-                            type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
-                            error={!!errors["source"]}
-                            helperText={errors["source"] ? errors["source"].message : ""}
-                            {...register("source")}
-                        />
-
-                        <TextField
-                            fullWidth
-                            label="Website"
-                            type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
-                            error={!!errors["website"]}
-                            helperText={errors["website"] ? errors["website"].message : ""}
-                            {...register("website")}
-                        />
-
                         <Button
                             type="submit"
                             className="submit-form-button"
                             size="large"
                             variant="outlined"
+                            onClick={refresh}
                         >
                             Save
                         </Button>
