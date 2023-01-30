@@ -7,6 +7,7 @@ import CryptoInformation from "./pages/CryptoInformation";
 import CryptocurrenciesVisualizations from "./pages/CryptocurrenciesVisualizations";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const darkTheme = createTheme({
@@ -35,6 +36,9 @@ function App() {
             path="/cryptos/visualizations"
             element={<CryptocurrenciesVisualizations />}
           />
+          <Route
+            path="*"
+            element={<PageNotFound />} />
         </Routes>
       </Router>
     </ThemeProvider>

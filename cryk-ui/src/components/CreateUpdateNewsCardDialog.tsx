@@ -86,7 +86,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
   });
 
-  const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<NewsCardInput> = async (values) => {
     if (props.operationType === "create") {
       const operationInput: CreateCryptoNewsInput = { title: values.title, body: values.body, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({
@@ -99,6 +99,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
         variables: { updateCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
+
     setIsOpen(false);
   };
 

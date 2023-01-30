@@ -22,8 +22,8 @@ const cryptocurrencyCardSchema = object({
     }).min(1, { message: "Cryptocurrency card description is required" }),
     blockReward: string(),
     totalCoins: string(),
-    source: string(),
-    website: string()
+    source: string().url({ message: "Invalid url" }),
+    website: string().url({ message: "Invalid url" })
 });
 
 type CryptocurrencyCardInput = TypeOf<typeof cryptocurrencyCardSchema>;
@@ -176,7 +176,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Website"
-                            type="text"
+                            type="url"
                             defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
@@ -186,7 +186,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Source"
-                            type="text"
+                            type="url"
                             defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}

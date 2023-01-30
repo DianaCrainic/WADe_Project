@@ -279,10 +279,11 @@ export default function CryptoInformation(props: any) {
                         {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <UpdateCryptocurrencyCardDialog
-                        operationType="update" 
+                        operationType="update"
                         queryUpdate={UPDATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput2}
                         cryptocurrency={cryptocurrency}
+                        setCryptocurrency={setCryptocurrency}
                     />
                     <Button
                         className="export-button"
