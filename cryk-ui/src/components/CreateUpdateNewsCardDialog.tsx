@@ -66,7 +66,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
   });
 
   useEffect(() => {
-    if (isSubmitSuccessful) {
+    if (props.operationType === "create" && isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
@@ -86,7 +86,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
   });
 
-  const onSubmitHandler: SubmitHandler<NewsCardInput> = async (values) => {
+  const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
     if (props.operationType === "create") {
       const operationInput: CreateCryptoNewsInput = { title: values.title, body: values.body, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({

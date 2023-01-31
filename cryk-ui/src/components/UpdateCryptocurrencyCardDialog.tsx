@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { DocumentNode } from "graphql";
 import "./css/CreateUpdateCryptocurrencyCardDialog.css";
 import { useMutation } from "@apollo/client";
-import { object, string, TypeOf } from "zod";
+import { object, string, TypeOf, literal } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefetchInput } from "../models/RefetchInput";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -20,8 +20,8 @@ const cryptocurrencyCardSchema = object({
     }).min(1, { message: "Cryptocurrency card description is required" }),
     blockReward: string(),
     totalCoins: string(),
-    source: string().url({ message: "Invalid url" }),
-    website: string().url({ message: "Invalid url" })
+    source: string().url().optional().or(literal("")),
+    website: string().url().optional().or(literal(""))
 });
 
 type CryptocurrencyCardInput = TypeOf<typeof cryptocurrencyCardSchema>;
@@ -39,8 +39,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
     operationType: string,
     queryUpdate: DocumentNode,
     refetchInput: RefetchInput<CryptocurrencyInput>,
-    cryptocurrency?: Cryptocurrency,
-    setCryptocurrency: any
+    cryptocurrency?: Cryptocurrency
 }) {
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -60,19 +59,12 @@ export default function UpdateCryptocurrencyCardDialog(props: {
     });
 
     const {
-        reset,
         register,
         handleSubmit,
-        formState: { isSubmitSuccessful, errors },
+        formState: { errors },
     } = useForm<CryptocurrencyCardInput>({
         resolver: zodResolver(cryptocurrencyCardSchema),
     });
-
-    useEffect(() => {
-        if (isSubmitSuccessful) {
-            reset();
-        }
-    }, [isSubmitSuccessful, reset]);
 
     const handleClickOpen = () => {
         setIsOpen(true);
@@ -89,7 +81,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
         refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
     });
 
-    const onSubmitHandler: SubmitHandler<CryptocurrencyCardInput> = async (values) => {
+    const onSubmitHandler: SubmitHandler<CryptocurrencyCardInput> = (values) => {
         const operationInput: UpdateCryptocurrencyInput = {
             id: (props.cryptocurrency ? props.cryptocurrency.id : ""),
             description: values.description,
@@ -98,14 +90,9 @@ export default function UpdateCryptocurrencyCardDialog(props: {
             source: values.source,
             website: values.website
         };
-        var cryptoData = await updateCryptocurrencyEntry({
+        updateCryptocurrencyEntry({
             variables: { updateCryptocurrencyInput: operationInput }
         }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
-
-        console.log("data: ", cryptoData?.data?.updateCryptocurrency);
-
-        props.setCryptocurrency(cryptoData?.data?.updateCryptocurrency);
-
         setIsOpen(false);
     };
 
@@ -179,7 +166,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Website"
-                            type="url"
+                            type="text"
                             defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
@@ -189,7 +176,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Source"
-                            type="url"
+                            type="text"
                             defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}

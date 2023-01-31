@@ -181,7 +181,7 @@ export default function CryptoInformation(props: any) {
         variables: {
             id: cryptocurrencyId
         }
-    }
+    };
 
     const [cryptocurrency, setCryptocurrency] = useState<Cryptocurrency>();
     const [news, setNews] = useState<News[]>([]);
@@ -234,8 +234,8 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
-    const reward = Number(cryptocurrency?.blockReward) < 0 ? null : Number(cryptocurrency?.blockReward);
-    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null : Number(cryptocurrency?.totalCoins);
+    const reward = Number(cryptocurrency?.blockReward) < 0 ? -1 : Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins) < 0 ? -1 : Number(cryptocurrency?.totalCoins);
 
     return (
         <HelmetProvider>
@@ -270,20 +270,19 @@ export default function CryptoInformation(props: any) {
                         property="http://purl.org/net/bel-epa/doacc#block-reward"
                         typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Reward: </span>
-                        {reward ? <span>{reward}</span> : UNKNOWN_MESSAGE}
+                        {reward >= 0 ? <span>{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-coins"
                         property="http://purl.org/net/bel-epa/doacc#total-coins"
                         typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Total Coins: </span>
-                        {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
+                        {coins >= 0 ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <UpdateCryptocurrencyCardDialog
                         operationType="update"
                         queryUpdate={UPDATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput2}
                         cryptocurrency={cryptocurrency}
-                        setCryptocurrency={setCryptocurrency}
                     />
                     <Button
                         className="export-button"

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { DocumentNode } from "graphql";
 import "./css/CreateUpdateCryptocurrencyCardDialog.css";
 import { useMutation } from "@apollo/client";
-import { object, string, TypeOf } from "zod";
+import { object, string, TypeOf, literal } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefetchInput } from "../models/RefetchInput";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -22,8 +22,8 @@ const cryptocurrencyCardSchema = object({
     }).min(1, { message: "Cryptocurrency card description is required" }),
     blockReward: string(),
     totalCoins: string(),
-    source: string().url({ message: "Invalid url" }),
-    website: string().url({ message: "Invalid url" })
+    source: string().url().optional().or(literal("")),
+    website: string().url().optional().or(literal(""))
 });
 
 type CryptocurrencyCardInput = TypeOf<typeof cryptocurrencyCardSchema>;
@@ -56,8 +56,8 @@ export default function CreateCryptocurrencyCardDialog(props: {
         "description-default-value": null,
         "blockReward-default-value": null,
         "totalCoins-default-value": null,
-        "source-default-value": null,
-        "website-default-value": null
+        "source-default-value": undefined,
+        "website-default-value": undefined
     });
 
     const {
@@ -176,7 +176,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Website"
-                            type="url"
+                            type="text"
                             defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
@@ -186,7 +186,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                         <TextField
                             fullWidth
                             label="Source"
-                            type="url"
+                            type="text"
                             defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}
