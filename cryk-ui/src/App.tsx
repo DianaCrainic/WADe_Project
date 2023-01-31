@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import "./App.css";
 import Cryptocurrencies from "./pages/Cryptocurrencies";
 import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
@@ -8,8 +8,13 @@ import CryptocurrenciesVisualizations from "./pages/CryptocurrenciesVisualizatio
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import PageNotFound from "./pages/PageNotFound";
+import Footer from "./components/Footer";
+
+export const AuthContext = createContext(false);
 
 function App() {
+  const [isAdminAuth, setIsAdminAuth] = useState(false);
+
   const darkTheme = createTheme({
     palette: {
       mode: "dark"
@@ -20,27 +25,31 @@ function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Router>
-        <CustomNavbar />
-        <Routes>
-          <Route
-            path="/"
-            element={<Cryptocurrencies />}
-          />
-          <Route
-            path="/cryptos/:id"
-            element={<CryptoInformation id={id} />}
-          />
-          <Route
-            path="/cryptos/visualizations"
-            element={<CryptocurrenciesVisualizations />}
-          />
-          <Route
-            path="*"
-            element={<PageNotFound />} />
-        </Routes>
-      </Router>
+      <AuthContext.Provider value={isAdminAuth}>
+        <CssBaseline />
+        <Router>
+          <CustomNavbar />
+          <Routes>
+            <Route
+              path="/"
+              element={<Cryptocurrencies />}
+            />
+            <Route
+              path="/cryptos/:id"
+              element={<CryptoInformation id={id} />}
+            />
+            <Route
+              path="/cryptos/visualizations"
+              element={<CryptocurrenciesVisualizations />}
+            />
+            <Route
+              path="*"
+              element={<PageNotFound />}
+            />
+          </Routes>
+        </Router>
+        <Footer setIsAdminAuth={setIsAdminAuth} />
+      </AuthContext.Provider>
     </ThemeProvider>
   );
 }

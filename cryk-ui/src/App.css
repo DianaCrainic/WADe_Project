@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
-.App {
-  text-align: center;
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 * {

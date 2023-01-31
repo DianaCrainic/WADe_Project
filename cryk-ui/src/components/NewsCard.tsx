@@ -9,6 +9,8 @@ import CreateUpdateNewsCardDialog from "./CreateUpdateNewsCardDialog";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
+import { AuthContext } from "../App";
+import { useContext } from "react";
 
 const DEFAULT_HEIGHT = 102;
 
@@ -61,6 +63,7 @@ export default function NewsCard(props: {cardId: string, news: News, cryptocurre
         setHeightCurrent(isExpanded ? heightMin : heightMax);
         setIsExpanded((prev) => !prev);
     };
+    const isAdminAuth = useContext(AuthContext);
 
     return (
         <Card className="news-card">
@@ -82,14 +85,14 @@ export default function NewsCard(props: {cardId: string, news: News, cryptocurre
                     {news.source ? <a href={news.source} property="https://schema.org/url">{news.source}</a> : <span>Not stated</span>}
                 </Typography>
             </CardContent>
-            <CardContent className="news-card-buttons-container">
+            {isAdminAuth && <CardContent className="news-card-buttons-container">
                 <CreateUpdateNewsCardDialog
                     operationType="update" dialogQuery={props.queryUpdate}
                     refetchInput={props.refetchInput}
                     cryptocurrencyId={props.cryptocurrencyId} news={news}
                 />
                 <AlertDialog {...alertParams} />
-            </CardContent>
+            </CardContent>}
         </Card>
     );
 }

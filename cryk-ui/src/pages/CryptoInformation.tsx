@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import NewsCard from "../components/NewsCard";
 import CreateUpdateNewsCardDialog from "../components/CreateUpdateNewsCardDialog";
@@ -16,6 +16,7 @@ import UpdateCryptocurrencyCardDialog from "../components/UpdateCryptocurrencyCa
 import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
 import DCAChart from "../components/DCAChart";
 import { PriceData } from "../models/PriceData";
+import { AuthContext } from "../App";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -171,6 +172,8 @@ export default function CryptoInformation(props: any) {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfCryptoNews, setTotalNumberOfCryptoNews] = useState(Number);
 
+    const isAdminAuth = useContext(AuthContext);
+
     const { id } = useParams<string>();
     const cryptocurrencyId = `http://purl.org/net/bel-epa/doacc#${id}`;
 
@@ -324,11 +327,11 @@ export default function CryptoInformation(props: any) {
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} />}                 
-                    <CreateUpdateNewsCardDialog
+                        onChange={(_event, value) => setCurrentPage(value)} />}
+                    {isAdminAuth && <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                         refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
-                    />
+                    />}
                 </div>
             </>
         </HelmetProvider>
