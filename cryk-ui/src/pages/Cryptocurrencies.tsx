@@ -217,7 +217,7 @@ export default function Cryptocurrencies() {
     const refetchInput: RefetchInput<GetPaginatedCryptocurrenciesInput> = {
         query: GET_PAGINATED_CRYPTOCURRENCIES_QUERY,
         variables: getPaginatedCryptocurrenciesInput
-    }
+    };
 
     const handleKeyDown = (event: any) => {
         if (["Enter", "Tab", ","].includes(event.key)) {
