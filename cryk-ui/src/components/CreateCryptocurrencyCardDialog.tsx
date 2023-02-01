@@ -84,8 +84,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
     const refetchInput = props.refetchInput
 
     const [createCryptocurrencyEntry] = useMutation(props.dialogQuery, {
-        context: { clientName: refetchInput.context },
-        refetchQueries: [{ query: refetchInput.query, context: { clientName: refetchInput.context }, variables: refetchInput.variables }]
+        refetchQueries: [{ query: refetchInput.query, variables: refetchInput.variables }]
     });
 
     const onSubmitHandler: SubmitHandler<CryptocurrencyCardInput> = (values) => {

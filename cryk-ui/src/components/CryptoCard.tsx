@@ -11,11 +11,15 @@ import { DocumentNode } from "graphql";
 import { RefetchInput } from "../models/RefetchInput";
 import AlertDialog from "./AlertDialog";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
+import { AuthContext } from "../App";
+import { useContext } from "react";
 
 export default function CryptoCard(props: { cryptocurrency: Cryptocurrency, queryDelete: DocumentNode, refetchInput: RefetchInput<GetPaginatedCryptocurrenciesInput> }) {
   const cryptocurrency = props.cryptocurrency;
 
   const alertParams = { id: cryptocurrency.id, alertQuery: props.queryDelete, refetchInput: props.refetchInput };
+
+  const isAdminAuth = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -49,7 +53,7 @@ export default function CryptoCard(props: { cryptocurrency: Cryptocurrency, quer
         >
           Learn More
         </Button>
-        <AlertDialog {...alertParams} />
+        {isAdminAuth && <AlertDialog {...alertParams} />}
       </CardActions>
     </Card>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import CryptoCard from "../components/CryptoCard"
 import "./css/Cryptocurrencies.css";
@@ -23,6 +23,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
+import { AuthContext } from "../App";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [""], $sortOrder: String = "DESC", $startDate: String = "", $endDate: String = "") {
@@ -194,6 +195,8 @@ export default function Cryptocurrencies() {
     const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
     const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
     const [seachInputValue, setSeachInputValue] = useState("");
+
+    const isAdminAuth = useContext(AuthContext);
 
     const navigate = useNavigate();
     const classes = useStyles();
@@ -375,10 +378,10 @@ export default function Cryptocurrencies() {
                         }
                     </div>
 
-                    <CreateCryptocurrencyCardDialog
+                    {isAdminAuth && <CreateCryptocurrencyCardDialog
                         dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
-                    />
+                    />}
                     {cryptocurrencies.length !== 0 &&
                         <Pagination className="pagination"
                             count={totalNumberOfPages}

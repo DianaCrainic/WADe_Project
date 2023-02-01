@@ -295,11 +295,11 @@ export default function CryptoInformation(props: any) {
                         <span>Total Coins: </span>
                         {coins >= 0 ? <span property="http://purl.org/net/bel-epa/doacc#total-coins">{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
-                    <UpdateCryptocurrencyCardDialog
+                    {isAdminAuth && <UpdateCryptocurrencyCardDialog
                         queryUpdate={UPDATE_CRYPTOCURRENCY}
                         refetchInput={getCryptoByIdRefetchInput}
                         cryptocurrency={cryptocurrency}
-                    />
+                    />}
                     <Button
                         className="export-button"
                         variant="outlined"
