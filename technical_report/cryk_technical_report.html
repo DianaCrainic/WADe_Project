@@ -114,6 +114,8 @@
                         </ol>
                     </li>
                     <li class="nested"><a href="#ProjectProgress">Project progress</a></li>
+                    <li class="nested"><a href="#TechnicalAspectsAPI">Technical aspects concerning the implemented
+                            API</a></li>
                     <li class="nested"><a href="#UserGuide">User guide of the developed solution</a></li>
                     <li class="nested"><a href="#Video">Video Demonstration</a></li>
                     <li class="nested"><a href="#Conclusions">Conclusions</a></li>
@@ -602,6 +604,94 @@
                     In conclusion, the modular web system is on track to meet its original goals, requirements, and
                     projected outcome. The system is functional and user-friendly, providing a comprehensive and
                     up-to-date source of information about the cryptocurrency market.
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="TechnicalAspectsAPI">7 Technical aspects concerning the implemented API</h2>
+                <div>
+                    <p>The GraphQL API implemented within the application is provided through <a
+                            href="https://aws.amazon.com/appsync/">AWS AppSync</a>, a fully managed GraphQL API layer
+                        developed by
+                        Amazon Web Services. AppSync allows developers to build GraphQL APIs without much of the usual
+                        work; it handles
+                        the parsing and resolution of requests as well as connecting to other AWS services like AWS
+                        Lambda, NoSQL and
+                        SQL data stores, and HTTP APIs to gather backend data for the API.</p>
+                    <p>As far as the current project is concerned, any call to the API determines the invocation of a
+                        lambda function
+                        (either the function associated with the cryptocurrencies service, or the function associated
+                        with the news
+                        service) since each query or mutation is connected to a lambda function data source.</p>
+                    <p>The mapping between the lambda function that is called and the operation is the following:</p>
+                    <ul>
+                        <li><strong><em>cryptocurrencies-service-lamda</em></strong>
+                            <ul>
+                                <li>Queries
+                                    <ul>
+                                        <li><strong>cryptocurrency</strong> - used to retrieve details about a specific
+                                            cryptocurrency
+                                            (e.g. symbol, description, total coins)</li>
+                                        <li><strong>cryptocurrencies</strong> - used to retrieve details about multiple
+                                            cryptocurrencies
+                                        </li>
+                                        <li><strong>cryptocurrenciesInfo</strong> - used to additional information about
+                                            cryptocurrencies (e.g. how many they are)</li>
+                                    </ul>
+                                </li>
+                                <li>Mutations
+                                    <ul>
+                                        <li><strong>createCryptocurrency</strong> - used to create a new cryptocurrency
+                                        </li>
+                                        <li><strong>updateCryptocurrency</strong> - used to update an existing
+                                            cryptocurrency</li>
+                                        <li><strong>removeCryptocurrency</strong> - used to remove a cryptocurrency</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><strong><em>news-service-lambda</em></strong>
+                            <ul>
+                                <li>Queries
+                                    <ul>
+                                        <li><strong>cryptoNews</strong> - used to retrieve news associated with a
+                                            cryptocurrency</li>
+                                        <li><strong>cryptoNewsInfo</strong> - used to retrieve additional information
+                                            about news
+                                            associated with a cryptocurrency (e.g. how many they are)</li>
+                                    </ul>
+                                </li>
+                                <li>Mutations
+                                    <ul>
+                                        <li><strong>createCryptoNews</strong> - used to create a new piece of news
+                                            related to a
+                                            cryptocurrency</li>
+                                        <li><strong>updateCryptoNews</strong> - used to update an existing piece of news
+                                            related to a
+                                            cryptocurrency</li>
+                                        <li><strong>removeCryptoNews</strong> - used to remove a piece of news related
+                                            to a
+                                            cryptocurrency</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>This GraphQL API is called by the React application through <a
+                            href="https://www.apollographql.com/docs/react/">Apollo Client</a> library. Apollo Client is
+                        a comprehensive
+                        state management library for JavaScript that enables you to manage both local and remote data
+                        with GraphQL. Use
+                        it to fetch, cache, and modify application data, all while automatically updating your UI.</p>
+                    <p>The React application takes full advantage of the features brought by this library. For example,
+                        the
+                        cryptocurrencies displayed on an accessed page are cached. Therefore, upon subsequent access to
+                        the same page,
+                        the cryptocurrencies that will be displayed will not be obtained through a call to the API, but
+                        will be
+                        retrieved from the cache. Another example which is worth mentioning:
+                        the library will automatically call the API to get the updated state of the page when a
+                        cryptocurrency is
+                        deleted from the current page.</p>
                 </div>
             </section>
             <section role="doc-part">
