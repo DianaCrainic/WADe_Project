@@ -164,7 +164,7 @@ export default function CryptoInformation(props: any) {
         offset: (currentPage - 1) * NEWS_PER_PAGE
     }
 
-    const refetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
+    const getPaginatedNewsRefetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
         context: "newsGraphqlEndpoint",
         query: GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY,
         variables: getPaginatedNewsInput
@@ -175,7 +175,7 @@ export default function CryptoInformation(props: any) {
         context: { clientName: "newsGraphqlEndpoint" }
     });
 
-    const refetchInput2: RefetchInput<CryptocurrencyInput> = {
+    const getCryptoByIdRefetchInput: RefetchInput<CryptocurrencyInput> = {
         context: "cryptocurrenciesGraphqlEndpoint",
         query: GET_CRYPTOCURRENCY_BY_ID_QUERY,
         variables: {
@@ -281,7 +281,7 @@ export default function CryptoInformation(props: any) {
                     <UpdateCryptocurrencyCardDialog
                         operationType="update"
                         queryUpdate={UPDATE_CRYPTOCURRENCY}
-                        refetchInput={refetchInput2}
+                        refetchInput={getCryptoByIdRefetchInput}
                         cryptocurrency={cryptocurrency}
                     />
                     <Button
@@ -299,7 +299,7 @@ export default function CryptoInformation(props: any) {
                                 <NewsCard news={oneNews} cryptocurrencyId={cryptocurrencyId}
                                     queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                                     queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                                    refetchInput={refetchInput} key={index} />)))
+                                    refetchInput={getPaginatedNewsRefetchInput} key={index} />)))
                             : null
                         }
                     </div>
@@ -312,7 +312,7 @@ export default function CryptoInformation(props: any) {
                         onChange={(_event, value) => setCurrentPage(value)} />
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                        refetchInput={refetchInput} cryptocurrencyId={cryptocurrencyId}
+                        refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
                     />
                 </div>
             </div>

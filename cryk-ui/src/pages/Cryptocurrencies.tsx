@@ -17,11 +17,6 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             id
             symbol
             description
-            blockTime
-            blockReward
-            totalCoins
-            source
-            website
         }
         cryptocurrenciesInfo {
             totalCount
