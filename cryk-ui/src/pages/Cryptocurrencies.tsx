@@ -187,7 +187,7 @@ export default function Cryptocurrencies() {
                     </div>
 
                     <CreateCryptocurrencyCardDialog
-                        operationType="create" dialogQuery={CREATE_CRYPTOCURRENCY}
+                        dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />
 

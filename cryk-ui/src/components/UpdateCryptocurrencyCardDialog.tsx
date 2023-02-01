@@ -36,14 +36,13 @@ const Transition = React.forwardRef((
 });
 
 export default function UpdateCryptocurrencyCardDialog(props: {
-    operationType: string,
     queryUpdate: DocumentNode,
     refetchInput: RefetchInput<CryptocurrencyInput>,
     cryptocurrency?: Cryptocurrency
 }) {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const operationPropertiesMap = {
+    const operationProperties = {
         "button-class": "cryptocurrency-card-update-button",
         "button-size": "medium" as const,
         "button-text": "Update",
@@ -98,12 +97,12 @@ export default function UpdateCryptocurrencyCardDialog(props: {
     return (
         <div>
             <Button
-                className={operationPropertiesMap["button-class"]}
+                className={operationProperties["button-class"]}
                 variant="outlined"
-                size={operationPropertiesMap["button-size"]}
+                size={operationProperties["button-size"]}
                 onClick={handleClickOpen}
             >
-                {operationPropertiesMap["button-text"]}
+                {operationProperties["button-text"]}
             </Button>
             <Dialog
                 fullScreen
@@ -123,7 +122,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             <CloseIcon fontSize="large" />
                         </IconButton>
                         <DialogTitle className="cryptocurrency-dialog-title">
-                            {operationPropertiesMap["dialog-symbol"]}
+                            {operationProperties["dialog-symbol"]}
                         </DialogTitle>
                     </Toolbar>
                 </AppBar>
@@ -140,12 +139,12 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Symbol"
                             type="text"
-                            defaultValue={operationPropertiesMap["symbol-default-value"]}
+                            defaultValue={operationProperties["symbol-default-value"]}
                             error={!!errors["symbol"]}
                             helperText={errors["symbol"] ? errors["symbol"].message : ""}
                             {...register("symbol")}
                             InputProps={{
-                                readOnly: operationPropertiesMap["disable-symbol-filling"]
+                                readOnly: operationProperties["disable-symbol-filling"]
                             }}
                         />
 
@@ -156,7 +155,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             rows={10}
                             label="Description"
                             type="text"
-                            defaultValue={operationPropertiesMap["description-default-value"]}
+                            defaultValue={operationProperties["description-default-value"]}
                             error={!!errors["description"]}
                             helperText={errors["description"] ? errors["description"].message : ""}
                             {...register("description")}
@@ -166,7 +165,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Website"
                             type="text"
-                            defaultValue={operationPropertiesMap["website-default-value"]}
+                            defaultValue={operationProperties["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
                             {...register("website")}
@@ -176,7 +175,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Source"
                             type="text"
-                            defaultValue={operationPropertiesMap["source-default-value"]}
+                            defaultValue={operationProperties["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}
                             {...register("source")}
@@ -186,7 +185,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Block Reward"
                             type="text"
-                            defaultValue={operationPropertiesMap["blockReward-default-value"]}
+                            defaultValue={operationProperties["blockReward-default-value"]}
                             error={!!errors["blockReward"]}
                             helperText={errors["blockReward"] ? errors["blockReward"].message : ""}
                             {...register("blockReward")}
@@ -196,7 +195,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Total Coins"
                             type="text"
-                            defaultValue={operationPropertiesMap["totalCoins-default-value"]}
+                            defaultValue={operationProperties["totalCoins-default-value"]}
                             error={!!errors["totalCoins"]}
                             helperText={errors["totalCoins"] ? errors["totalCoins"].message : ""}
                             {...register("totalCoins")}
