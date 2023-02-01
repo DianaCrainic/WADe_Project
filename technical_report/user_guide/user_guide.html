@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <title>cryk (cryptocurrency knowledge manager)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles_user_guide.css" />
+</head>
+
+<body>
+    <main>
+        <article resource="#" typeof="schema:ScholarlyArticle">
+            <header>
+                <h1 property="schema:name">cryk (cryptocurrency knowledge manager)</h1>
+                <p role="doc-subtitle" property="schema:alternateName">
+                    - user guide -
+                </p>
+            </header>
+            <meta property="schema:accessibilityFeature" content="alternativeText">
+            <meta property="schema:accessibilityHazard" content="none">
+            <div role="contentinfo">
+                <section typeof="sa:AuthorsList">
+                    <h2>Team - <strong>Tech Army</strong></h2>
+                    <h2>Members </h2>
+                    <ul id="team_list">
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Ciprian">
+                                <meta property="schema:familyName" content="Daniș">
+                                <span property="schema:name">Ciprian Daniș</span>
+                            </span>
+                        </li>
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Diana">
+                                <meta property="schema:additionalName" content="Isabela">
+                                <meta property="schema:familyName" content="Crainic">
+                                <span property="schema:name">Diana-Isabela Crainic</span>
+                            </span>
+                        </li>
+                        <li typeof="sa:ContributorRole" property="schema:author" resource="#">
+                            <span typeof="schema:Person">
+                                <meta property="schema:givenName" content="Ioan">
+                                <meta property="schema:familyName" content="Sava">
+                                <span property="schema:name">Ioan Sava</span>
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+            <section role="doc-toc">
+                <h2>Table of Contents</h2>
+                <ol class="nested" role="directory">
+                    <li class="nested"><a href="#Introduction">Introduction</a>
+                    </li>
+                    <li class="nested"><a href="#UseCases">Use Cases</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#LoginCreateCrypto">Login and Create a Cryptocurrency</a></li>
+                            <li class="nested"><a href="#UpdateDeleteCrypto">Update and Delete a Cryptocurrency</a></li>
+                            <li class="nested"><a href="#ExportCrypto">Export a Cryptocurrency in JSON-LD Format</a>
+                            </li>
+                            <li class="nested"><a href="#AddUpdateDeleteNews">Add, Update, Delete News for a
+                                    Cryptocurrency</a></li>
+                            <li class="nested"><a href="#CryptoCharts">View the Charts for the Cryptocurrencies from the
+                                    Current Page</a></li>
+                            <li class="nested"><a href="#Visualizations">Access the Visualizations page</a></li>
+                        </ol>
+                    </li>
+                </ol>
+
+            </section>
+
+            <section role="doc-introduction">
+                <h2 id="Introduction">1 Introduction</h2>
+                <div>
+                    <p>
+                        This user guide is designed to help you get started with the Cryptocurrency Knowledge Management
+                        System, a modular web system for managing and expressing knowledge about cryptocurrencies and
+                        their metadata. The system queries information via a SPARQL endpoint and provides it in
+                        HTML+RDFa and JSON-LD formats, as well as multiple visualizations.
+                    </p>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="UseCases">2 Use cases</h2>
+                <div>
+                    <section>
+                        <h3 id="LoginCreateCrypto">2.1 Login and Create a Cryptocurrency</h3>
+                        <p>Access the Cryptocurrencies page: </p>
+                        <img class="use-case-1" src="./images/use-case-1/0.png" alt="Access Page">
+
+                        <p>In order to create a cryptocurrency, the authentication is needed. Only the admin user can
+                            perform mutations on the cryptocurrencies. The <b>Login as administrator</b> button is
+                            located in the bottom of the page: </p>
+                        <img class="use-case-1" src="./images/use-case-1/1.png" alt="Login button">
+
+                        <p>Enter the credentials received on the email:</p>
+                        <img class="use-case-1" src="./images/use-case-1/2.png" alt="Credentials">
+
+                        <p>Now, you can create your own cryptocurrency! Press the <b>Create Cryptocurrency</b> button in
+                            order to create one.</p>
+                        <img class="use-case-1" src="./images/use-case-1/3.png" alt="Create">
+
+                        <p>Please fill in the fields in the form.
+                        <ol>
+                            <li><b>symbol</b> represents the name of the cryptocurrency</li>
+                            <li><b>description</b> is about some words about the cryptocurrency</li>
+                            <li><b>website</b> represents the website of the cryptocurrency</li>
+                            <li><b>source</b> represents the source of the cryptocurrency</li>
+                            <li><b>block reward</b> represents the block reward of the cryptocurrency</li>
+                            <li><b>total coins</b> represents the total coins of the cryptocurrency</li>
+                        </ol>
+                        Next, once the fields are filled, press the button <b>Save</b> in order to finally create the
+                        cryptocurrency.
+                        </p>
+                        <img class="use-case-1" src="./images/use-case-1/4.png" alt="Completion">
+
+                        <p>An example of a filled form:</p>
+                        <img class="use-case-1" src="./images/use-case-1/5.png" alt="Example">
+
+                        <p>Your very first cryptocurrency is displayed in the list of the cryptocurrencies!</p>
+                        <img class="use-case-1" src="./images/use-case-1/6.png" alt="Crypto created">
+                    </section>
+                    <section>
+                        <h3 id="UpdateDeleteCrypto">2.2 Update and Delete a Cryptocurrency</h3>
+                        <p>In order to update a cryptocurrency, you need to be authenticated as administrator. If you
+                            need information about the login process, please read the previous section. Once you are
+                            logged in, to update a cryptocurrency choose one and press the button <b>Learn more</b>:</p>
+                        <img class="use-case-2" src="./images/use-case-2/1.png" alt="Crypto to update">
+
+                        <p>A new page with more information about the chosen cryptocurrency will be opened. Press the
+                            button <b>Update</b>:</p>
+                        <img class="use-case-2" src="./images/use-case-2/2.png" alt="Crypto information">
+
+                        <p>Please update the information that you want about the cryptocurrency and the press
+                            <b>Save</b>:
+                        </p>
+                        <img class="use-case-2" src="./images/use-case-2/3.png" alt="Update info">
+
+                        <p>Now, you can see the updated content of the cryptocurrency:</p>
+                        <img class="use-case-2" src="./images/use-case-2/4.png" alt="Crypto Updated">
+
+                        <p>In order to delete a cryptocurrency, you also need to be authenticated as administrator.
+                            Please access the main page with the list of cryptocurrencies, choose the one that you want
+                            to delete and press the <b>Delete</b> button:</p>
+                        <img class="use-case-2" src="./images/use-case-2/5.png" alt="Crypto created">
+
+                        <p>A dialog will open which will ask if you are sure about the deletion. Press <b>Agree</b> if
+                            you want to delete the cryptocurrency.</p>
+                        <img class="use-case-2" src="./images/use-case-2/6.png" alt="Crypto created">
+                    </section>
+                    <section>
+                        <h3 id="ExportCrypto">2.3 Export a Cryptocurrency in JSON-LD Format</h3>
+                        <p>
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="AddUpdateDeleteNews">2.4 Add, Update, Delete News for a
+                            Cryptocurrency</h3>
+                        <p>
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="CryptoCharts">2.5 View the Charts for the Cryptocurrencies from the
+                            Current Page</h3>
+                        <p>
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="Visualizations">2.6 Access the Visualizations page</h3>
+                        <p>
+                        </p>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="">3 </h2>
+
+            </section>
+            <section role="doc-part">
+                <h2 id="">4 </h2>
+
+            </section>
+            <section role="doc-part">
+                <h2 id="">5 </h2>
+
+            </section>
+            <section role="doc-part">
+                <h2 id="">6</h2>
+
+            </section>
+            <section role="doc-part">
+                <h2 id="">7</h2>
+
+            </section>
+            <section role="doc-part">
+                <h2 id="">8</h2>
+
+            </section>
+            <section role="doc-conclusion">
+                <h2 id="Conclusions">12 Conclusions</h2>
+
+            </section>
+
+            <section role="doc-bibliography">
+                <h2 id="References">7 References</h2>
+                <ul>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html"
+                        property="schema:citation" id="course-site">
+                        <cite property="schema:name">
+                            <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application
+                                Development - linked data & knowledge management on Web</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://nodejs.org/en/"
+                        property="schema:citation" id="nodejs">
+                        <cite property="schema:name">
+                            <a href="https://nodejs.org/en/">Node.js</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://reactjs.org/"
+                        property="schema:citation" id="react">
+                        <cite property="schema:name">
+                            <a href="https://reactjs.org/">React</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/neptune/"
+                        property="schema:citation" id="neptune">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/lambda/"
+                        property="schema:citation" id="lambda">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/appsync/"
+                        property="schema:citation" id="appsync">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/s3/"
+                        property="schema:citation" id="s3">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/s3/">Amazon S3</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cloudfront/"
+                        property="schema:citation" id="cloudfront">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cognito/"
+                        property="schema:citation" id="cognito">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://doacc.github.io/index.html"
+                        property="schema:citation" id="doacc">
+                        <cite property="schema:name">
+                            <a href="https://doacc.github.io/index.html">DOACC</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://rdf.js.org/"
+                        property="schema:citation" id="rdf.js">
+                        <cite property="schema:name">
+                            <a href="https://rdf.js.org/">RDF JavaScript Libraries</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://github.com/rubensworks/graphql-to-sparql.js" property="schema:citation"
+                        id="graphql-to-sparql">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://github.com/rubensworks/sparqlxml-parse.js" property="schema:citation"
+                        id="sparql-xml-parser">
+                        <cite property="schema:name">
+                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL/XML Parser</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://aws.amazon.com/sdk-for-javascript/" property="schema:citation"
+                        id="aws-sdk-js">
+                        <cite property="schema:name">
+                            <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://www.npmjs.com/package/react-apollo" property="schema:citation"
+                        id="react-apollo">
+                        <cite property="schema:name">
+                            <a href="https://www.npmjs.com/package/react-apollo">React Apollo</a>
+                        </cite>
+                    </li>
+                </ul>
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
