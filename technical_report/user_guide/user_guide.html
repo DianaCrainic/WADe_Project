@@ -54,6 +54,15 @@
                 <ol class="nested" role="directory">
                     <li class="nested"><a href="#Introduction">Introduction</a>
                     </li>
+                    <li class="nested"><a href="#GettingStarted">Getting Started</a>
+                        <ol class="nested">
+                            <li class="nested"><a href="#Access">Access the application</a></li>
+                            <li class="nested"><a href="#DataFormats">Data Formats</a></li>
+                            <li class="nested"><a href="#Visualizations">Visualizations</a></li>
+                        </ol>
+                    </li>
+                    <li class="nested"><a href="#Roles">User Roles</a>
+                    </li>
                     <li class="nested"><a href="#UseCases">Use Cases</a>
                         <ol class="nested">
                             <li class="nested"><a href="#LoginCreateCrypto">Login and Create a Cryptocurrency</a></li>
@@ -64,9 +73,11 @@
                                     Cryptocurrency</a></li>
                             <li class="nested"><a href="#CryptoCharts">View the Charts for the Cryptocurrencies from the
                                     Current Page</a></li>
-                            <li class="nested"><a href="#Visualizations">Access the Visualizations page</a></li>
+                            <li class="nested"><a href="#Visualizations">Access the Visualizations Page</a></li>
                         </ol>
                     </li>
+                    <li class="nested"><a href="#Conclusions">Conclusions</a>
+
                 </ol>
 
             </section>
@@ -83,10 +94,88 @@
                 </div>
             </section>
             <section role="doc-part">
-                <h2 id="UseCases">2 Use cases</h2>
+                <h2 id="Introduction">2 Getting Started</h2>
                 <div>
                     <section>
-                        <h3 id="LoginCreateCrypto">2.1 Login and Create a Cryptocurrency</h3>
+                        <h3 id="Access">2.1 Access the application</h3>
+                        <p>The applications can be accessed in the following ways:
+                        <ol>
+                            <li>
+                                <p>Through the link:</p>
+                                <a href="http://wade-cryk-ui.s3-website-us-east-1.amazonaws.com/">http://wade-cryk-ui.s3-website-us-east-1.amazonaws.com/
+                                </a>
+                            </li>
+                            <li>
+                                <p>Using the short version of the link:</p>
+                                <a href="https://tinyurl.com/cryk-main-page">https://tinyurl.com/cryk-main-page</a>
+                            </li>
+                            <li>
+                                <p>Using the QR code, by scanning with you mobile device:</p>
+                                <img class="qr" src="./images/main-page-qr-code.png" alt="QR">
+                            </li>
+                        </ol>
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="DataFormats">2.2 Data Formats</h3>
+                        <p>Exposed information are available in the following formats:
+                        <ol>
+                            <li>HTML+RDFa</li>
+                            <li>JSON-LD</li>
+                        </ol>
+
+                        </p>
+                    </section>
+                    <section>
+                        <h3 id="Visualizations">2.3 Visualizations</h3>
+                        <p>The system provides multiple visualizations of the data to help you understand the
+                            relationships between cryptocurrencies and their metadata.
+                            To view the visualization page, click on the <b>Visualizations</b> button at the top of the
+                            page, on which 2 charts will be shown for all the cryptocurrencies. The first one is a
+                            pie-chart, representing the <b>Number of cryptocurrencies by protection scheme</b>, and the
+                            second one is a time series chart for the <b>Number of cryptocurrencies by founded date</b>.
+                            Also, if you want to see the bar-charts with the
+                            information about the cryptocurrencies of each page, scroll down, and you will see one for
+                            the <b>Total coins</b> property and one for the <b>Block time</b> property.
+                        </p>
+                    </section>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Introduction">3 User roles</h2>
+                <div>
+                    <p>
+                        There are two types of user in this application: the unauthenticated user and the administrator.
+                    <p>
+                        The unauthenticated user can:
+                    </p>
+                    <ul>
+                        <li>view the cryptocurrencies paginated list</li>
+                        <li>access the information rearding a cryptocurrency</li>
+                        <li>export the cryptocurrencyin JSON-LD format</li>
+                        <li>view the news regarding the cryptocurrency</li>
+                        <li>access the page with the visualizations</li>
+                    </ul>
+                    <p>
+                        The administrator can do the following actions, in addition to those that the unauthenticated
+                        user can do:
+                    </p>
+                    <ul>
+                        <li>create a cryptocurrency</li>
+                        <li>update a cryptocurrency</li>
+                        <li>delete a cryptocurrency</li>
+                        <li>create a piece of news</li>
+                        <li>update a piece of news</li>
+                        <li>delete a piece of news</li>
+                    </ul>
+                    </p>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="UseCases">4 Use cases</h2>
+                <div>
+                    <section>
+                        <h3 id="LoginCreateCrypto">4.1 Login and Create a Cryptocurrency</h3>
                         <p>Access the Cryptocurrencies page: </p>
                         <img class="use-case-1" src="./images/use-case-1/0.png" alt="Access Page">
 
@@ -123,7 +212,7 @@
                         <img class="use-case-1" src="./images/use-case-1/6.png" alt="Crypto created">
                     </section>
                     <section>
-                        <h3 id="UpdateDeleteCrypto">2.2 Update and Delete a Cryptocurrency</h3>
+                        <h3 id="UpdateDeleteCrypto">4.2 Update and Delete a Cryptocurrency</h3>
                         <p>In order to update a cryptocurrency, you need to be authenticated as administrator. If you
                             need information about the login process, please read the previous section. Once you are
                             logged in, to update a cryptocurrency choose one and press the <b>Learn more</b> button:</p>
@@ -152,7 +241,7 @@
                         <img class="use-case-2" src="./images/use-case-2/6.png" alt="Agree to delete">
                     </section>
                     <section>
-                        <h3 id="ExportCrypto">2.3 Export a Cryptocurrency in JSON-LD Format</h3>
+                        <h3 id="ExportCrypto">4.3 Export a Cryptocurrency in JSON-LD Format</h3>
                         <p>An user and also the administrator can export a crypto in JSON-LD format. Firstly, choose the
                             cryptocurrency that you want to export, then press <b>Learn more</b>.</p>
                         <img class="use-case-3" src="./images/use-case-3/1.png" alt="Learn more">
@@ -167,7 +256,7 @@
                         <img class="use-case-3" src="./images/use-case-3/4.png" alt="Crypto created">
                     </section>
                     <section>
-                        <h3 id="AddUpdateDeleteNews">2.4 Add, Update, Delete News for a
+                        <h3 id="AddUpdateDeleteNews">4.4 Add, Update, Delete News for a
                             Cryptocurrency</h3>
                         <p>In order to add, update, or delete news for a cryptocurrency, you need to be authenticated as
                             administrator. If you
@@ -215,7 +304,7 @@
                         <img class="use-case-4" src="./images/use-case-4/10.png" alt="News deletion complete">
                     </section>
                     <section>
-                        <h3 id="CryptoCharts">2.5 View the Charts for the Cryptocurrencies from the
+                        <h3 id="CryptoCharts">4.5 View the Charts for the Cryptocurrencies from the
                             Current Page</h3>
                         <p>Both the the unauthenticated user and the administrator can view the Charts for the
                             Cryptocurrencies from the
@@ -223,7 +312,7 @@
                         <img class="use-case-5" src="./images/use-case-5/1.png" alt="Crypto charts">
                     </section>
                     <section>
-                        <h3 id="Visualizations">2.6 Access the Visualizations page</h3>
+                        <h3 id="Visualizations">4.6 Access the Visualizations page</h3>
                         <p>Both the the unauthenticated user and the administrator can access the Visualizations page
                             containing the pie chart for the <b>Number of cryptocurrencies
                                 by protection scheme</b> and the time series charts for the <b>Number of
@@ -234,37 +323,25 @@
                     </section>
                 </div>
             </section>
-            <section role="doc-part">
-                <h2 id="">3 </h2>
-
-            </section>
-            <section role="doc-part">
-                <h2 id="">4 </h2>
-
-            </section>
-            <section role="doc-part">
-                <h2 id="">5 </h2>
-
-            </section>
-            <section role="doc-part">
-                <h2 id="">6</h2>
-
-            </section>
-            <section role="doc-part">
-                <h2 id="">7</h2>
-
-            </section>
-            <section role="doc-part">
-                <h2 id="">8</h2>
-
-            </section>
             <section role="doc-conclusion">
-                <h2 id="Conclusions">12 Conclusions</h2>
+                <h2 id="Conclusions">5 Conclusions</h2>
+                <p>
+                    In conclusion, the Cryptocurrency Knowledge Management System is a versatile and user-friendly
+                    platform for managing and expressing knowledge about cryptocurrencies and their metadata. The
+                    multiple visualizations provided within
+                    the system offer a unique and insightful way to understand and analyze the relationships between
+                    cryptocurrencies and their metadata.
+                </p>
+                <p>
+                    Hope that this user guide has been helpful in getting you started with the application. If you have
+                    any questions or require further
+                    assistance, please don't hesitate to reach out.
+                </p>
 
             </section>
 
             <section role="doc-bibliography">
-                <h2 id="References">7 References</h2>
+                <h2 id="References">6 References</h2>
                 <ul>
                     <li typeof="schema:WebPage" role="doc-biblioentry"
                         resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html"
@@ -272,94 +349,6 @@
                         <cite property="schema:name">
                             <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html">Web Application
                                 Development - linked data & knowledge management on Web</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://nodejs.org/en/"
-                        property="schema:citation" id="nodejs">
-                        <cite property="schema:name">
-                            <a href="https://nodejs.org/en/">Node.js</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://reactjs.org/"
-                        property="schema:citation" id="react">
-                        <cite property="schema:name">
-                            <a href="https://reactjs.org/">React</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/neptune/"
-                        property="schema:citation" id="neptune">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/lambda/"
-                        property="schema:citation" id="lambda">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/appsync/"
-                        property="schema:citation" id="appsync">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/appsync/">AWS AppSync</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/s3/"
-                        property="schema:citation" id="s3">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/s3/">Amazon S3</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cloudfront/"
-                        property="schema:citation" id="cloudfront">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/cloudfront/">Amazon CloudFront</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://aws.amazon.com/cognito/"
-                        property="schema:citation" id="cognito">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://doacc.github.io/index.html"
-                        property="schema:citation" id="doacc">
-                        <cite property="schema:name">
-                            <a href="https://doacc.github.io/index.html">DOACC</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://rdf.js.org/"
-                        property="schema:citation" id="rdf.js">
-                        <cite property="schema:name">
-                            <a href="https://rdf.js.org/">RDF JavaScript Libraries</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry"
-                        resource="https://github.com/rubensworks/graphql-to-sparql.js" property="schema:citation"
-                        id="graphql-to-sparql">
-                        <cite property="schema:name">
-                            <a href="https://github.com/rubensworks/graphql-to-sparql.js">GraphQL to SPARQL</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry"
-                        resource="https://github.com/rubensworks/sparqlxml-parse.js" property="schema:citation"
-                        id="sparql-xml-parser">
-                        <cite property="schema:name">
-                            <a href="https://github.com/rubensworks/sparqlxml-parse.js">SPARQL/XML Parser</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry"
-                        resource="https://aws.amazon.com/sdk-for-javascript/" property="schema:citation"
-                        id="aws-sdk-js">
-                        <cite property="schema:name">
-                            <a href="https://aws.amazon.com/sdk-for-javascript/">AWS SDK for JavaScript</a>
-                        </cite>
-                    </li>
-                    <li typeof="schema:WebPage" role="doc-biblioentry"
-                        resource="https://www.npmjs.com/package/react-apollo" property="schema:citation"
-                        id="react-apollo">
-                        <cite property="schema:name">
-                            <a href="https://www.npmjs.com/package/react-apollo">React Apollo</a>
                         </cite>
                     </li>
                 </ul>

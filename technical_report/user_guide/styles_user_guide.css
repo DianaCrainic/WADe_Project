@@ -71,7 +71,8 @@ figcaption {
     text-align: center;
 }
 
-img {
+.use-case-5,
+.use-case-6 {
     width: 100%;
 }
 
