@@ -113,6 +113,9 @@
                             </li>
                         </ol>
                     </li>
+                    <li class="nested"><a href="#ProjectProgress">Project progress</a></li>
+                    <li class="nested"><a href="#UserGuide">User guide of the developed solution</a></li>
+                    <li class="nested"><a href="#Video">Video Demonstration</a></li>
                     <li class="nested"><a href="#Conclusions">Conclusions</a></li>
                     <li class="nested appendix-li"><a href="#Appendix">Appendix 1 - Task Distribution</a></li>
                     <li class="nested"><a href="#References">References</a></li>
@@ -122,7 +125,8 @@
                 <h2 id="Abstract">Abstract</h2>
                 <div>
                     <p>
-                        <b>cryk</b> is a crypto application which gives you personalized cryptocurrency information and
+                        <b>cryk</b> is a cryptocurrency application which gives you personalized cryptocurrency
+                        information and
                         news, analytics about the desired cryptocurrencies, to cut short your struggles. It gives vital
                         details with great accuracy that otherwise
                         take hours of calculation.
@@ -522,8 +526,105 @@
                     </section>
                 </div>
             </section>
+            <section role="doc-part">
+                <h2 id="ProjectProgress">6 Project Progress</h2>
+                <div>
+                    <p>
+                        The <b>cryk (cryptocurrency knowledge manager)</b> application, a modular web system aimed to
+                        express and manage knowledge about existing cryptocurrencies and
+                        their metadata has come to a good end. The project aims to provide a
+                        comprehensive and up-to-date source of information about the cryptocurrency market, and to make
+                        this information accessible and usable to a wide audience.
+                    </p>
+                    <p>
+                        To date, the project has made significant progress towards its original goals, requirements, and
+                        projected outcome. The following is a summary of the project's current status and progress.
+                    </p>
+                    <ol>
+                        <li>Original goals and requirements: The original goals of the project were to build a modular
+                            web system capable of expressing and managing knowledge about existing cryptocurrencies and
+                            their metadata. This system was required to use a SPARQL endpoint to perform all data
+                            queries and
+                            to expose information in multiple formats, including HTML+RDFa and JSON-LD. Additionally,
+                            the
+                            system was required to provide multiple visualizations of interest.
+                        </li>
+
+                        <li>
+                            Current progress: The modular web system is currently functional, with all required
+                            services (<b>cryptocurrencies</b> and <b>news</b>)
+                            implemented and integrated into a cohesive whole. The
+                            system is modular, as both services use their own database.
+                            The services are called through the GraphQL API, using multiple queries and
+                            mutations like: <i>get cryptocurrency by id</i> query, <i>get cryptocurrencies</i> query,
+                            <i>create
+                                cryptocurrency</i> mutation, <i>update cryptocurrency</i> mutation, <i>remove
+                                cryptocurrency</i> mutation, <i>get
+                                news by cryptocurrency id</i> query, <i>get news by id</i> query, <i>create news</i>
+                            mutation, <i>update news</i>
+                            mutation, <i>delete news</i> mutation. The GraphQL calls are directed to the service
+                            responsible of
+                            the entity provided in the query or mutation. The services make operations on
+                            the database
+                            using the SPARQL endpoint which offers fast and reliable access to the stored data.
+                            The system is also able to expose
+                            information in multiple formats, including HTML+RDFa and JSON-LD, providing users with the
+                            ability to
+                            access
+                            and use the data in the format that best suits their needs. Finally, the system includes
+                            multiple visualizations of interest, using charts like pie-chart, bar-chart or time-seriers
+                            chart, allowing users to easily understand and
+                            analyze the data.
+                        </li>
+
+                        <li>
+                            Comparison to initial projections: The project's progress to date is in line with the
+                            original
+                            projections, with all required functionalities implemented and integrated into a functional
+                            system, having the previous designed architecture.
+                            There have been some minor deviations from the original plan, like the comparisons of the
+                            cryptocurrencies, but these have not impacted
+                            the overall progress of the project.
+                        </li>
+
+                        <li>
+                            Evaluation of project success: The project has been a success so far, with the modular web
+                            system
+                            meeting all of its original goals, requirements, and projected outcome. The system is
+                            functional
+                            and
+                            user-friendly, providing a comprehensive and up-to-date source of information about the
+                            cryptocurrency market.
+                        </li>
+
+                    </ol>
+
+                    In conclusion, the modular web system is on track to meet its original goals, requirements, and
+                    projected outcome. The system is functional and user-friendly, providing a comprehensive and
+                    up-to-date source of information about the cryptocurrency market.
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="UserGuide">10 User Guide</h2>
+                <div>
+                    <p>
+                        Link to the <b>cryk</b> application user guide:
+                        <a href="./user_guide/user_guide.html">User Guide</a>.
+                    </p>
+                </div>
+            </section>
+            <section role="doc-part">
+                <h2 id="Video">11 Video Demonstration</h2>
+                <div>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/pmf_N8g0-Bo"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </section>
             <section role="doc-conclusion">
-                <h2 id="Conclusions">6 Conclusions</h2>
+                <h2 id="Conclusions">12 Conclusions</h2>
                 <div>
                     <p>
                         The <b>cryk (cryptocurrency knowledge manager)</b> application facilitates the access to
@@ -539,18 +640,49 @@
                 </div>
             </section>
             <section role="doc-appendix">
-                <h2 id="Appendix-1">7 Appendix 1 - Task Distribution</h2>
+                <h2 id="Appendix-1">13 Appendix 1 - Task Distribution</h2>
                 <div>
                     <section>
                         <span typeof="schema:Person">
                             <meta property="schema:givenName" content="Ciprian">
                             <meta property="schema:familyName" content="Daniș">
-                            <span property="schema:name">Ciprian Daniș</span>
+                            <span property="schema:name"><b>Ciprian Daniș</b></span>
                         </span>
                         <ul>
-                            <li>Created and structured a public GitHub Wiki for recording the project progress.</li>
-                            <li>Contributed to the technical report: C4 diagrams for levels 1, 2 and 3, data sources,
-                                linked data principles, I/O data formats.</li>
+                            <li>Design & Architecture
+                                <ul>
+                                    <li>Created and structured a public GitHub Wiki for recording the project progress.
+                                    </li>
+                                    <li>Contributed to the technical report: C4 diagrams for levels 1, 2 and 3, data
+                                        sources,
+                                        linked data principles, I/O data formats.</li>
+                                </ul>
+                            </li>
+                            <li><i>news-service</i>
+                                <ul>
+                                    <li>Implemented get news by cryptocurrency id query</li>
+                                    <li>Implemented get news by id query (not exported in the schema, but used by
+                                        mutations)</li>
+                                    <li>Implemented create news mutation</li>
+                                    <li>Implemented update news mutation</li>
+                                    <li>Implemented delete news mutation</li>
+                                    <li>Implemented get news count query (used for pagination in UI)</li>
+                                </ul>
+                            </li>
+                            <li><i>cryk-ui</i>
+                                <ul>
+                                    <li>Implemented fetching and pagination of news in cryptocurrency details pag</li>
+                                    <li>Created components for handling news service mutations</li>
+                                    <li>Implemented input validation for create and update news mutations</li>
+                                </ul>
+                            </li>
+                            <li>Technical report
+                                <ul>
+                                    <li>Considerations regarding the designed/reused RDF-based knowledge model(s)</li>
+                                    <li>Pragmatic use of external data/knowledge sources, plus several non-trivial
+                                        SPARQL queries of interest</li>
+                                </ul>
+                            </li>
                         </ul>
                     </section>
                     <section>
@@ -558,31 +690,117 @@
                             <meta property="schema:givenName" content="Diana">
                             <meta property="schema:additionalName" content="Isabela">
                             <meta property="schema:familyName" content="Crainic">
-                            <span property="schema:name">Diana-Isabela Crainic</span>
+                            <span property="schema:name"><b>Diana-Isabela Crainic</b></span>
                         </span>
                         <ul>
-                            <li>Created the technical report, designed it, and contributed to the sections: Abstract,
-                                Introduction, Used Technologies, Diagrams, and Conclusions.</li>
-                            <li>Created Use Case Diagram and Data Flow Diagrams.</li>
+                            <li>Design & Architecture
+                                <ul>
+                                    <li>Created the technical report, designed it, and contributed to the sections:
+                                        Abstract,
+                                        Introduction, Used Technologies, Diagrams, and Conclusions.</li>
+                                    <li>Created Use Case Diagram and Data Flow Diagrams.</li>
+                                </ul>
+                            </li>
+
+                            <li>Initialized the React project <i>cryk-ui</i></li>
+                            <li><i>cryk-ui</i>
+                                <ul>
+                                    <li>Created the Cryptocurrencies, Cryptocurrencies Information, 404 pages</li>
+                                    <li>Implemented fetching and pagination of cryptocurrencies on the cryptocurrencies
+                                        page</li>
+                                    <li>Implemented validations for displaying information on the cryptocurrencies
+                                        information page</li>
+                                    <li>Created components for handling cryptocurrency service mutations</li>
+                                    <li>Implemented input validation for create and update cryptocurrency mutations</li>
+                                    <li>Integrated delete cryptocurrency mutation in cryptocurrency card</li>
+                                </ul>
+                            </li>
+                            <li><i>cryptocurrencies-service</i>
+                                <ul>
+                                    <li>Implemented get cryptocurrencies information query</li>
+                                </ul>
+                            </li>
+                            <li>Technical report
+                                <ul>
+                                    <li>Project progress with respect to the initial goals, requirements, and projected
+                                        outcome</li>
+                                    <li>User guide of the developed solution</li>
+                                </ul>
+                            </li>
                         </ul>
                     </section>
                     <section>
                         <span typeof="schema:Person">
                             <meta property="schema:givenName" content="Ioan">
                             <meta property="schema:familyName" content="Sava">
-                            <span property="schema:name">Ioan Sava </span>
+                            <span property="schema:name"><b>Ioan Sava</b></span>
                         </span>
                         <ul>
-                            <li>Designed the service-oriented architecture of the web application to be developed.</li>
-                            <li>Created the schema for the GraphQL API provided by the project, including various usage
-                                examples and pragmatic case studies.</li>
-                            <li>Contributed to the technical report: architecture and libraries.</li>
+                            <li>Design & Architecture
+                                <ul>
+                                    <li>Designed the service-oriented architecture of the web application to be
+                                        developed.</li>
+                                    <li>Created the schema for the GraphQL API provided by the project, including
+                                        various usage
+                                        examples and pragmatic case studies.</li>
+                                    <li>Contributed to the technical report: architecture and libraries.</li>
+                                </ul>
+                            </li>
+                            <li>Initialized the nodejs services (<i>cryptocurrency-service</i> and <i>news-service</i>)
+                            </li>
+                            <li><i>cryptocurrencies-service</i>
+                                <ul>
+                                    <li>Implemented get cryptocurrency by id query</li>
+                                    <li>Implemented get cryptocurrencies query</li>
+                                    <li>Implemented create cryptocurrency mutation</li>
+                                    <li>Implemented update cryptocurrency mutation</li>
+                                    <li>Implemented remove cryptocurrency mutation</li>
+                                </ul>
+                            </li>
+                            <li><i>cryk-ui</i>
+                                <ul>
+                                    <li>Displayed visualizations
+                                        <ul>
+                                            <li>Pie Chart that includes the distribution of cryptocurrencies by
+                                                protection scheme</li>
+                                            <li>Line Chart that includes a timeline with the number of coins founded
+                                                over time</li>
+                                            <li>Bar Chart containing the total number of coins for each cryptocurrency
+                                                on the
+                                                current page</li>
+                                            <li>Bar Chart containing the block time for each cryptocurrency on the
+                                                current page</li>
+                                        </ul>
+                                    </li>
+                                    <li>Authentication</li>
+                                </ul>
+                            </li>
+                            <li>Infrastructure
+                                <ul>
+                                    <li>Created an Amazon Lambda Function for cryptocurrencies-service that query an
+                                        Amazon Neptune Database via a SPARQL endpoint</li>
+                                    <li>Created an Amazon Lambda Function for news-service that query an Amazon Neptune
+                                        Database via a SPARQL endpoint</li>
+                                    <li>Created an AWS AppSync to expose the GraphQL API (the previously created lambda
+                                        functions are called behind the scenes)</li>
+                                    <li>Uploaded the React application in an S3 bucket and hosted the website</li>
+                                    <li>Served the website through an Amazon CloudFront distribution</li>
+                                    <li>Implemented authentication through Amazon Cognito</li>
+                                </ul>
+                            </li>
+                            <li>Technical report
+                                <ul>
+                                    <li>Video demonstration</li>
+                                    <li>Technical aspects concerning the implemented API(s) according to the proposed
+                                        Web system architecture</li>
+                                </ul>
+                            </li>
                         </ul>
                     </section>
                 </div>
             </section>
             <section role="doc-bibliography">
-                <h2 id="References">7 References</h2>
+                <h2 id="References">14 References</h2>
                 <ul>
                     <li typeof="schema:WebPage" role="doc-biblioentry"
                         resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/index.html"
@@ -678,6 +896,14 @@
                         id="react-apollo">
                         <cite property="schema:name">
                             <a href="https://www.npmjs.com/package/react-apollo">React Apollo</a>
+                        </cite>
+                    </li>
+                    <li typeof="schema:WebPage" role="doc-biblioentry"
+                        resource="https://pixabay.com/illustrations/background-black-background-1939128/"
+                        property="schema:citation" id="background-image">
+                        <cite property="schema:name">
+                            <a href="https://pixabay.com/illustrations/background-black-background-1939128/">Background
+                                Image</a>
                         </cite>
                     </li>
                 </ul>
