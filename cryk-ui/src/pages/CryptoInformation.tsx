@@ -246,37 +246,27 @@ export default function CryptoInformation(props: any) {
                 <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
                     <div className="title"
                         about={cryptocurrencyId}>
-                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol"
-                            typeof="http://www.w3.org/2001/XMLSchema#string">{symbol}</h1>
+                        <h1 property="http://purl.org/net/bel-epa/doacc#symbol">{symbol}</h1>
                     </div>
                     <p className="crypto-description"
-                        property="<http://purl.org/dc/elements/1.1/description"
-                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                        property="http://purl.org/dc/elements/1.1/description">
                         {description}
                     </p>
-                    <p className="crypto-website"
-                        property="http://purl.org/net/bel-epa/doacc#website"
-                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                    <p className="crypto-website">
                         <span>Official website: </span>
-                        {website ? <a href={website}>{website}</a> : UNKNOWN_MESSAGE}
+                        {website ? <a href={website} property="http://purl.org/net/bel-epa/doacc#website">{website}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-source"
-                        property="http://purl.org/net/bel-epa/doacc#source"
-                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                    <p className="crypto-source">
                         <span>Source: </span>
-                        {source ? <a href={source}>{source}</a> : UNKNOWN_MESSAGE}
+                        {source ? <a href={source} property="http://purl.org/net/bel-epa/doacc#source">{source}</a> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-reward"
-                        property="http://purl.org/net/bel-epa/doacc#block-reward"
-                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                    <p className="crypto-reward">
                         <span>Reward: </span>
-                        {reward >= 0 ? <span>{reward}</span> : UNKNOWN_MESSAGE}
+                        {reward >= 0 ? <span property="http://purl.org/net/bel-epa/doacc#block-reward">{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
-                    <p className="crypto-coins"
-                        property="http://purl.org/net/bel-epa/doacc#total-coins"
-                        typeof="http://www.w3.org/2001/XMLSchema#string">
+                    <p className="crypto-coins">
                         <span>Total Coins: </span>
-                        {coins >= 0 ? <span>{coins}</span> : UNKNOWN_MESSAGE}
+                        {coins >= 0 ? <span property="http://purl.org/net/bel-epa/doacc#total-coins">{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <UpdateCryptocurrencyCardDialog
                         queryUpdate={UPDATE_CRYPTOCURRENCY}
