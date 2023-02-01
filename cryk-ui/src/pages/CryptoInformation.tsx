@@ -12,6 +12,8 @@ import { Alert, Button, Pagination } from "@mui/material";
 import { GetPaginatedCryptoNewsInput } from "../models/GetPaginatedCryptoNewsInput";
 import { RefetchInput } from "../models/RefetchInput";
 import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
+import UpdateCryptocurrencyCardDialog from "../components/UpdateCryptocurrencyCardDialog";
+import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -33,6 +35,20 @@ const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
             }
         }
     }
+`;
+
+const UPDATE_CRYPTOCURRENCY = gql`
+mutation UpdateCryptocurrency($updateCryptocurrencyInput: UpdateCryptocurrencyInput!) {
+    updateCryptocurrency(updateCryptocurrencyInput: $updateCryptocurrencyInput) {
+        id
+        symbol
+        description
+        blockReward
+        totalCoins
+        source
+        website
+    }
+}
 `;
 
 const NEWS_PER_PAGE = 5;
@@ -148,7 +164,7 @@ export default function CryptoInformation(props: any) {
         offset: (currentPage - 1) * NEWS_PER_PAGE
     }
 
-    const refetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
+    const getPaginatedNewsRefetchInput: RefetchInput<GetPaginatedCryptoNewsInput> = {
         context: "newsGraphqlEndpoint",
         query: GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY,
         variables: getPaginatedNewsInput
@@ -158,6 +174,14 @@ export default function CryptoInformation(props: any) {
         variables: getPaginatedNewsInput,
         context: { clientName: "newsGraphqlEndpoint" }
     });
+
+    const getCryptoByIdRefetchInput: RefetchInput<CryptocurrencyInput> = {
+        context: "cryptocurrenciesGraphqlEndpoint",
+        query: GET_CRYPTOCURRENCY_BY_ID_QUERY,
+        variables: {
+            id: cryptocurrencyId
+        }
+    };
 
     const [cryptocurrency, setCryptocurrency] = useState<Cryptocurrency>();
     const [news, setNews] = useState<News[]>([]);
@@ -210,8 +234,8 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
-    const reward = Number(cryptocurrency?.blockReward) < 0 ? null : Number(cryptocurrency?.blockReward);
-    const coins = Number(cryptocurrency?.totalCoins) < 0 ? null : Number(cryptocurrency?.totalCoins);
+    const reward = Number(cryptocurrency?.blockReward) < 0 ? -1 : Number(cryptocurrency?.blockReward);
+    const coins = Number(cryptocurrency?.totalCoins) < 0 ? -1 : Number(cryptocurrency?.totalCoins);
 
     return (
         <HelmetProvider>
@@ -246,14 +270,19 @@ export default function CryptoInformation(props: any) {
                         property="http://purl.org/net/bel-epa/doacc#block-reward"
                         typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Reward: </span>
-                        {reward ? <span>{reward}</span> : UNKNOWN_MESSAGE}
+                        {reward >= 0 ? <span>{reward}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-coins"
                         property="http://purl.org/net/bel-epa/doacc#total-coins"
                         typeof="http://www.w3.org/2001/XMLSchema#string">
                         <span>Total Coins: </span>
-                        {coins ? <span>{coins}</span> : UNKNOWN_MESSAGE}
+                        {coins >= 0 ? <span>{coins}</span> : UNKNOWN_MESSAGE}
                     </p>
+                    <UpdateCryptocurrencyCardDialog
+                        queryUpdate={UPDATE_CRYPTOCURRENCY}
+                        refetchInput={getCryptoByIdRefetchInput}
+                        cryptocurrency={cryptocurrency}
+                    />
                     <Button
                         className="export-button"
                         variant="outlined"
@@ -269,7 +298,7 @@ export default function CryptoInformation(props: any) {
                                 <NewsCard news={oneNews} cryptocurrencyId={cryptocurrencyId}
                                     queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                                     queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                                    refetchInput={refetchInput} key={index} />)))
+                                    refetchInput={getPaginatedNewsRefetchInput} key={index} />)))
                             : null
                         }
                     </div>
@@ -282,7 +311,7 @@ export default function CryptoInformation(props: any) {
                         onChange={(_event, value) => setCurrentPage(value)} />
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
-                        refetchInput={refetchInput} cryptocurrencyId={cryptocurrencyId}
+                        refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
                     />
                 </div>
             </div>

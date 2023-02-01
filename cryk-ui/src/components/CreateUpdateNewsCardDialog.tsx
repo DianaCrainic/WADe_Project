@@ -66,7 +66,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
   });
 
   useEffect(() => {
-    if (isSubmitSuccessful) {
+    if (props.operationType === "create" && isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
@@ -99,6 +99,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
         variables: { updateCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
+
     setIsOpen(false);
   };
 

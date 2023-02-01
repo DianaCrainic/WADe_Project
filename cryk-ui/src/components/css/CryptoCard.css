@@ -24,3 +24,10 @@ a {
     color: white !important;
     border: 1px solid white !important;
 }
+
+.cryptocurrency-card-buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    gap: 15px;
+}
