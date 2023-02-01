@@ -76,7 +76,9 @@ img {
 }
 
 .use-case-1,
-.use-case-2 {
+.use-case-2,
+.use-case-3,
+.use-case-4 {
     width: 50%;
     margin-bottom: 2%;
 }
