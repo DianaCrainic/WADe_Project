@@ -20,10 +20,9 @@ export default function CryptoCard(props: { cryptocurrency: Cryptocurrency, quer
   const navigate = useNavigate();
 
   return (
-    <Card className="crypto-card" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
-      <CardContent>
+    <Card className="crypto-card">
+      <CardContent vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency" resource={cryptocurrency.id}>
         <Typography className="card-title" color="textSecondary" gutterBottom
-          about={cryptocurrency.id}
           property="http://purl.org/net/bel-epa/doacc#symbol">
           {cryptocurrency.symbol}
         </Typography>

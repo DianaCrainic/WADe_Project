@@ -243,9 +243,8 @@ export default function CryptoInformation(props: any) {
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
-                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency">
-                    <div className="title"
-                        about={cryptocurrencyId}>
+                <div className="page-container" vocab="http://purl.org/net/bel-epa/doacc#" typeof="Cryptocurrency" resource={cryptocurrencyId}>
+                    <div className="title">
                         <h1 property="http://purl.org/net/bel-epa/doacc#symbol">{symbol}</h1>
                     </div>
                     <p className="crypto-description"
