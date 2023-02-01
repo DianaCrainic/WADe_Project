@@ -43,10 +43,9 @@ export default function UpdateCryptocurrencyCardDialog(props: {
 }) {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const operationPropertiesMap = new Map();
-    operationPropertiesMap.set("update", {
+    const operationPropertiesMap = {
         "button-class": "cryptocurrency-card-update-button",
-        "button-size": "medium",
+        "button-size": "medium" as const,
         "button-text": "Update",
         "dialog-symbol": "Update Cryptocurrency",
         "disable-symbol-filling": true,
@@ -56,7 +55,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
         "totalCoins-default-value": props.cryptocurrency?.totalCoins,
         "source-default-value": props.cryptocurrency?.source,
         "website-default-value": props.cryptocurrency?.website,
-    });
+    };
 
     const {
         register,
@@ -99,12 +98,12 @@ export default function UpdateCryptocurrencyCardDialog(props: {
     return (
         <div>
             <Button
-                className={operationPropertiesMap.get(props.operationType)["button-class"]}
+                className={operationPropertiesMap["button-class"]}
                 variant="outlined"
-                size={operationPropertiesMap.get(props.operationType)["button-size"]}
+                size={operationPropertiesMap["button-size"]}
                 onClick={handleClickOpen}
             >
-                {operationPropertiesMap.get(props.operationType)["button-text"]}
+                {operationPropertiesMap["button-text"]}
             </Button>
             <Dialog
                 fullScreen
@@ -124,7 +123,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             <CloseIcon fontSize="large" />
                         </IconButton>
                         <DialogTitle className="cryptocurrency-dialog-title">
-                            {operationPropertiesMap.get(props.operationType)["dialog-symbol"]}
+                            {operationPropertiesMap["dialog-symbol"]}
                         </DialogTitle>
                     </Toolbar>
                 </AppBar>
@@ -141,12 +140,12 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Symbol"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["symbol-default-value"]}
+                            defaultValue={operationPropertiesMap["symbol-default-value"]}
                             error={!!errors["symbol"]}
                             helperText={errors["symbol"] ? errors["symbol"].message : ""}
                             {...register("symbol")}
                             InputProps={{
-                                readOnly: operationPropertiesMap.get(props.operationType)["disable-symbol-filling"]
+                                readOnly: operationPropertiesMap["disable-symbol-filling"]
                             }}
                         />
 
@@ -157,7 +156,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             rows={10}
                             label="Description"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["description-default-value"]}
+                            defaultValue={operationPropertiesMap["description-default-value"]}
                             error={!!errors["description"]}
                             helperText={errors["description"] ? errors["description"].message : ""}
                             {...register("description")}
@@ -167,7 +166,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Website"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
+                            defaultValue={operationPropertiesMap["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
                             {...register("website")}
@@ -177,7 +176,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Source"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
+                            defaultValue={operationPropertiesMap["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}
                             {...register("source")}
@@ -187,7 +186,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Block Reward"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["blockReward-default-value"]}
+                            defaultValue={operationPropertiesMap["blockReward-default-value"]}
                             error={!!errors["blockReward"]}
                             helperText={errors["blockReward"] ? errors["blockReward"].message : ""}
                             {...register("blockReward")}
@@ -197,7 +196,7 @@ export default function UpdateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Total Coins"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["totalCoins-default-value"]}
+                            defaultValue={operationPropertiesMap["totalCoins-default-value"]}
                             error={!!errors["totalCoins"]}
                             helperText={errors["totalCoins"] ? errors["totalCoins"].message : ""}
                             {...register("totalCoins")}

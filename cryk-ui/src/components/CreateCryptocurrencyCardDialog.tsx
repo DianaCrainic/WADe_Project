@@ -45,10 +45,9 @@ export default function CreateCryptocurrencyCardDialog(props: {
 }) {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const operationPropertiesMap = new Map();
-    operationPropertiesMap.set("create", {
+    const operationPropertiesMap = {
         "button-class": "cryptocurrency-card-create-button",
-        "button-size": "large",
+        "button-size": "large" as const,
         "button-text": "Create Cryptocurrency",
         "dialog-symbol": "Create Cryptocurrency",
         "disable-symbol-filling": false,
@@ -58,7 +57,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
         "totalCoins-default-value": null,
         "source-default-value": undefined,
         "website-default-value": undefined
-    });
+    };
 
     const {
         reset,
@@ -109,12 +108,12 @@ export default function CreateCryptocurrencyCardDialog(props: {
     return (
         <div>
             <Button
-                className={operationPropertiesMap.get(props.operationType)["button-class"]}
+                className={operationPropertiesMap["button-class"]}
                 variant="outlined"
-                size={operationPropertiesMap.get(props.operationType)["button-size"]}
+                size={operationPropertiesMap["button-size"]}
                 onClick={handleClickOpen}
             >
-                {operationPropertiesMap.get(props.operationType)["button-text"]}
+                {operationPropertiesMap["button-text"]}
             </Button>
             <Dialog
                 fullScreen
@@ -134,7 +133,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             <CloseIcon fontSize="large" />
                         </IconButton>
                         <DialogTitle className="cryptocurrency-dialog-title">
-                            {operationPropertiesMap.get(props.operationType)["dialog-symbol"]}
+                            {operationPropertiesMap["dialog-symbol"]}
                         </DialogTitle>
                     </Toolbar>
                 </AppBar>
@@ -151,12 +150,12 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Symbol"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["symbol-default-value"]}
+                            defaultValue={operationPropertiesMap["symbol-default-value"]}
                             error={!!errors["symbol"]}
                             helperText={errors["symbol"] ? errors["symbol"].message : ""}
                             {...register("symbol")}
                             InputProps={{
-                                readOnly: operationPropertiesMap.get(props.operationType)["disable-symbol-filling"]
+                                readOnly: operationPropertiesMap["disable-symbol-filling"]
                             }}
                         />
 
@@ -167,7 +166,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             rows={10}
                             label="Description"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["description-default-value"]}
+                            defaultValue={operationPropertiesMap["description-default-value"]}
                             error={!!errors["description"]}
                             helperText={errors["description"] ? errors["description"].message : ""}
                             {...register("description")}
@@ -177,7 +176,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Website"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["website-default-value"]}
+                            defaultValue={operationPropertiesMap["website-default-value"]}
                             error={!!errors["website"]}
                             helperText={errors["website"] ? errors["website"].message : ""}
                             {...register("website")}
@@ -187,7 +186,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Source"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
+                            defaultValue={operationPropertiesMap["source-default-value"]}
                             error={!!errors["source"]}
                             helperText={errors["source"] ? errors["source"].message : ""}
                             {...register("source")}
@@ -197,7 +196,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Block Reward"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["blockReward-default-value"]}
+                            defaultValue={operationPropertiesMap["blockReward-default-value"]}
                             error={!!errors["blockReward"]}
                             helperText={errors["blockReward"] ? errors["blockReward"].message : ""}
                             {...register("blockReward")}
@@ -207,7 +206,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
                             fullWidth
                             label="Total Coins"
                             type="text"
-                            defaultValue={operationPropertiesMap.get(props.operationType)["totalCoins-default-value"]}
+                            defaultValue={operationPropertiesMap["totalCoins-default-value"]}
                             error={!!errors["totalCoins"]}
                             helperText={errors["totalCoins"] ? errors["totalCoins"].message : ""}
                             {...register("totalCoins")}
