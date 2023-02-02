@@ -74,13 +74,10 @@ figcaption {
 .rdfa-image {
     margin: auto;
     display: block;
+    padding-bottom: 10px;
 }
 
 .sparql-code-container {
-    /* display: flex;
-    justify-content: center;
-    width: 60%;
-    height: auto; */
     margin-bottom: 0;
     padding-bottom: 0;
 }
@@ -89,8 +86,6 @@ figcaption {
     background-color: #eee;
     border: 1px solid #999;
     display: block;
-    /* padding: 20px; */
-    /* text-align: center; */
 }
 
 .sparql-code-caption {
