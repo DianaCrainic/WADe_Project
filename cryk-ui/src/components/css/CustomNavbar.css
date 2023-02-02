@@ -6,3 +6,7 @@
     top: 0;
     left: 3%;
 }
+
+.navbar-brand:hover {
+    cursor: pointer;
+}

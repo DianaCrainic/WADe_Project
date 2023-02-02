@@ -17,6 +17,8 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             id
             symbol
             description
+            totalCoins
+            blockTime
         }
         cryptocurrenciesInfo {
             totalCount
@@ -158,7 +160,7 @@ export default function Cryptocurrencies() {
 
     return (
         <HelmetProvider>
-            <div>
+            <>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
@@ -209,7 +211,7 @@ export default function Cryptocurrencies() {
                             {getBarChart(blockTimeStats)}
                         </>}
                 </div>
-            </div>
+            </>
         </HelmetProvider>
     );
 }

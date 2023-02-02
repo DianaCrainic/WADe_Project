@@ -4,9 +4,10 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Cryptocurrency } from "../models/Cryptocurrency";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import { PieChart, Pie, Tooltip, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis, LineChart, Line } from "recharts";
+import { PieChart, Pie, Tooltip, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis, LineChart, Line, Cell } from "recharts";
 import "./css/CryptocurrenciesVisualizations.css";
 
+const COLORS = ["#0088FE", "#00C49F", "#FF8042"];
 const MAX_INT = Math.pow(2, 31) - 1;
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -33,15 +34,7 @@ const getProtectionSchemeStatsForCryptocurrencies = (cryptocurrencies: Cryptocur
     const countedCryptocurrenciesByProtectionScheme = Object.keys(groupedCryptocurrenciesByProtectionScheme).map((key: string) => {
         return { name: key, value: groupedCryptocurrenciesByProtectionScheme[key].length };
     });
-    const otherCountedCryptocurrenciesByProtectionScheme =
-        countedCryptocurrenciesByProtectionScheme.filter(element => element.value <= 10);
-    const numberOfOtherCryptocurrenciesByProtectionScheme = otherCountedCryptocurrenciesByProtectionScheme.reduce((accumulator, object) => {
-        return accumulator + object.value;
-    }, 0);
-    const filtertedCountedCryptocurrenciesByProtectionScheme =
-        countedCryptocurrenciesByProtectionScheme.filter(element => element.value > 10);
-    filtertedCountedCryptocurrenciesByProtectionScheme.splice(1, 0, { name: "Other", value: numberOfOtherCryptocurrenciesByProtectionScheme });
-    return filtertedCountedCryptocurrenciesByProtectionScheme;
+    return countedCryptocurrenciesByProtectionScheme.filter(element => element.value > 10);
 }
 
 const getDateFoundedStatsForCryptocurrencies = (cryptocurrencies: Cryptocurrency[]): { name: string, value: number }[] => {
@@ -102,7 +95,7 @@ export default function CryptocurrenciesVisualizations() {
 
     return (
         <HelmetProvider>
-            <div>
+            <>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
@@ -126,7 +119,11 @@ export default function CryptocurrenciesVisualizations() {
                             outerRadius={100}
                             fill="#9E9E9E"
                             label
-                        />
+                        >
+                            {protectionSchemeStats?.map((_entry: { name: string, value: number }, index: number) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
                         <Tooltip />
                     </PieChart>
                     <h2>Number of cryptocurrencies by founded date</h2>
@@ -163,7 +160,7 @@ export default function CryptocurrenciesVisualizations() {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-            </div>
+            </>
         </HelmetProvider>
     );
 }
