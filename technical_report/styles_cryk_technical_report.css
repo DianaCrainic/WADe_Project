@@ -70,3 +70,39 @@ p {
 figcaption {
     text-align: center;
 }
+
+.rdfa-image {
+    margin: auto;
+    display: block;
+}
+
+.sparql-code-container {
+    /* display: flex;
+    justify-content: center;
+    width: 60%;
+    height: auto; */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.sparql-code-section {
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+    /* padding: 20px; */
+    /* text-align: center; */
+}
+
+.sparql-code-caption {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
+/* pre code {
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+    padding: 20px;
+    text-align: left;
+} */
