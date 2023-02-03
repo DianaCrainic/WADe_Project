@@ -1,3 +1,7 @@
 .title {
     margin-top: 2%;
 }
+
+.recharts-legend-item {
+    display: block !important;
+}

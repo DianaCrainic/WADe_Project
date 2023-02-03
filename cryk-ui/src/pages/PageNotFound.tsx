@@ -6,7 +6,7 @@ export default function PageNotFound() {
 
     return (
         <HelmetProvider>
-            <div>
+            <>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
@@ -14,7 +14,7 @@ export default function PageNotFound() {
                     <h1>404</h1>
                     <h2>Page Not Found</h2>
                 </div>
-            </div>
+            </>
         </HelmetProvider>
     )
 }

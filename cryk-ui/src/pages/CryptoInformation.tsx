@@ -239,7 +239,7 @@ export default function CryptoInformation(props: any) {
 
     return (
         <HelmetProvider>
-            <div>
+            <>
                 <Helmet>
                     <title>{title}</title>
                 </Helmet>
@@ -303,7 +303,7 @@ export default function CryptoInformation(props: any) {
                         refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
                     />
                 </div>
-            </div>
+            </>
         </HelmetProvider>
     )
 }
