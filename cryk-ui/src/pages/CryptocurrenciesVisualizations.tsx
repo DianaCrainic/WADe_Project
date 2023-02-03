@@ -106,7 +106,7 @@ export default function CryptocurrenciesVisualizations() {
                     <h2>Number of cryptocurrencies by protection scheme</h2>
                     <PieChart
                         width={2000}
-                        height={300}
+                        height={450}
                         margin={{
                             top: 40,
                             bottom: 40,
@@ -124,6 +124,7 @@ export default function CryptocurrenciesVisualizations() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
+                        <Legend/>
                         <Tooltip />
                     </PieChart>
                     <h2>Number of cryptocurrencies by founded date</h2>
