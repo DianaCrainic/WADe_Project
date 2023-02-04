@@ -182,8 +182,6 @@ export const removeCryptoNewsById = async (id: string): Promise<CryptoNews> => {
     const newsArticle: CryptoNews = await getCryptoNewsById(id);
 
     const query = `
-        PREFIX schema: <http://schema.org/>
-
         DELETE {
             <${id}> ?p ?o
         }

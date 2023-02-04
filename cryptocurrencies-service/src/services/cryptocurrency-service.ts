@@ -236,8 +236,6 @@ export const removeCryptocurrencyById = async (id: string): Promise<Cryptocurren
     const cryptocurrency: Cryptocurrency = await getCryptocurrencyById(id);
 
     const query = `
-        PREFIX doacc: <http://purl.org/net/bel-epa/doacc#>
-
         DELETE {
             <${id}> ?p ?o
         }
