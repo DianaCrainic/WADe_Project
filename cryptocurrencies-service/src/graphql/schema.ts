@@ -9,6 +9,12 @@ const schema = buildSchema(`
         description: String
     }
 
+    type PriceData {
+        currency: String!
+        timestamp: Float!
+        value: Float!
+    }
+
     type Cryptocurrency {
         id: ID!
         symbol: String!
@@ -19,6 +25,7 @@ const schema = buildSchema(`
         dateFounded: String
         source: String
         website: String
+        priceHistory: [PriceData!]!
         protectionScheme: ProtectionScheme
         distributionScheme: DistributionScheme
     }
