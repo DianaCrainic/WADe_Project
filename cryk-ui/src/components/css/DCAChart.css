@@ -1,0 +1,21 @@
+.dca-chart-container {
+    margin: 50px 0;
+    text-align: center;
+    max-width: 900px;
+}
+
+.dca-chart-title {
+    font-size: 50px;
+    margin-bottom: 40px;
+}
+
+.calculations-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.chart-container {
+    margin: 0 auto;
+}

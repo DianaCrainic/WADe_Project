@@ -1,4 +1,5 @@
 import { DistributionScheme } from "./DistributionScheme";
+import { PriceData } from "./PriceData";
 import { ProtectionScheme } from "./ProtectionScheme";
 
 export interface Cryptocurrency {
@@ -11,6 +12,7 @@ export interface Cryptocurrency {
   dateFounded?: string;
   source?: string;
   website?: string;
+  priceHistory?: PriceData[];
   protectionScheme?: ProtectionScheme;
   distributionScheme?: DistributionScheme;
 }

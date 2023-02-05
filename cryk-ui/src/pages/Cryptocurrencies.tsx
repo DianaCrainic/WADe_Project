@@ -73,7 +73,7 @@ const getBlockTimeStats = (cryptocurrencies: Cryptocurrency[]): { name: string, 
     return mappedCryptocurrencies.filter(element => element.value !== -1);
 }
 
-const getBarChart = (data: { name: string, value: number }[]): any => {
+const getBarChart = (data: { name: string, value: number }[], name: string): any => {
     return (<ResponsiveContainer width="90%" height={500} >
         <BarChart
             width={500}
@@ -87,20 +87,28 @@ const getBarChart = (data: { name: string, value: number }[]): any => {
             }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
+            <XAxis
+                dataKey="name"
+                tick={{
+                    fill: "white",
+                }}
+            />
+            <YAxis
+                tick={{
+                    fill: "white",
+                }}
+            />
             <Tooltip
                 contentStyle={{
-                    color: "black",
-                }}
-                itemStyle={{
-                    color: "black",
+                    color: "white",
+                    backgroundColor: "#121212",
                 }}
             />
             <Legend />
             <Bar
                 dataKey="value"
                 fill="white"
+                name={name}
             />
         </BarChart>
     </ResponsiveContainer>);
@@ -199,16 +207,16 @@ export default function Cryptocurrencies() {
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(event, value) => setCurrentPage(value)} />
+                        onChange={(_event, value) => setCurrentPage(value)} />
                     {totalCoinsStats.length > 0 &&
                         <>
                             <h2>Total coins</h2>
-                            {getBarChart(totalCoinsStats)}
+                            {getBarChart(totalCoinsStats, "Number of coins")}
                         </>}
                     {blockTimeStats.length > 0 &&
                         <>
                             <h2>Block time</h2>
-                            {getBarChart(blockTimeStats)}
+                            {getBarChart(blockTimeStats, "Block time")}
                         </>}
                 </div>
             </>

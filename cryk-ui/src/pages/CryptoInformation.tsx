@@ -14,6 +14,8 @@ import { RefetchInput } from "../models/RefetchInput";
 import { UNKNOWN_MESSAGE } from "../constants/cryptocurrencies-messages";
 import UpdateCryptocurrencyCardDialog from "../components/UpdateCryptocurrencyCardDialog";
 import { CryptocurrencyInput } from "../models/CryptocurrencyInput";
+import DCAChart from "../components/DCAChart";
+import { PriceData } from "../models/PriceData";
 
 const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
     query GetSomeDetailsAboutCryptocurrency($id: ID!) {
@@ -27,6 +29,10 @@ const GET_CRYPTOCURRENCY_BY_ID_QUERY = gql`
             dateFounded
             source
             website
+            priceHistory {
+                timestamp
+                value
+            }
             distributionScheme {
                 description
             }
@@ -110,6 +116,9 @@ const convertCryptocurrencyInformationToJsonLd = (cryptocurrency: Cryptocurrency
             },
             protectionScheme: {
                 "@type": "http://purl.org/net/bel-epa/doacc#ProtectionScheme",
+            },
+            priceHistory: {
+                "@type": "http://purl.org/net/bel-epa/doacc#PriceData",
             }
         },
         "@type": "http://purl.org/net/bel-epa/doacc#Cryptocurrency",
@@ -130,6 +139,14 @@ const convertCryptocurrencyInformationToJsonLd = (cryptocurrency: Cryptocurrency
             "@type": "http://purl.org/net/bel-epa/doacc#ProtectionScheme",
             description: cryptocurrency?.protectionScheme?.description,
         },
+        priceHistory: cryptocurrency?.priceHistory?.map((priceData: PriceData) => {
+            return {
+                "@type": "http://purl.org/net/bel-epa/doacc#PriceData",
+                "timestamp": priceData.timestamp,
+                "value": priceData.value,
+                "currency": priceData.currency,
+            }
+        }),
     };
 }
 
@@ -236,6 +253,7 @@ export default function CryptoInformation(props: any) {
     const source = cryptocurrency?.source;
     const reward = Number(cryptocurrency?.blockReward) < 0 ? -1 : Number(cryptocurrency?.blockReward);
     const coins = Number(cryptocurrency?.totalCoins) < 0 ? -1 : Number(cryptocurrency?.totalCoins);
+    const priceHistory = cryptocurrency?.priceHistory || [];
 
     return (
         <HelmetProvider>
@@ -280,6 +298,7 @@ export default function CryptoInformation(props: any) {
                     >
                         Export as JSON-LD
                     </Button>
+                    {priceHistory.length > 0 && <DCAChart priceHistory={priceHistory} cryptocurrencySymbol={symbol} />}
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
                         {news ?
