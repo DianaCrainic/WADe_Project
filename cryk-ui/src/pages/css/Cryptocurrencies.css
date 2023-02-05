@@ -24,17 +24,30 @@
 .crypto-website,
 .crypto-source,
 .crypto-coins {
-  font-size: 30px;
-  padding-left: 10%;
-  padding-right: 10%;
+    font-size: 30px;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .news-title {
-  font-size: 50px;
-  padding-top: 4%;
+    font-size: 50px;
+    padding-top: 4%;
 }
 
 .pagination {
     padding-bottom: 3%;
     padding-top: 3%;
+}
+
+.search-component {
+    text-align: left !important;
+    position: relative;
+    padding-top: 3%;
+    padding-bottom: 2%;
+    padding-left: auto;
+    padding-right: auto;
+}
+
+search {
+    width: 300;
 }

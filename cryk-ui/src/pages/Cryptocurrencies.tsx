@@ -10,6 +10,13 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import CreateCryptocurrencyCardDialog from "../components/CreateCryptocurrencyCardDialog";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
+import { styled, alpha } from '@mui/material/styles';
+import { makeStyles, createStyles } from '@mui/styles';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import Chip from "@mui/material/Chip";
+import { ADD_CLAUSE, REMOVE_CLAUSE } from "../components/ClausesReducer";
+import ClausesReducer from "../components/ClausesReducer";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
@@ -114,6 +121,57 @@ const getBarChart = (data: { name: string, value: number }[], name: string): any
     </ResponsiveContainer>);
 }
 
+const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    textAlign: 'left',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.05),
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(1),
+        width: 'auto',
+    }
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    height: '60px',
+    fontSize: '1.5rem',
+    '& .MuiInputBase-input': {
+        padding: theme.spacing(1, 1, 1, 0),
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '30ch'
+        },
+    },
+}));
+
+const useStyles = makeStyles((theme: any) => ({
+    chip: {
+        margin: theme.spacing(0.2),
+        fontSize: "x-large",
+        '&.MuiChip-root': {
+            height: theme.spacing(6)
+        }
+    }
+}));
+
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
     const [currentPage, setCurrentPage] = useState(1);
@@ -140,6 +198,31 @@ export default function Cryptocurrencies() {
     const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
     const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
     const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
+
+    const [value, setValue] = React.useState("");
+    const [clauses, clauseDispatch] = React.useReducer(ClausesReducer, []);
+    const classes = useStyles();
+
+    const handleChange = (e: any) => {
+        setValue(e.target.value);
+    };
+
+    const handleKeyDown = (event: any) => {
+        if (["Enter", "Tab", ","].includes(event.key)) {
+            event.preventDefault();
+
+            var clause = value.trim();
+
+            if (clause) {
+                clauseDispatch({ type: ADD_CLAUSE, payload: clause });
+                setValue("");
+            }
+        }
+    };
+
+    const handleDelete = (clause: any) => (e: any) => {
+        clauseDispatch({ type: REMOVE_CLAUSE, payload: clause });
+    };
 
     useEffect(() => {
         if (data) {
@@ -186,6 +269,31 @@ export default function Cryptocurrencies() {
                             Visualizations
                         </Button>
                     </div>
+
+                    <div className="search-component">
+                        <Search>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="bitcoin,ethereum..."
+                                inputProps={{ 'aria-label': 'search' }}
+                                value={value}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </Search>
+                    </div>
+                    <div className="chips-list">
+                        {clauses.map((clause: any) => (
+                            <Chip
+                                label={clause}
+                                onDelete={handleDelete(clause)}
+                                className={classes.chip}
+                            />
+                        ))}
+                    </div>
+
                     <div className="cards-container">
                         {cryptocurrencies ?
                             cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
