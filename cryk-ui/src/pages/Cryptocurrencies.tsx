@@ -11,16 +11,15 @@ import CreateCryptocurrencyCardDialog from "../components/CreateCryptocurrencyCa
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
 import { styled, alpha } from '@mui/material/styles';
-import { makeStyles, createStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from "@mui/material/Chip";
-import { ADD_CLAUSE, REMOVE_CLAUSE } from "../components/ClausesReducer";
-import ClausesReducer from "../components/ClausesReducer";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
-    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
-        cryptocurrencies(limit: $limit, offset: $offset) {
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = []) {
+        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText)  
+        {
             id
             symbol
             description
@@ -175,13 +174,16 @@ const useStyles = makeStyles((theme: any) => ({
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
+    const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
+    const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
+    const [symbolsToSearch, setSymbolsToSearch] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
-        offset: (currentPage - 1) * CRYPTOS_PER_PAGE
+        offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
+        searchText: searchTextValue.length !== 0 ? searchTextValue: [""]
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -199,35 +201,38 @@ export default function Cryptocurrencies() {
     const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
     const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
 
-    const [value, setValue] = React.useState("");
-    const [clauses, clauseDispatch] = React.useReducer(ClausesReducer, []);
+    const [searchItems, setSearchItems] = useState<string[]>([]);
     const classes = useStyles();
-
-    const handleChange = (e: any) => {
-        setValue(e.target.value);
-    };
+    const [value, setValue] = React.useState("");
 
     const handleKeyDown = (event: any) => {
         if (["Enter", "Tab", ","].includes(event.key)) {
             event.preventDefault();
 
-            var clause = value.trim();
+            var searchItem = value?.trim();
 
-            if (clause) {
-                clauseDispatch({ type: ADD_CLAUSE, payload: clause });
-                setValue("");
+            if (searchItem) {
+                setSearchItems([...searchItems, searchItem]);
+                setValue(event.target.value);
+
+                symbolsToSearch.push(searchItem);
+                setSearchTextValue(symbolsToSearch);
             }
+            setValue("");
         }
     };
 
-    const handleDelete = (clause: any) => (e: any) => {
-        clauseDispatch({ type: REMOVE_CLAUSE, payload: clause });
+    const handleDelete = (searchItem: any) => (e: any) => {
+        setSearchItems(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
+        setSymbolsToSearch(symbolsToSearch.splice(symbolsToSearch.indexOf(searchItem)));
+        setValue("");
+        setSearchTextValue(symbolsToSearch);
     };
 
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
-            setTotalNumberOfCryptocurrencies(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
+            setTotalNumberOfPages(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
             setTotalCoinsStats(getTotalCoinsStats(data.cryptocurrencies));
             setBlockTimeStats(getBlockTimeStats(data.cryptocurrencies));
         }
@@ -279,17 +284,18 @@ export default function Cryptocurrencies() {
                                 placeholder="bitcoin,ethereum..."
                                 inputProps={{ 'aria-label': 'search' }}
                                 value={value}
-                                onChange={handleChange}
+                                onChange={e => setValue(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
                         </Search>
                     </div>
                     <div className="chips-list">
-                        {clauses.map((clause: any) => (
+                        {searchItems.map((item: string, index: number) => (
                             <Chip
-                                label={clause}
-                                onDelete={handleDelete(clause)}
+                                label={item}
+                                onDelete={handleDelete(item)}
                                 className={classes.chip}
+                                key={index}
                             />
                         ))}
                     </div>
@@ -310,7 +316,7 @@ export default function Cryptocurrencies() {
                     />
 
                     <Pagination className="pagination"
-                        count={totalNumberOfCryptocurrencies}
+                        count={totalNumberOfPages}
                         color="primary"
                         size="large"
                         page={currentPage}

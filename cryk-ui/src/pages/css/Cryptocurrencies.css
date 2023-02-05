@@ -48,6 +48,10 @@
     padding-right: auto;
 }
 
+.chips-list{
+    padding-bottom: 2%;
+}
+
 search {
     width: 300;
 }
