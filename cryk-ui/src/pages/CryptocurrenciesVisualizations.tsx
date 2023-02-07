@@ -124,8 +124,17 @@ export default function CryptocurrenciesVisualizations() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
-                        <Legend/>
-                        <Tooltip />
+                        <Legend 
+                            layout="vertical"
+                        />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: "#121212",
+                            }}
+                            itemStyle={{
+                                color: "white"
+                            }}
+                        />
                     </PieChart>
                     <h2>Number of cryptocurrencies by founded date</h2>
                     <ResponsiveContainer width="90%" height={500}>
@@ -141,19 +150,26 @@ export default function CryptocurrenciesVisualizations() {
                             }}
                         >
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
+                            <XAxis dataKey="name"
+                                tick={{
+                                    fill: "white",
+                                }}
+                            />
+                            <YAxis
+                                tick={{
+                                    fill: "white",
+                                }}
+                            />
                             <Tooltip
                                 contentStyle={{
-                                    color: "black",
-                                }}
-                                itemStyle={{
-                                    color: "black",
+                                    color: "white",
+                                    backgroundColor: "#121212",
                                 }}
                             />
                             <Legend />
                             <Line
                                 dataKey="value"
+                                name="Number of founded cryptocurrencies"
                                 stroke="white"
                                 type="monotone"
                                 activeDot={{ r: 8 }}
