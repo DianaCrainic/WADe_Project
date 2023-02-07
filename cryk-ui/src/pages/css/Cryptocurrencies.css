@@ -48,10 +48,23 @@
     padding-right: auto;
 }
 
-.chips-list{
+.search-box {
     padding-bottom: 2%;
+}
+
+
+.chips-list {
+    padding-bottom: 2%;
+    font-size: large !important;
 }
 
 search {
     width: 300;
+}
+
+.clear-filters-chip {
+    float: right;
+    align-items: flex-end;
+    margin-top: 3%;
+    font-size: medium !important;
 }

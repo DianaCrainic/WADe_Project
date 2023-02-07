@@ -120,7 +120,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
     };
 
     const result = await sparqlTransformer.default(jsonLdQuery, {
-        debug: false,
+        debug: true,
         sparqlFunction: async (query: string) => {
             return {
                 results: {
@@ -133,13 +133,18 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
     return result["@graph"] as Cryptocurrency[];
 };
 
-export const getCryptocurrenciesInfo = async (): Promise<CryptocurrenciesInfo> => {
+export const getCryptocurrenciesInfo = async (searchText = [""]): Promise<CryptocurrenciesInfo> => {
+    const whereClause = searchText.map(text => `regex(?symbol, "${text}", "i")`).join(" || ");
+    const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+
     const query = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         SELECT (COUNT(?id) AS ?totalCount)
         WHERE {
-            ?id rdf:type doacc:Cryptocurrency 
+            ?id rdf:type doacc:Cryptocurrency .
+            ?id doacc:symbol ?symbol .
+            FILTER (${filters})
         }
     `;
     const result = await sparqlClient.query.select(query);

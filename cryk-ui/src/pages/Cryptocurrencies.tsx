@@ -163,11 +163,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const useStyles = makeStyles((theme: any) => ({
     chip: {
-        margin: theme.spacing(0.2),
-        fontSize: "x-large",
         '&.MuiChip-root': {
-            height: theme.spacing(6)
-        }
+            height: theme.spacing(6),
+            marginLeft: theme.spacing(1),
+        },
+        '& .MuiChip-label': {
+            fontSize: 25
+        },
     }
 }));
 
@@ -183,7 +185,7 @@ export default function Cryptocurrencies() {
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
         offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        searchText: searchTextValue.length !== 0 ? searchTextValue: [""]
+        searchText: searchTextValue.length !== 0 ? searchTextValue : [""]
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -229,6 +231,12 @@ export default function Cryptocurrencies() {
         setSearchTextValue(symbolsToSearch);
     };
 
+    const handleClear = () => {
+        setSearchItems([]);
+        setSymbolsToSearch([]);
+        setValue("");
+        setSearchTextValue([]);
+    }
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
@@ -276,18 +284,21 @@ export default function Cryptocurrencies() {
                     </div>
 
                     <div className="search-component">
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon />
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="bitcoin,ethereum..."
-                                inputProps={{ 'aria-label': 'search' }}
-                                value={value}
-                                onChange={e => setValue(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                            />
-                        </Search>
+                        <div className="search-box">
+                            <Search>
+                                <SearchIconWrapper>
+                                    <SearchIcon />
+                                </SearchIconWrapper>
+                                <StyledInputBase
+                                    placeholder="ace,bit..."
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    value={value}
+                                    onChange={e => setValue(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </Search>
+                        </div>
+                        <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
                     </div>
                     <div className="chips-list">
                         {searchItems.map((item: string, index: number) => (
