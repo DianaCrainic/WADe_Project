@@ -28,7 +28,6 @@ const schema = buildSchema(`
         priceHistory: [PriceData!]!
         protectionScheme: ProtectionScheme
         distributionScheme: DistributionScheme
-        count: Int
     }
 
     type CryptocurrenciesInfo {

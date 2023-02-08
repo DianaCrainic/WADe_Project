@@ -120,7 +120,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
     };
 
     const result = await sparqlTransformer.default(jsonLdQuery, {
-        debug: true,
+        debug: false,
         sparqlFunction: async (query: string) => {
             return {
                 results: {
