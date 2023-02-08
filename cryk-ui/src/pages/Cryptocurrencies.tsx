@@ -26,7 +26,7 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             totalCoins
             blockTime
         }
-        cryptocurrenciesInfo {
+        cryptocurrenciesInfo(searchText: $searchText) {
             totalCount
         }
     }
@@ -178,7 +178,6 @@ export default function Cryptocurrencies() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
     const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
-    const [symbolsToSearch, setSymbolsToSearch] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
@@ -216,24 +215,20 @@ export default function Cryptocurrencies() {
             if (searchItem) {
                 setSearchItems([...searchItems, searchItem]);
                 setValue(event.target.value);
-
-                symbolsToSearch.push(searchItem);
-                setSearchTextValue(symbolsToSearch);
+                setSearchTextValue([...searchItems, searchItem]);
             }
             setValue("");
         }
     };
 
-    const handleDelete = (searchItem: any) => (e: any) => {
-        setSearchItems(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
-        setSymbolsToSearch(symbolsToSearch.splice(symbolsToSearch.indexOf(searchItem)));
+    const handleDelete = (searchItem: string) => (e: any) => {
+        setSearchItems(searchItems.filter((newSearchItem: string) => newSearchItem !== searchItem));
         setValue("");
-        setSearchTextValue(symbolsToSearch);
+        setSearchTextValue(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
     };
 
     const handleClear = () => {
         setSearchItems([]);
-        setSymbolsToSearch([]);
         setValue("");
         setSearchTextValue([]);
     }

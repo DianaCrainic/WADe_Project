@@ -134,7 +134,6 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
 };
 
 export const getCryptocurrenciesInfo = async (searchText = [""]): Promise<CryptocurrenciesInfo> => {
-    const whereClause = searchText.map(text => `regex(?symbol, "${text}", "i")`).join(" || ");
     const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const query = `

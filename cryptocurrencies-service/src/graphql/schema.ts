@@ -28,6 +28,7 @@ const schema = buildSchema(`
         priceHistory: [PriceData!]!
         protectionScheme: ProtectionScheme
         distributionScheme: DistributionScheme
+        count: Int
     }
 
     type CryptocurrenciesInfo {
@@ -59,7 +60,7 @@ const schema = buildSchema(`
     type Query {
         cryptocurrency(id: ID!): Cryptocurrency!
         cryptocurrencies(limit: Int, offset: Int, searchText: [String]): [Cryptocurrency!]!
-        cryptocurrenciesInfo: CryptocurrenciesInfo
+        cryptocurrenciesInfo(searchText: [String]): CryptocurrenciesInfo
     }
     
     type Mutation {

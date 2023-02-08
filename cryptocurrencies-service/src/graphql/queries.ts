@@ -10,8 +10,8 @@ const queries = {
         return await getCryptocurrencies(args.limit, args.offset, args.searchText);
     },
 
-    cryptocurrenciesInfo: async (): Promise<CryptocurrenciesInfo> => {
-        return await getCryptocurrenciesInfo();
+    cryptocurrenciesInfo: async (args: { searchText?: string[] }, context: any): Promise<CryptocurrenciesInfo> => {
+        return await getCryptocurrenciesInfo(args.searchText);
     }
 };
 
