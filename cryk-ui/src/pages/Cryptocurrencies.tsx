@@ -307,6 +307,9 @@ export default function Cryptocurrencies() {
                     </div>
 
                     <div className="cards-container">
+                        {data.cryptocurrenciesInfo.totalCount === 0 ?
+                            <h2 className="no-cryptos">There are no cryptocurrencies matching the filters.</h2> : null}
+
                         {cryptocurrencies ?
                             cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
                                 <CryptoCard cryptocurrency={cryptocurrency}
@@ -320,14 +323,15 @@ export default function Cryptocurrencies() {
                         dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />
-
-                    <Pagination className="pagination"
-                        count={totalNumberOfPages}
-                        color="primary"
-                        size="large"
-                        page={currentPage}
-                        variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} />
+                    {data.cryptocurrenciesInfo.totalCount !== 0 ?
+                        <Pagination className="pagination"
+                            count={totalNumberOfPages}
+                            color="primary"
+                            size="large"
+                            page={currentPage}
+                            variant="outlined"
+                            onChange={(event, value) => setCurrentPage(value)} />
+                        : null}
                     {totalCoinsStats.length > 0 &&
                         <>
                             <h2>Total coins</h2>
@@ -338,6 +342,7 @@ export default function Cryptocurrencies() {
                             <h2>Block time</h2>
                             {getBarChart(blockTimeStats, "Block time")}
                         </>}
+
                 </div>
             </>
         </HelmetProvider>
