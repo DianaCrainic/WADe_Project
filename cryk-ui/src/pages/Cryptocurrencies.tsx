@@ -307,7 +307,7 @@ export default function Cryptocurrencies() {
                     </div>
 
                     <div className="cards-container">
-                        {data.cryptocurrenciesInfo.totalCount === 0 &&
+                        {cryptocurrencies.length === 0 &&
                             <h2 className="no-cryptos">There are no cryptocurrencies matching the filters.</h2>}
 
                         {cryptocurrencies ?
@@ -323,7 +323,7 @@ export default function Cryptocurrencies() {
                         dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />
-                    {data.cryptocurrenciesInfo.totalCount !== 0 &&
+                    {cryptocurrencies.length !== 0 &&
                         <Pagination className="pagination"
                             count={totalNumberOfPages}
                             color="primary"
