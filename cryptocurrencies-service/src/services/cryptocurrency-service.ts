@@ -79,8 +79,8 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     return cryptocurrency;
 }
 
-export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [""]): Promise<Cryptocurrency[]> => {
-    const whereClause = searchText.map(text => `regex(?symbol, "${text}", "i")`).join(" || ");
+export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: string[] = [""]): Promise<Cryptocurrency[]> => {
+    const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const jsonLdQuery = {
         "@graph": [{
@@ -107,7 +107,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
         }],
         "$where": [
             "?id rdf:type doacc:Cryptocurrency",
-            `FILTER (${whereClause})`
+            `FILTER (${filters})`
         ],
         "$limit": limit,
         "$offset": offset,
@@ -133,7 +133,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText = [
     return result["@graph"] as Cryptocurrency[];
 };
 
-export const getCryptocurrenciesInfo = async (searchText = [""]): Promise<CryptocurrenciesInfo> => {
+export const getCryptocurrenciesInfo = async (searchText: string[] = [""]): Promise<CryptocurrenciesInfo> => {
     const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const query = `

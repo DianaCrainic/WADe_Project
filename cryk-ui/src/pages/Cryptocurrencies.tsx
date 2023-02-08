@@ -10,10 +10,10 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import CreateCryptocurrencyCardDialog from "../components/CreateCryptocurrencyCardDialog";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
-import { styled, alpha } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
+import { styled, alpha } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import Chip from "@mui/material/Chip";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
@@ -120,54 +120,54 @@ const getBarChart = (data: { name: string, value: number }[], name: string): any
     </ResponsiveContainer>);
 }
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    textAlign: 'left',
+const Search = styled("div")(({ theme }) => ({
+    position: "relative",
+    textAlign: "left",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.05),
-    '&:hover': {
+    "&:hover": {
         backgroundColor: alpha(theme.palette.common.white, 0.15),
     },
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
         marginLeft: theme.spacing(1),
-        width: 'auto',
+        width: "auto",
     }
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    height: '60px',
-    fontSize: '1.5rem',
-    '& .MuiInputBase-input': {
+    color: "inherit",
+    height: "60px",
+    fontSize: "1.5rem",
+    "& .MuiInputBase-input": {
         padding: theme.spacing(1, 1, 1, 0),
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '30ch'
+        transition: theme.transitions.create("width"),
+        width: "100%",
+        [theme.breakpoints.up("md")]: {
+            width: "30ch"
         },
     },
 }));
 
 const useStyles = makeStyles((theme: any) => ({
     chip: {
-        '&.MuiChip-root': {
+        "&.MuiChip-root": {
             height: theme.spacing(6),
             marginLeft: theme.spacing(1),
         },
-        '& .MuiChip-label': {
+        "& .MuiChip-label": {
             fontSize: 25
         },
     }
@@ -204,32 +204,32 @@ export default function Cryptocurrencies() {
 
     const [searchItems, setSearchItems] = useState<string[]>([]);
     const classes = useStyles();
-    const [value, setValue] = React.useState("");
+    const [seachInputValue, setSeachInputValue] = useState("");
 
     const handleKeyDown = (event: any) => {
         if (["Enter", "Tab", ","].includes(event.key)) {
             event.preventDefault();
 
-            var searchItem = value?.trim();
+            let searchItem = seachInputValue?.trim();
 
             if (searchItem) {
                 setSearchItems([...searchItems, searchItem]);
-                setValue(event.target.value);
+                setSeachInputValue(event.target.value);
                 setSearchTextValue([...searchItems, searchItem]);
             }
-            setValue("");
+            setSeachInputValue("");
         }
     };
 
-    const handleDelete = (searchItem: string) => (e: any) => {
+    const handleDelete = (searchItem: string) => (event: any) => {
         setSearchItems(searchItems.filter((newSearchItem: string) => newSearchItem !== searchItem));
-        setValue("");
+        setSeachInputValue("");
         setSearchTextValue(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
     };
 
     const handleClear = () => {
         setSearchItems([]);
-        setValue("");
+        setSeachInputValue("");
         setSearchTextValue([]);
     }
     useEffect(() => {
@@ -286,9 +286,9 @@ export default function Cryptocurrencies() {
                                 </SearchIconWrapper>
                                 <StyledInputBase
                                     placeholder="ace,bit..."
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    value={value}
-                                    onChange={e => setValue(e.target.value)}
+                                    inputProps={{ "aria-label": "search" }}
+                                    value={seachInputValue}
+                                    onChange={event => setSeachInputValue(event.target.value)}
                                     onKeyDown={handleKeyDown}
                                 />
                             </Search>
