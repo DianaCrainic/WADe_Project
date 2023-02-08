@@ -307,8 +307,8 @@ export default function Cryptocurrencies() {
                     </div>
 
                     <div className="cards-container">
-                        {data.cryptocurrenciesInfo.totalCount === 0 ?
-                            <h2 className="no-cryptos">There are no cryptocurrencies matching the filters.</h2> : null}
+                        {data.cryptocurrenciesInfo.totalCount === 0 &&
+                            <h2 className="no-cryptos">There are no cryptocurrencies matching the filters.</h2>}
 
                         {cryptocurrencies ?
                             cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
@@ -323,15 +323,14 @@ export default function Cryptocurrencies() {
                         dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />
-                    {data.cryptocurrenciesInfo.totalCount !== 0 ?
+                    {data.cryptocurrenciesInfo.totalCount !== 0 &&
                         <Pagination className="pagination"
                             count={totalNumberOfPages}
                             color="primary"
                             size="large"
                             page={currentPage}
                             variant="outlined"
-                            onChange={(event, value) => setCurrentPage(value)} />
-                        : null}
+                            onChange={(event, value) => setCurrentPage(value)} />}
                     {totalCoinsStats.length > 0 &&
                         <>
                             <h2>Total coins</h2>
