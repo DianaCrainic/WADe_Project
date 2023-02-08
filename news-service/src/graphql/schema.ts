@@ -6,6 +6,8 @@ const schema = buildSchema(`
         id: ID!
         title: String!
         body: String
+        publishedAt: String!
+        source: String
         about: [ID!]!
     }
 
@@ -16,6 +18,8 @@ const schema = buildSchema(`
     input CreateCryptoNewsInput {
         title: String!
         body: String!
+        publishedAt: String!
+        source: String
         about: [ID!]!
     }
 
@@ -23,6 +27,8 @@ const schema = buildSchema(`
         id: ID!
         title: String
         body: String
+        publishedAt: String!
+        source: String
         about: [ID!]
     }
 
