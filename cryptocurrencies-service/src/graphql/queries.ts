@@ -6,12 +6,12 @@ const queries = {
         return await getCryptocurrencyById(args.id);
     },
 
-    cryptocurrencies: async (args: { limit?: number, offset?: number }, context: any): Promise<Cryptocurrency[]> => {
-        return await getCryptocurrencies(args.limit, args.offset);
+    cryptocurrencies: async (args: { limit?: number, offset?: number, searchText?: string[] }, context: any): Promise<Cryptocurrency[]> => {
+        return await getCryptocurrencies(args.limit, args.offset, args.searchText);
     },
 
-    cryptocurrenciesInfo: async (): Promise<CryptocurrenciesInfo> => {
-        return await getCryptocurrenciesInfo();
+    cryptocurrenciesInfo: async (args: { searchText?: string[] }, context: any): Promise<CryptocurrenciesInfo> => {
+        return await getCryptocurrenciesInfo(args.searchText);
     }
 };
 

@@ -10,17 +10,23 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import CreateCryptocurrencyCardDialog from "../components/CreateCryptocurrencyCardDialog";
 import { GetPaginatedCryptocurrenciesInput } from "../models/GetPaginatedCryptocurrenciesInput";
 import { RefetchInput } from "../models/RefetchInput";
+import { styled, alpha } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import Chip from "@mui/material/Chip";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
-    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0) {
-        cryptocurrencies(limit: $limit, offset: $offset) {
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = []) {
+        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText)  
+        {
             id
             symbol
             description
             totalCoins
             blockTime
         }
-        cryptocurrenciesInfo {
+        cryptocurrenciesInfo(searchText: $searchText) {
             totalCount
         }
     }
@@ -114,16 +120,71 @@ const getBarChart = (data: { name: string, value: number }[], name: string): any
     </ResponsiveContainer>);
 }
 
+const Search = styled("div")(({ theme }) => ({
+    position: "relative",
+    textAlign: "left",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.05),
+    "&:hover": {
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+        marginLeft: theme.spacing(1),
+        width: "auto",
+    }
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: "inherit",
+    height: "60px",
+    fontSize: "1.5rem",
+    "& .MuiInputBase-input": {
+        padding: theme.spacing(1, 1, 1, 0),
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create("width"),
+        width: "100%",
+        [theme.breakpoints.up("md")]: {
+            width: "30ch"
+        },
+    },
+}));
+
+const useStyles = makeStyles((theme: any) => ({
+    chip: {
+        "&.MuiChip-root": {
+            height: theme.spacing(6),
+            marginLeft: theme.spacing(1),
+        },
+        "& .MuiChip-label": {
+            fontSize: 25
+        },
+    }
+}));
+
 export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalNumberOfCryptocurrencies, setTotalNumberOfCryptocurrencies] = useState(Number);
+    const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
+    const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
 
     const navigate = useNavigate();
 
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
-        offset: (currentPage - 1) * CRYPTOS_PER_PAGE
+        offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
+        searchText: searchTextValue.length !== 0 ? searchTextValue : [""]
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -141,10 +202,40 @@ export default function Cryptocurrencies() {
     const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
     const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
 
+    const [searchItems, setSearchItems] = useState<string[]>([]);
+    const classes = useStyles();
+    const [seachInputValue, setSeachInputValue] = useState("");
+
+    const handleKeyDown = (event: any) => {
+        if (["Enter", "Tab", ","].includes(event.key)) {
+            event.preventDefault();
+
+            let searchItem = seachInputValue?.trim();
+
+            if (searchItem) {
+                setSearchItems([...searchItems, searchItem]);
+                setSeachInputValue(event.target.value);
+                setSearchTextValue([...searchItems, searchItem]);
+            }
+            setSeachInputValue("");
+        }
+    };
+
+    const handleDelete = (searchItem: string) => (event: any) => {
+        setSearchItems(searchItems.filter((newSearchItem: string) => newSearchItem !== searchItem));
+        setSeachInputValue("");
+        setSearchTextValue(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
+    };
+
+    const handleClear = () => {
+        setSearchItems([]);
+        setSeachInputValue("");
+        setSearchTextValue([]);
+    }
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
-            setTotalNumberOfCryptocurrencies(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
+            setTotalNumberOfPages(Math.ceil(data.cryptocurrenciesInfo.totalCount / CRYPTOS_PER_PAGE));
             setTotalCoinsStats(getTotalCoinsStats(data.cryptocurrencies));
             setBlockTimeStats(getBlockTimeStats(data.cryptocurrencies));
         }
@@ -186,7 +277,39 @@ export default function Cryptocurrencies() {
                             Visualizations
                         </Button>
                     </div>
+
+                    <div className="search-component">
+                        <div className="search-box">
+                            <Search>
+                                <SearchIconWrapper>
+                                    <SearchIcon />
+                                </SearchIconWrapper>
+                                <StyledInputBase
+                                    placeholder="ace,bit..."
+                                    inputProps={{ "aria-label": "search" }}
+                                    value={seachInputValue}
+                                    onChange={event => setSeachInputValue(event.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </Search>
+                        </div>
+                        <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
+                    </div>
+                    <div className="chips-list">
+                        {searchItems.map((item: string, index: number) => (
+                            <Chip
+                                label={item}
+                                onDelete={handleDelete(item)}
+                                className={classes.chip}
+                                key={index}
+                            />
+                        ))}
+                    </div>
+
                     <div className="cards-container">
+                        {cryptocurrencies.length === 0 &&
+                            <h2 className="no-cryptos">There are no cryptocurrencies matching the filters.</h2>}
+
                         {cryptocurrencies ?
                             cryptocurrencies.map((cryptocurrency: Cryptocurrency, index: number) => (
                                 <CryptoCard cryptocurrency={cryptocurrency}
@@ -200,14 +323,14 @@ export default function Cryptocurrencies() {
                         dialogQuery={CREATE_CRYPTOCURRENCY}
                         refetchInput={refetchInput}
                     />
-
-                    <Pagination className="pagination"
-                        count={totalNumberOfCryptocurrencies}
-                        color="primary"
-                        size="large"
-                        page={currentPage}
-                        variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} />
+                    {cryptocurrencies.length !== 0 &&
+                        <Pagination className="pagination"
+                            count={totalNumberOfPages}
+                            color="primary"
+                            size="large"
+                            page={currentPage}
+                            variant="outlined"
+                            onChange={(event, value) => setCurrentPage(value)} />}
                     {totalCoinsStats.length > 0 &&
                         <>
                             <h2>Total coins</h2>
@@ -218,6 +341,7 @@ export default function Cryptocurrencies() {
                             <h2>Block time</h2>
                             {getBarChart(blockTimeStats, "Block time")}
                         </>}
+
                 </div>
             </>
         </HelmetProvider>

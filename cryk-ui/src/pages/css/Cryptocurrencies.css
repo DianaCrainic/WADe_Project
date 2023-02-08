@@ -24,17 +24,51 @@
 .crypto-website,
 .crypto-source,
 .crypto-coins {
-  font-size: 30px;
-  padding-left: 10%;
-  padding-right: 10%;
+    font-size: 30px;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .news-title {
-  font-size: 50px;
-  padding-top: 4%;
+    font-size: 50px;
+    padding-top: 4%;
 }
 
 .pagination {
     padding-bottom: 3%;
     padding-top: 3%;
+}
+
+.search-component {
+    text-align: left !important;
+    position: relative;
+    padding-top: 3%;
+    padding-bottom: 2%;
+    padding-left: auto;
+    padding-right: auto;
+}
+
+.search-box {
+    padding-bottom: 2%;
+}
+
+
+.chips-list {
+    padding-bottom: 2%;
+    font-size: large !important;
+}
+
+search {
+    width: 300;
+}
+
+.clear-filters-chip {
+    float: right;
+    align-items: flex-end;
+    margin-top: 3%;
+    font-size: medium !important;
+}
+
+.no-cryptos{
+    padding-bottom: 5%;
 }
