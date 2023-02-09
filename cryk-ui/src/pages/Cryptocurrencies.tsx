@@ -15,10 +15,14 @@ import { makeStyles } from "@mui/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "@mui/material/Chip";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
-    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = []) {
-        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText)  
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [], $sortOrder: String = "DESC") {
+        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText, sortOrder: $sortOrder)  
         {
             id
             symbol
@@ -180,13 +184,15 @@ export default function Cryptocurrencies() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
     const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
+    const [sortOrderDateFounded, setSortOrderDateFounded] = useState("DESC");
 
     const navigate = useNavigate();
 
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
         offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        searchText: searchTextValue.length !== 0 ? searchTextValue : [""]
+        searchText: searchTextValue.length !== 0 ? searchTextValue : [""],
+        sortOrder: sortOrderDateFounded
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -234,6 +240,12 @@ export default function Cryptocurrencies() {
         setSeachInputValue("");
         setSearchTextValue([]);
     }
+
+    const handleChangeDropdown = (event: any) => {
+        setSortOrderDateFounded(event.target.value);
+        console.log("sorting value: ", sortOrderDateFounded);
+    };
+
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
@@ -296,6 +308,23 @@ export default function Cryptocurrencies() {
                             </Search>
                         </div>
                         <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
+                    </div>
+                    <div className="sorting-component">
+                        <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 150 }}>
+                            <InputLabel id="demo-simple-select-label">Date Founded</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={sortOrderDateFounded}
+                                defaultValue="DESC"
+                                label="Date Founded"
+                                onChange={handleChangeDropdown}
+                            >
+                                <MenuItem value={"DESC"}>Newest to Oldest</MenuItem>
+                                <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
+                            </Select>
+                        </FormControl>
+
                     </div>
                     <div className="chips-list">
                         {searchItems.map((item: string, index: number) => (

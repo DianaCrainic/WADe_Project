@@ -80,7 +80,7 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     return cryptocurrency;
 }
 
-export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: string[] = [""]): Promise<Cryptocurrency[]> => {
+export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: string[] = [""], sortOrder: "ASC" | "DESC" = "DESC"): Promise<Cryptocurrency[]> => {
     const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const jsonLdQuery = {
@@ -92,7 +92,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
             "blockReward": "$doacc:block-reward",
             "blockTime": "$doacc:block-time",
             "totalCoins": "$doacc:total-coins",
-            "dateFounded": "$doacc:date-founded",
+            "dateFounded": "$doacc:date-founded$var:?dateFounded",
             "source": "$doacc:source",
             "website": "$doacc:website",
             "protectionScheme": {
@@ -112,7 +112,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
         ],
         "$limit": limit,
         "$offset": offset,
-        "$orderby": "?symbol",
+        "$orderby": `${sortOrder} (?dateFounded) ?symbol`,
         "$prefixes": {
             "doacc": "http://purl.org/net/bel-epa/doacc#",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
