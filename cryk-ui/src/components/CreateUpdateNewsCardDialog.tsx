@@ -3,7 +3,7 @@ import { DocumentNode } from "graphql";
 import { News } from "../models/News";
 import "./css/CreateUpdateNewsCardDialog.css";
 import { useMutation } from "@apollo/client";
-import { object, string, TypeOf } from "zod";
+import { object, string, literal, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefetchInput } from "../models/RefetchInput";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -21,7 +21,8 @@ const newsCardSchema = object({
   }).min(1, { message: "News card title is required" }),
   body: string({
     required_error: "News card body is required"
-  }).min(1, { message: "News card body is required" })
+  }).min(1, { message: "News card body is required" }),
+  source: string().url().optional().or(literal(""))
 });
 
 type NewsCardInput = TypeOf<typeof newsCardSchema>;
@@ -45,7 +46,8 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     "button-text": "Create News",
     "dialog-title": "Create News",
     "title-default-value": null,
-    "body-default-value": null
+    "body-default-value": null,
+    "source-default-value": null
   });
   operationPropertiesMap.set("update", {
     "button-class": "news-card-update-button",
@@ -53,7 +55,8 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     "button-text": "Update",
     "dialog-title": "Update News",
     "title-default-value": props.news?.title,
-    "body-default-value": props.news?.body
+    "body-default-value": props.news?.body,
+    "source-default-value": props.news?.source
   });
 
   const {
@@ -69,7 +72,7 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
     if (props.operationType === "create" && isSubmitSuccessful) {
       reset();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, props.operationType, reset]);
 
   const handleClickOpen = () => {
     setIsOpen(true);
@@ -87,14 +90,16 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
   });
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
+    const currentDateTime = new Date();
+    const sanitizedBody = (values.body.replace(/(?:\r\n|\r|\n|\\r\\n|\\r|\\n)/g, '<br>')).replace(/(?:\"|\')/g, '\\\"');
     if (props.operationType === "create") {
-      const operationInput: CreateCryptoNewsInput = { title: values.title, body: values.body, about: [props.cryptocurrencyId] };
+      const operationInput: CreateCryptoNewsInput = { title: values.title, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({
         variables: { createCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
     else {
-      const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: values.title, body: values.body };
+      const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: values.title, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source };
       createUpdateNewsEntry({
         variables: { updateCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
@@ -165,6 +170,16 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
               error={!!errors["body"]}
               helperText={errors["body"] ? errors["body"].message : ""}
               {...register("body")}
+            />
+
+            <TextField
+              fullWidth
+              label="Source"
+              type="url"
+              defaultValue={operationPropertiesMap.get(props.operationType)["source-default-value"]}
+              error={!!errors["source"]}
+              helperText={errors["source"] ? errors["source"].message : ""}
+              {...register("source")}
             />
 
             <Button

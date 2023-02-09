@@ -65,6 +65,8 @@ const GET_PAGINATED_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
             id
             title
             body
+            publishedAt
+            source
         }
         cryptoNewsInfo(cryptocurrencyId: $cryptocurrencyId) {
             totalCount
@@ -78,6 +80,8 @@ const CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
             id
             title
             body
+            publishedAt
+            source
         }
     }
 `;
@@ -88,6 +92,8 @@ const UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY = gql`
             id
             title
             body
+            publishedAt
+            source
         }
     }
 `;
@@ -301,22 +307,23 @@ export default function CryptoInformation(props: any) {
                     {priceHistory.length > 0 && <DCAChart priceHistory={priceHistory} cryptocurrencySymbol={symbol} />}
                     <h2 className="news-title">News</h2>
                     <div className="news-cards-container">
-                        {news ?
+                        {news && news.length !== 0 ?
                             (news.map((oneNews: News, index: number) => (
-                                <NewsCard news={oneNews} cryptocurrencyId={cryptocurrencyId}
+                                <NewsCard cardId={`news-card${index}`} news={oneNews} cryptocurrencyId={cryptocurrencyId}
                                     queryUpdate={UPDATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                                     queryDelete={DELETE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                                     refetchInput={getPaginatedNewsRefetchInput} key={index} />)))
-                            : null
+                            : <h2 className="no-news">There are no news for this cryptocurrency.</h2>
                         }
                     </div>
+                    {news && news.length !== 0 ? 
                     <Pagination className="pagination"
                         count={totalNumberOfCryptoNews}
                         color="primary"
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} />
+                        onChange={(_event, value) => setCurrentPage(value)} /> : null}                 
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                         refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
