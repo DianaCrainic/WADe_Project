@@ -26,7 +26,16 @@ export default function CryptoCard(props: { cryptocurrency: Cryptocurrency, quer
           property="http://purl.org/net/bel-epa/doacc#symbol">
           {cryptocurrency.symbol}
         </Typography>
-        {cryptocurrency?.description && <Typography variant="body2"
+        {cryptocurrency?.dateFounded ?
+          <Typography variant="body2" className="card-date-founded" property="http://www.w3.org/2001/XMLSchema#date"
+          >
+            Date founded: {cryptocurrency.dateFounded}
+          </Typography>
+          :
+          <Typography variant="body2" className="card-date-founded" property="http://www.w3.org/2001/XMLSchema#date">
+            Date founded: unknown
+          </Typography>}
+        {cryptocurrency?.description && <Typography variant="body2" className="card-content"
           property="http://purl.org/dc/elements/1.1/description">
           {cryptocurrency.description}
         </Typography>}

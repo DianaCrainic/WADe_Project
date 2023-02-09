@@ -3,6 +3,7 @@ export interface CreateCryptocurrencyInput {
     description?: string;
     blockReward?: string;
     totalCoins?: string;
+    dateFounded?: string;
     source?: string;
     website?: string;
 }

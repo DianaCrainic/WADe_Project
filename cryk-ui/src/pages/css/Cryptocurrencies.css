@@ -23,7 +23,8 @@
 .crypto-reward,
 .crypto-website,
 .crypto-source,
-.crypto-coins {
+.crypto-coins,
+.crypto-date-founded {
     font-size: 30px;
     padding-left: 10%;
     padding-right: 10%;

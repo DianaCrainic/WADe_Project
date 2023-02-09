@@ -25,6 +25,7 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             description
             totalCoins
             blockTime
+            dateFounded
         }
         cryptocurrenciesInfo(searchText: $searchText) {
             totalCount
@@ -42,6 +43,7 @@ mutation CreateCryptocurrency($createCryptocurrencyInput: CreateCryptocurrencyIn
         totalCoins
         source
         website
+        dateFounded
     }
 }
 `;
