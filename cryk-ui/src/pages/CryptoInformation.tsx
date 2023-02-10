@@ -251,6 +251,7 @@ export default function CryptoInformation(props: any) {
     const description = cryptocurrency?.description;
     const website = cryptocurrency?.website;
     const source = cryptocurrency?.source;
+    const dateFounded = cryptocurrency?.dateFounded;
     const reward = Number(cryptocurrency?.blockReward) < 0 ? -1 : Number(cryptocurrency?.blockReward);
     const coins = Number(cryptocurrency?.totalCoins) < 0 ? -1 : Number(cryptocurrency?.totalCoins);
     const priceHistory = cryptocurrency?.priceHistory || [];
@@ -276,6 +277,10 @@ export default function CryptoInformation(props: any) {
                     <p className="crypto-source">
                         <span>Source: </span>
                         {source ? <a href={source} property="http://purl.org/net/bel-epa/doacc#source">{source}</a> : UNKNOWN_MESSAGE}
+                    </p>
+                    <p className="crypto-date-founded">
+                        <span>Date founded: </span>
+                        {dateFounded ? <span property="http://www.w3.org/2001/XMLSchema#date">{dateFounded}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-reward">
                         <span>Reward: </span>

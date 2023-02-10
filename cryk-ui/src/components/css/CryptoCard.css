@@ -8,7 +8,16 @@
 
 .card-title {
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 2rem !important;
+}
+
+.card-date-founded {
+    font-size: 1.2rem !important;
+    padding-bottom: 3%;
+}
+
+.card-content{
+    font-size: 1rem !important;
 }
 
 .card-media {

@@ -58,7 +58,7 @@ const schema = buildSchema(`
 
     type Query {
         cryptocurrency(id: ID!): Cryptocurrency!
-        cryptocurrencies(limit: Int, offset: Int, searchText: [String]): [Cryptocurrency!]!
+        cryptocurrencies(limit: Int, offset: Int, searchText: [String], sortOrder: String): [Cryptocurrency!]!
         cryptocurrenciesInfo(searchText: [String]): CryptocurrenciesInfo
     }
     

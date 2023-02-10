@@ -15,16 +15,21 @@ import { makeStyles } from "@mui/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "@mui/material/Chip";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
-    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = []) {
-        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText)  
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [], $sortOrder: String = "DESC") {
+        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText, sortOrder: $sortOrder)  
         {
             id
             symbol
             description
             totalCoins
             blockTime
+            dateFounded
         }
         cryptocurrenciesInfo(searchText: $searchText) {
             totalCount
@@ -42,6 +47,7 @@ mutation CreateCryptocurrency($createCryptocurrencyInput: CreateCryptocurrencyIn
         totalCoins
         source
         website
+        dateFounded
     }
 }
 `;
@@ -178,13 +184,15 @@ export default function Cryptocurrencies() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
     const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
+    const [sortOrderDateFounded, setSortOrderDateFounded] = useState("DESC");
 
     const navigate = useNavigate();
 
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
         offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        searchText: searchTextValue.length !== 0 ? searchTextValue : [""]
+        searchText: searchTextValue.length !== 0 ? searchTextValue : [""],
+        sortOrder: sortOrderDateFounded
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -232,6 +240,11 @@ export default function Cryptocurrencies() {
         setSeachInputValue("");
         setSearchTextValue([]);
     }
+
+    const handleChangeDropdown = (event: any) => {
+        setSortOrderDateFounded(event.target.value);
+    };
+
     useEffect(() => {
         if (data) {
             setCryptocurrencies(data.cryptocurrencies);
@@ -277,33 +290,52 @@ export default function Cryptocurrencies() {
                             Visualizations
                         </Button>
                     </div>
-
-                    <div className="search-component">
-                        <div className="search-box">
-                            <Search>
-                                <SearchIconWrapper>
-                                    <SearchIcon />
-                                </SearchIconWrapper>
-                                <StyledInputBase
-                                    placeholder="ace,bit..."
-                                    inputProps={{ "aria-label": "search" }}
-                                    value={seachInputValue}
-                                    onChange={event => setSeachInputValue(event.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </Search>
+                    <div className="filters-component">
+                        <div className="search-component">
+                            <div className="search-box">
+                                <Search>
+                                    <SearchIconWrapper>
+                                        <SearchIcon />
+                                    </SearchIconWrapper>
+                                    <StyledInputBase
+                                        placeholder="ace,bit..."
+                                        inputProps={{ "aria-label": "search" }}
+                                        value={seachInputValue}
+                                        onChange={event => setSeachInputValue(event.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </Search>
+                            </div>
+                            <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
+                            <div className="chips-list">
+                                {searchItems.map((item: string, index: number) => (
+                                    <Chip
+                                        label={item}
+                                        onDelete={handleDelete(item)}
+                                        className={classes.chip}
+                                        key={index}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                        <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
-                    </div>
-                    <div className="chips-list">
-                        {searchItems.map((item: string, index: number) => (
-                            <Chip
-                                label={item}
-                                onDelete={handleDelete(item)}
-                                className={classes.chip}
-                                key={index}
-                            />
-                        ))}
+
+                        <div className="sorting-component">
+                            <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 200, }}>
+                                <InputLabel id="demo-simple-select-label" style={{ fontSize: "1.2rem" }}>Date Founded</InputLabel>
+                                <Select
+                                    style={{ fontSize: "1.3rem" }}
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={sortOrderDateFounded}
+                                    defaultValue="DESC"
+                                    label="Date Founded"
+                                    onChange={handleChangeDropdown}
+                                >
+                                    <MenuItem value={"DESC"}>Newest to Oldest</MenuItem>
+                                    <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
 
                     <div className="cards-container">
