@@ -93,7 +93,7 @@ export default function CreateCryptocurrencyCardDialog(props: {
         const year = date.getFullYear();
         const month = date.getMonth() + 1;
         const day = date.getDate();
-        let dateFoundedValue: string = `${year}-${month > 9 ? month : `0${month}`}-${day > 9 ? day : `0${day}`}`;
+        const dateFoundedValue: string = `${year}-${month > 9 ? month : `0${month}`}-${day > 9 ? day : `0${day}`}`;
 
         const operationInput: CreateCryptocurrencyInput = {
             symbol: values.symbol,

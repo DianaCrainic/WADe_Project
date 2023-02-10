@@ -243,7 +243,6 @@ export default function Cryptocurrencies() {
 
     const handleChangeDropdown = (event: any) => {
         setSortOrderDateFounded(event.target.value);
-        console.log("sorting value: ", sortOrderDateFounded);
     };
 
     useEffect(() => {
