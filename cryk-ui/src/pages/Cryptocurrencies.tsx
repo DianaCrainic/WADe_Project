@@ -291,50 +291,52 @@ export default function Cryptocurrencies() {
                             Visualizations
                         </Button>
                     </div>
-
-                    <div className="search-component">
-                        <div className="search-box">
-                            <Search>
-                                <SearchIconWrapper>
-                                    <SearchIcon />
-                                </SearchIconWrapper>
-                                <StyledInputBase
-                                    placeholder="ace,bit..."
-                                    inputProps={{ "aria-label": "search" }}
-                                    value={seachInputValue}
-                                    onChange={event => setSeachInputValue(event.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </Search>
+                    <div className="filters-component">
+                        <div className="search-component">
+                            <div className="search-box">
+                                <Search>
+                                    <SearchIconWrapper>
+                                        <SearchIcon />
+                                    </SearchIconWrapper>
+                                    <StyledInputBase
+                                        placeholder="ace,bit..."
+                                        inputProps={{ "aria-label": "search" }}
+                                        value={seachInputValue}
+                                        onChange={event => setSeachInputValue(event.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </Search>
+                            </div>
+                            <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
+                            <div className="chips-list">
+                                {searchItems.map((item: string, index: number) => (
+                                    <Chip
+                                        label={item}
+                                        onDelete={handleDelete(item)}
+                                        className={classes.chip}
+                                        key={index}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                        <Chip className="clear-filters-chip" label={"Clear filters"} onClick={() => handleClear()} />
-                    </div>
-                    <div className="sorting-component">
-                        <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 150 }}>
-                            <InputLabel id="demo-simple-select-label">Date Founded</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={sortOrderDateFounded}
-                                defaultValue="DESC"
-                                label="Date Founded"
-                                onChange={handleChangeDropdown}
-                            >
-                                <MenuItem value={"DESC"}>Newest to Oldest</MenuItem>
-                                <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
-                            </Select>
-                        </FormControl>
 
-                    </div>
-                    <div className="chips-list">
-                        {searchItems.map((item: string, index: number) => (
-                            <Chip
-                                label={item}
-                                onDelete={handleDelete(item)}
-                                className={classes.chip}
-                                key={index}
-                            />
-                        ))}
+                        <div className="sorting-component">
+                            <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 200, }}>
+                                <InputLabel id="demo-simple-select-label" style={{ fontSize: "1.2rem" }}>Date Founded</InputLabel>
+                                <Select
+                                    style={{ fontSize: "1.3rem" }}
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={sortOrderDateFounded}
+                                    defaultValue="DESC"
+                                    label="Date Founded"
+                                    onChange={handleChangeDropdown}
+                                >
+                                    <MenuItem value={"DESC"}>Newest to Oldest</MenuItem>
+                                    <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
 
                     <div className="cards-container">
