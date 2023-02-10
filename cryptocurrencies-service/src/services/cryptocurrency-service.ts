@@ -2,7 +2,6 @@ import envs from "../envs";
 import ParsingClient from "sparql-http-client/ParsingClient";
 import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput, CryptocurrenciesInfo } from "../models/cryptocurrency";
 import sparqlTransformer from "sparql-transformer";
-import crypto from "crypto";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 
