@@ -8,6 +8,16 @@ import sparqlTransformer from "sparql-transformer";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 
+const convertDateTimeToISOFormat = (date: Date): string => {
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth() + 1;
+    const day = date.getUTCDate();
+    const hour = date.getUTCHours();
+    const minute = date.getUTCMinutes();
+    const second = date.getUTCSeconds();
+    return `${year}-${month > 9 ? month : `0${month}`}-${day > 9 ? day : `0${day}`}T${hour > 9 ? hour : `0${hour}`}:${minute > 9 ? minute : `0${minute}`}:${second > 9 ? second : `0${second}`}Z`;
+}
+
 const getCryptoNewsById = async (id: string): Promise<any> => {
     const jsonLdQuery = {
         "@graph": [{
@@ -15,6 +25,8 @@ const getCryptoNewsById = async (id: string): Promise<any> => {
             "id": `<${id}>`,
             "title": "$schema:headline$required",
             "body": "$schema:articleBody",
+            "publishedAt": "$schema:datePublished$required",
+            "source": "$schema:url",
             "about": "$elements:subject$required$list"
         }],
         "$where": [
@@ -54,6 +66,8 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, 
             "id": "?id",
             "title": "$schema:headline$required",
             "body": "$schema:articleBody",
+            "publishedAt": "$schema:datePublished$required$var:?publishedAt",
+            "source": "$schema:url",
             "about": "$elements:subject$required$list"
         }],
         "$where": [
@@ -62,7 +76,7 @@ export const getCryptoNewsByCryptocurrencyId = async (cryptocurrencyId: string, 
         ],
         "$limit": limit,
         "$offset": offset,
-        "$orderby": "?title",
+        "$orderby": "DESC(?publishedAt)",
         "$prefixes": {
             "schema": "http://schema.org/",
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -103,6 +117,14 @@ export const getCryptoNewsInfoForCryptocurrency = async (cryptocurrencyId: strin
 export const createCryptoNews = async (cryptoNews: CreateCryptoNewsInput): Promise<CryptoNews> => {
     const id = `http://schema.org/${crypto.randomUUID()}`;
 
+    if (cryptoNews.publishedAt) {
+        const publishedAt = new Date(cryptoNews.publishedAt);
+        if (!(publishedAt instanceof Date) || isNaN(publishedAt.valueOf())) {
+            throw new Error("Invalid date (publishedAt)");
+        }
+        cryptoNews.publishedAt = convertDateTimeToISOFormat(publishedAt);
+    }
+
     let cryptocurrencies = "";
     cryptoNews.about.forEach(function(item) {
         cryptocurrencies = cryptocurrencies + `<${id}> ` + "elements:subject " + `<${item}> .\n`
@@ -116,7 +138,10 @@ export const createCryptoNews = async (cryptoNews: CreateCryptoNewsInput): Promi
         INSERT DATA {
             <${id}> rdf:type                  schema:NewsArticle       ;
                     schema:headline           "${cryptoNews.title}"@en ;
-                    schema:articleBody        "${cryptoNews.body}"@en .     
+                    schema:articleBody        "${cryptoNews.body}"@en ;
+                    schema:datePublished      "${cryptoNews.publishedAt}"^^<http://schema.org/DateTime> .
+
+            ${cryptoNews.source ? `<${id}> schema:url <${cryptoNews.source}> .` : ""}
 
             ${cryptocurrencies}
         }
@@ -144,6 +169,14 @@ export const updateCryptoNewsById = async (cryptoNews: UpdateCryptoNewsInput): P
         throw new Error(`CryptoNews with id ${id} not found`);
     }
 
+    if (cryptoNews.publishedAt) {
+        const publishedAt = new Date(cryptoNews.publishedAt);
+        if (!(publishedAt instanceof Date) || isNaN(publishedAt.valueOf())) {
+            throw new Error("Invalid date (publishedAt)");
+        }
+        cryptoNews.publishedAt = convertDateTimeToISOFormat(publishedAt);
+    }
+
     let cryptocurrencies = "";
     if(cryptoNews.about) {
         cryptoNews.about.forEach(function(item) {
@@ -156,20 +189,33 @@ export const updateCryptoNewsById = async (cryptoNews: UpdateCryptoNewsInput): P
         PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX elements: <http://purl.org/dc/elements/1.1/>
 
+        INSERT { 
+            ${cryptoNews.source ? `<${id}> schema:url <${cryptoNews.source}> .` : ""}
+        }
+        WHERE {
+            MINUS { ${cryptoNews.source ? `<${id}> schema:url ?oldSource .` : ""} }
+        };
+
         DELETE {
-            ${cryptoNews.title ? `<${id}> schema:headline ?oldTitle . ` : ""}
-            ${cryptoNews.body ? `<${id}> schema:articleBody ?oldArticleBody . ` : ""}      
-            ${cryptoNews.about ? `<${id}> elements:subject ?oldAbout . ` : ""}
+            ${cryptoNews.title ? `<${id}> schema:headline ?oldTitle .` : ""}
+            ${cryptoNews.body ? `<${id}> schema:articleBody ?oldArticleBody .` : ""}
+            <${id}> schema:datePublished ?oldDatePublished .
+            ${cryptoNews.source ? `<${id}> schema:url ?oldSource .` : ""}
+            ${cryptoNews.about ? `<${id}> elements:subject ?oldAbout .` : ""}
         }
         INSERT {
             ${cryptoNews.title ? `<${id}> schema:headline "${cryptoNews.title}"@en .` : ""}
             ${cryptoNews.body ? `<${id}> schema:articleBody "${cryptoNews.body}"@en .` : ""}
+            <${id}> schema:datePublished "${cryptoNews.publishedAt}"^^<http://schema.org/DateTime> .
+            ${cryptoNews.source ? `<${id}> schema:url <${cryptoNews.source}> .` : ""}
             ${cryptocurrencies}
         }
         WHERE {
-            ${cryptoNews.title ? `<${id}> schema:headline ?oldTitle . ` : ""}
-            ${cryptoNews.body ? `<${id}> schema:articleBody ?oldArticleBody . ` : ""}
-            ${cryptoNews.about ? `<${id}> elements:subject ?oldAbout . ` : ""}
+            ${cryptoNews.title ? `<${id}> schema:headline ?oldTitle .` : ""}
+            ${cryptoNews.body ? `<${id}> schema:articleBody ?oldArticleBody .` : ""}
+            <${id}> schema:datePublished ?oldDatePublished .
+            ${cryptoNews.source ? `<${id}> schema:url ?oldSource .` : ""}
+            ${cryptoNews.about ? `<${id}> elements:subject ?oldAbout .` : ""}
         }
     `;
 

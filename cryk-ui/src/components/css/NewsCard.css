@@ -1,7 +1,7 @@
 .news-card {
     margin: 2rem 2rem 2rem 0;
     padding: 1.5rem;
-    width: 450px;
+    width: 65%;
     transition: transform .3s ease;
     cursor: auto;
     font-size: 20px;
@@ -9,14 +9,40 @@
 
 .card-title {
     font-weight: 900 !important;
-    font-size: 2rem;
-    padding-bottom: 8px;
+    font-size: 24px !important;
+    font-family: "Lato", sans-serif !important;
 }
 
-.card-media {
-    height: 250px;
-    padding-top: 2%;
-    cursor: poi;
+.card-publishedAt {
+    font-style: italic !important;
+    font-size: 16px !important;
+    margin-bottom: 20px !important;
+    font-family: "Lato", sans-serif !important;
+}
+
+.card-text {
+    font-size: 18px !important;
+    overflow: hidden !important;
+    transition: height 0.5s ease-in-out !important;
+    font-family: "Lato", sans-serif !important;
+}
+
+.card-text.collapsed {
+    animation: mask-collapsing 0.5s !important;
+    mask-image: linear-gradient(black 50%, transparent) !important;
+}
+
+.card-text.expanded {
+    animation: mask-expanding 0.5s !important;
+    mask-image: linear-gradient(black 100%, transparent) !important;
+}
+
+.toggle-button {
+    color: white !important;
+    border: 1px solid white !important;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+    font-family: "Lato", sans-serif !important;
 }
 
 .news-card-buttons-container {
@@ -24,4 +50,22 @@
     justify-content: flex-end;
     flex-direction: row;
     gap: 15px;
+}
+
+@keyframes mask-collapsing {
+    from {
+        mask-image: linear-gradient(black 100%, transparent);
+    }
+    to {
+        mask-image: linear-gradient(black 50%, transparent);
+    }
+}
+
+@keyframes mask-expanding {
+    from {
+        mask-image: linear-gradient(black 50%, transparent);
+    }
+    to {
+        mask-image: linear-gradient(black 100%, transparent);
+    }
 }
