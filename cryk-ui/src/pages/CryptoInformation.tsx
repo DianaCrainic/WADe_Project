@@ -316,14 +316,14 @@ export default function CryptoInformation(props: any) {
                             : <h2 className="no-news">There are no news for this cryptocurrency.</h2>
                         }
                     </div>
-                    {news && news.length !== 0 ? 
+                    {news && news.length !== 0 && 
                     <Pagination className="pagination"
                         count={totalNumberOfCryptoNews}
                         color="primary"
                         size="large"
                         page={currentPage}
                         variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} /> : null}                 
+                        onChange={(_event, value) => setCurrentPage(value)} />}                 
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                         refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
