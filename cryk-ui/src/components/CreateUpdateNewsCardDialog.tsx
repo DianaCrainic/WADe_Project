@@ -91,15 +91,16 @@ export default function CreateUpdateNewsCardDialog(props: { operationType: strin
 
   const onSubmitHandler: SubmitHandler<NewsCardInput> = (values) => {
     const currentDateTime = new Date();
-    const sanitizedBody = (values.body.replace(/(?:\r\n|\r|\n|\\r\\n|\\r|\\n)/g, '<br>')).replace(/(?:\"|\')/g, '\\\"');
+    const sanitizedTitle = values.title.replace(/(?:\")/g, '\\\"');
+    const sanitizedBody = (values.body.replace(/(?:\r\n|\r|\n|\\r\\n|\\r|\\n)/g, '<br>')).replace(/(?:\")/g, '\\\"');
     if (props.operationType === "create") {
-      const operationInput: CreateCryptoNewsInput = { title: values.title, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source, about: [props.cryptocurrencyId] };
+      const operationInput: CreateCryptoNewsInput = { title: sanitizedTitle, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source, about: [props.cryptocurrencyId] };
       createUpdateNewsEntry({
         variables: { createCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
     }
     else {
-      const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: values.title, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source };
+      const operationInput: UpdateCryptoNewsInput = { id: (props.news ? props.news.id : ""), title: sanitizedTitle, body: sanitizedBody, publishedAt: currentDateTime.toISOString(), source: values.source };
       createUpdateNewsEntry({
         variables: { updateCryptoNewsInput: operationInput }
       }).catch((error) => { console.error(JSON.stringify(error, null, 2)) });
