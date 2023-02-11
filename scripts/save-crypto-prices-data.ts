@@ -1,5 +1,6 @@
 import ParsingClient from "sparql-http-client/ParsingClient";
 import axios from "axios";
+import crypto from "crypto";
 
 const SPARQL_ENDPOINT = process.env.SPARQL_ENDPOINT || "http://localhost:9999/blazegraph/sparql";
 const sparqlClient = new ParsingClient({ endpointUrl: SPARQL_ENDPOINT, updateUrl: SPARQL_ENDPOINT });

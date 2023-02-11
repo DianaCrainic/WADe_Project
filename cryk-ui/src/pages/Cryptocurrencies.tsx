@@ -19,6 +19,10 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import TextField from "@mui/material/TextField";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
     query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [], $sortOrder: String = "DESC") {
@@ -185,6 +189,8 @@ export default function Cryptocurrencies() {
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
     const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
     const [sortOrderDateFounded, setSortOrderDateFounded] = useState("DESC");
+    const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
+    const [endDate, setEndDate] = React.useState<Dayjs | null>(null);
 
     const navigate = useNavigate();
 
@@ -321,11 +327,9 @@ export default function Cryptocurrencies() {
 
                         <div className="sorting-component">
                             <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 200, }}>
-                                <InputLabel id="demo-simple-select-label" style={{ fontSize: "1.2rem" }}>Date Founded</InputLabel>
+                                <InputLabel style={{ fontSize: "1.1rem" }}>Date Founded</InputLabel>
                                 <Select
-                                    style={{ fontSize: "1.3rem" }}
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    style={{ fontSize: "1.1rem" }}
                                     value={sortOrderDateFounded}
                                     defaultValue="DESC"
                                     label="Date Founded"
@@ -335,6 +339,32 @@ export default function Cryptocurrencies() {
                                     <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
                                 </Select>
                             </FormControl>
+                        </div>
+                        <div className="date-range-filtering">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    className="start-date-picker"
+                                    label="Start date"
+                                    value={startDate}
+                                    onChange={(newDate) => {
+                                        setStartDate(newDate);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} variant="filled" />}
+                                    maxDate={endDate ? endDate : dayjs()}
+                                />
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    className="end-date-picker"
+                                    label="End date"
+                                    value={endDate}
+                                    onChange={(newDate) => {
+                                        setEndDate(newDate);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} variant="filled" />}
+                                    minDate={startDate ? startDate : dayjs()}
+                                />
+                            </LocalizationProvider>
                         </div>
                     </div>
 
