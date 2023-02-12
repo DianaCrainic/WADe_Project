@@ -144,7 +144,7 @@ export const getCryptocurrencies = async (
     };
 
     const result = await sparqlTransformer.default(jsonLdQuery, {
-        debug: true,
+        debug: false,
         sparqlFunction: async (query: string) => {
             return {
                 results: {
@@ -178,33 +178,6 @@ export const getCryptocurrenciesInfo = async (searchText: string[] = [""], start
 
     return { totalCount: parseInt(result[0].totalCount.value) };
 };
-
-// 1
-// export const getCryptocurrenciesInfo = async (searchText: string[] = [""], startDate = "", endDate = ""): Promise<CryptocurrenciesInfo> => {
-//     const searchTextFilter = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
-
-//     let dateFilter = "";
-//     if (startDate != "" || endDate != "") {
-//         dateFilter = `(?dateFounded >= "${startDate}"^^xsd:date && ?dateFounded <= "${endDate}"^^xsd:date)`;
-//     }
-//     const checkNotNullFilter = "(!isBlank(?dateFounded))";
-
-//     const query = `
-//         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
-//         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-//         SELECT (COUNT(?id) AS ?totalCount)
-//         WHERE {
-//             ?id rdf:type doacc:Cryptocurrency .
-//             ?id doacc:symbol ?symbol .
-//             FILTER (${searchTextFilter}) .
-//             FILTER (${checkNotNullFilter}) . 
-//             FILTER (${dateFilter})
-//         }
-//     `;
-//     const result = await sparqlClient.query.select(query);
-
-//     return { totalCount: parseInt(result[0].totalCount.value) };
-// };
 
 export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
     const id = `http://purl.org/net/bel-epa/doacc#${crypto.randomUUID()}`;
