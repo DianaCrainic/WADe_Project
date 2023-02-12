@@ -19,11 +19,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import TextField from "@mui/material/TextField";
 
 const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
-    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [], $sortOrder: String = "DESC") {
-        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText, sortOrder: $sortOrder)  
-        {
+    query GetPaginatedCryptocurrencies($limit: Int = 10, $offset: Int = 0, $searchText: [String] = [""], $sortOrder: String = "DESC", $startDate: String = "", $endDate: String = "") {
+        cryptocurrencies(limit: $limit, offset: $offset, searchText: $searchText, sortOrder: $sortOrder, startDate: $startDate, endDate: $endDate) {
             id
             symbol
             description
@@ -31,7 +34,7 @@ const GET_PAGINATED_CRYPTOCURRENCIES_QUERY = gql`
             blockTime
             dateFounded
         }
-        cryptocurrenciesInfo(searchText: $searchText) {
+        cryptocurrenciesInfo(searchText: $searchText, startDate: $startDate, endDate: $endDate) {
             totalCount
         }
     }
@@ -183,16 +186,25 @@ export default function Cryptocurrencies() {
     const title = "Cryptocurrencies";
     const [currentPage, setCurrentPage] = useState(1);
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(Number);
-    const [searchTextValue, setSearchTextValue] = useState<string[]>([]);
     const [sortOrderDateFounded, setSortOrderDateFounded] = useState("DESC");
+    const [startDate, setStartDate] = useState<Dayjs | null>(null);
+    const [endDate, setEndDate] = useState<Dayjs | null>(null);
+    const [searchItems, setSearchItems] = useState<string[]>([]);
+    const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+    const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
+    const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
+    const [seachInputValue, setSeachInputValue] = useState("");
 
     const navigate = useNavigate();
+    const classes = useStyles();
 
     const getPaginatedCryptocurrenciesInput: GetPaginatedCryptocurrenciesInput = {
         limit: CRYPTOS_PER_PAGE,
         offset: (currentPage - 1) * CRYPTOS_PER_PAGE,
-        searchText: searchTextValue.length !== 0 ? searchTextValue : [""],
-        sortOrder: sortOrderDateFounded
+        searchText: searchItems.length !== 0 ? searchItems : [""],
+        sortOrder: sortOrderDateFounded,
+        startDate: startDate != null ? startDate.format("YYYY-MM-DD") : "",
+        endDate: endDate != null ? endDate.format("YYYY-MM-DD") : "",
     }
 
     const { data, loading, error } = useQuery(GET_PAGINATED_CRYPTOCURRENCIES_QUERY, {
@@ -206,39 +218,29 @@ export default function Cryptocurrencies() {
         variables: getPaginatedCryptocurrenciesInput
     }
 
-    const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
-    const [totalCoinsStats, setTotalCoinsStats] = useState<{ name: string, value: number }[]>([]);
-    const [blockTimeStats, setBlockTimeStats] = useState<{ name: string, value: number }[]>([]);
-
-    const [searchItems, setSearchItems] = useState<string[]>([]);
-    const classes = useStyles();
-    const [seachInputValue, setSeachInputValue] = useState("");
-
     const handleKeyDown = (event: any) => {
         if (["Enter", "Tab", ","].includes(event.key)) {
             event.preventDefault();
 
-            let searchItem = seachInputValue?.trim();
+            const searchItem = seachInputValue?.trim();
 
             if (searchItem) {
-                setSearchItems([...searchItems, searchItem]);
-                setSeachInputValue(event.target.value);
-                setSearchTextValue([...searchItems, searchItem]);
+                if (!searchItems.includes(searchItem)) {
+                    setSearchItems([...searchItems, searchItem]);
+                }
             }
             setSeachInputValue("");
         }
     };
 
-    const handleDelete = (searchItem: string) => (event: any) => {
+    const handleDelete = (searchItem: string) => () => {
         setSearchItems(searchItems.filter((newSearchItem: string) => newSearchItem !== searchItem));
         setSeachInputValue("");
-        setSearchTextValue(searchItems.filter((newSearchItem: any) => newSearchItem !== searchItem));
     };
 
     const handleClear = () => {
         setSearchItems([]);
         setSeachInputValue("");
-        setSearchTextValue([]);
     }
 
     const handleChangeDropdown = (event: any) => {
@@ -321,11 +323,9 @@ export default function Cryptocurrencies() {
 
                         <div className="sorting-component">
                             <FormControl fullWidth variant="filled" sx={{ m: 1, minWidth: 200, }}>
-                                <InputLabel id="demo-simple-select-label" style={{ fontSize: "1.2rem" }}>Date Founded</InputLabel>
+                                <InputLabel style={{ fontSize: "1.1rem" }}>Date Founded</InputLabel>
                                 <Select
-                                    style={{ fontSize: "1.3rem" }}
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    style={{ fontSize: "1.1rem" }}
                                     value={sortOrderDateFounded}
                                     defaultValue="DESC"
                                     label="Date Founded"
@@ -335,6 +335,32 @@ export default function Cryptocurrencies() {
                                     <MenuItem value={"ASC"}>Oldest to Newest</MenuItem>
                                 </Select>
                             </FormControl>
+                        </div>
+                        <div className="date-range-filtering">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    className="start-date-picker"
+                                    label="Start date"
+                                    value={startDate}
+                                    onChange={(newDate) => {
+                                        setStartDate(newDate);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} variant="filled" />}
+                                    maxDate={endDate ? endDate : dayjs()}
+                                />
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    className="end-date-picker"
+                                    label="End date"
+                                    value={endDate}
+                                    onChange={(newDate) => {
+                                        setEndDate(newDate);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} variant="filled" />}
+                                    minDate={startDate ? startDate : dayjs()}
+                                />
+                            </LocalizationProvider>
                         </div>
                     </div>
 

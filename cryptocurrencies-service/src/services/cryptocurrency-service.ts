@@ -80,8 +80,31 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     return cryptocurrency;
 }
 
-export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: string[] = [""], sortOrder: "ASC" | "DESC" = "DESC"): Promise<Cryptocurrency[]> => {
-    const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+export const getCryptocurrencies = async (
+    limit = 10,
+    offset = 0,
+    searchText: string[] = [""],
+    sortOrder: "ASC" | "DESC" = "DESC",
+    startDate = "",
+    endDate = ""
+): Promise<Cryptocurrency[]> => {
+    const filters = [];
+
+    if (JSON.stringify(searchText) !== JSON.stringify([""])) {
+        const searchTextCondition = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+        const searchTextFilter = `FILTER (${searchTextCondition}) .`;
+        filters.push(searchTextFilter);
+    }
+
+    if (startDate !== "" || endDate !== "") {
+        filters.push("FILTER (!isBlank(?dateFounded)) .");
+        if (startDate !== "") {
+            filters.push(`FILTER (?dateFounded >= "${startDate}"^^xsd:date) .`);
+        }
+        if (endDate !== "") {
+            filters.push(`FILTER (?dateFounded <= "${endDate}"^^xsd:date) .`);
+        }
+    }
 
     const jsonLdQuery = {
         "@graph": [{
@@ -107,8 +130,8 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
             }
         }],
         "$where": [
-            "?id rdf:type doacc:Cryptocurrency",
-            `FILTER (${filters})`
+            "?id rdf:type doacc:Cryptocurrency . ",
+            ...filters,
         ],
         "$limit": limit,
         "$offset": offset,
@@ -134,8 +157,8 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
     return result["@graph"] as Cryptocurrency[];
 };
 
-export const getCryptocurrenciesInfo = async (searchText: string[] = [""]): Promise<CryptocurrenciesInfo> => {
-    const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+export const getCryptocurrenciesInfo = async (searchText: string[] = [""], startDate = "", endDate = ""): Promise<CryptocurrenciesInfo> => {
+    const searchTextFilter = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const query = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
@@ -144,7 +167,11 @@ export const getCryptocurrenciesInfo = async (searchText: string[] = [""]): Prom
         WHERE {
             ?id rdf:type doacc:Cryptocurrency .
             ?id doacc:symbol ?symbol .
-            FILTER (${filters})
+            ?id doacc:date-founded ?dateFounded .
+            ${JSON.stringify(searchText) !== JSON.stringify([""]) ? `FILTER (${searchTextFilter}) .` : ""}
+            ${startDate !== "" || endDate !== "" ? "FILTER (!isBlank(?dateFounded)) ." : ""}
+            ${startDate !== "" ? `FILTER (?dateFounded >= "${startDate}"^^xsd:date) .` : ""}
+            ${endDate !== "" ? `FILTER (?dateFounded <= "${endDate}"^^xsd:date) .` : ""}
         }
     `;
     const result = await sparqlClient.query.select(query);

@@ -58,8 +58,8 @@ const schema = buildSchema(`
 
     type Query {
         cryptocurrency(id: ID!): Cryptocurrency!
-        cryptocurrencies(limit: Int, offset: Int, searchText: [String], sortOrder: String): [Cryptocurrency!]!
-        cryptocurrenciesInfo(searchText: [String]): CryptocurrenciesInfo
+        cryptocurrencies(limit: Int, offset: Int, searchText: [String], sortOrder: String, startDate: String, endDate: String): [Cryptocurrency!]!
+        cryptocurrenciesInfo(searchText: [String], startDate: String, endDate: String): CryptocurrenciesInfo
     }
     
     type Mutation {

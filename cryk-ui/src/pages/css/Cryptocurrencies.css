@@ -42,22 +42,23 @@
 
 .filters-component {
     display: flex;
-    width: 50%;
+    flex-direction: row;
+    justify-content: space-around !important;
+    /* align-items: center; */
+    width: 65%;
+    /* padding-top: 3%; */
+    padding-bottom: 2%;
 }
 
 .search-component {
     text-align: left !important;
     position: relative;
     padding-top: 3%;
-    padding-bottom: 2%;
-    padding-left: auto;
-    padding-right: auto;
-    width: 120%;
-    margin-right: 50px;
 }
 
 .search-box {
-    padding-bottom: 2%;
+    padding-bottom: 2.5%;
+    width: 100%;
 }
 
 .chips-list {
@@ -84,20 +85,24 @@ search {
 
 .sorting-component {
     padding-bottom: 3%;
-    padding-top: 2.4%;
+    margin-left: 10px;
+    width: 20% !important;
+    padding-top: 2.45%;
+}
+
+.date-range-filtering {
+    padding-top: 3%;
     margin-left: 20px;
-    width: 40% !important;
-}
-
-input-label {
-    font-size: x-large
-}
-
-select {
-    font-size: larger;
-}
-
-.filters-component {
-    display: flex;
     flex-direction: row;
+}
+
+.start-date-picker {
+    margin-right: 7px !important;
+}
+
+
+@media screen and (max-width: 1400px) {
+    .filters-component {
+        flex-direction: column;
+    }
 }
