@@ -30,9 +30,9 @@ export default function CryptoCard(props: { cryptocurrency: Cryptocurrency, quer
         <Typography
           variant="body2"
           className="card-date-founded"
-          property="http://www.w3.org/2001/XMLSchema#date"
         >
-          Date founded: {cryptocurrency?.dateFounded ? cryptocurrency.dateFounded : "unknown"}
+          <span>Date founded:</span>
+          <span property="http://purl.org/net/bel-epa/doacc#date-founded">{cryptocurrency?.dateFounded ? cryptocurrency.dateFounded : "unknown"}</span>
         </Typography>
 
         {cryptocurrency?.description && <Typography variant="body2" className="card-content"

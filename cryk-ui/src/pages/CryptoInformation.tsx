@@ -286,7 +286,7 @@ export default function CryptoInformation(props: any) {
                     </p>
                     <p className="crypto-date-founded">
                         <span>Date founded: </span>
-                        {dateFounded ? <span property="http://www.w3.org/2001/XMLSchema#date">{dateFounded}</span> : UNKNOWN_MESSAGE}
+                        {dateFounded ? <span property="http://purl.org/net/bel-epa/doacc#date-founded">{dateFounded}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-reward">
                         <span>Reward: </span>
@@ -321,14 +321,14 @@ export default function CryptoInformation(props: any) {
                             : <h2 className="no-news">There are no news for this cryptocurrency.</h2>
                         }
                     </div>
-                    {news && news.length !== 0 && 
-                    <Pagination className="pagination"
-                        count={totalNumberOfCryptoNews}
-                        color="primary"
-                        size="large"
-                        page={currentPage}
-                        variant="outlined"
-                        onChange={(_event, value) => setCurrentPage(value)} />}                 
+                    {news && news.length !== 0 &&
+                        <Pagination className="pagination"
+                            count={totalNumberOfCryptoNews}
+                            color="primary"
+                            size="large"
+                            page={currentPage}
+                            variant="outlined"
+                            onChange={(_event, value) => setCurrentPage(value)} />}
                     <CreateUpdateNewsCardDialog
                         operationType="create" dialogQuery={CREATE_CRYPTONEWS_FOR_CRYPTOCURRENCY}
                         refetchInput={getPaginatedNewsRefetchInput} cryptocurrencyId={cryptocurrencyId}
