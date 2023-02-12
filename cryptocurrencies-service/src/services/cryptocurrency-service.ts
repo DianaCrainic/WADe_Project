@@ -80,16 +80,31 @@ export const getCryptocurrencyById = async (id: string): Promise<any> => {
     return cryptocurrency;
 }
 
-export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: string[] = [""], sortOrder: "ASC" | "DESC" = "DESC",
+export const getCryptocurrencies = async (
+    limit = 10,
+    offset = 0,
+    searchText: string[] = [""],
+    sortOrder: "ASC" | "DESC" = "DESC",
     startDate = "",
-    endDate = ""): Promise<Cryptocurrency[]> => {
-    const searchTextFilter = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+    endDate = ""
+): Promise<Cryptocurrency[]> => {
+    const filters = [];
 
-    let dateFilter = "";
-    if (startDate != "" || endDate != "") {
-        dateFilter = `(?dateFounded >= "${startDate}"^^xsd:date && ?dateFounded <= "${endDate}"^^xsd:date)`;
+    if (JSON.stringify(searchText) !== JSON.stringify([""])) {
+        const searchTextCondition = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+        const searchTextFilter = `FILTER (${searchTextCondition}) .`;
+        filters.push(searchTextFilter);
     }
-    const checkNotNullFilter = "(!isBlank(?dateFounded))";
+
+    if (startDate !== "" || endDate !== "") {
+        filters.push("FILTER (!isBlank(?dateFounded)) .");
+        if (startDate !== "") {
+            filters.push(`FILTER (?dateFounded >= "${startDate}"^^xsd:date) .`);
+        }
+        if (endDate !== "") {
+            filters.push(`FILTER (?dateFounded <= "${endDate}"^^xsd:date) .`);
+        }
+    }
 
     const jsonLdQuery = {
         "@graph": [{
@@ -116,9 +131,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
         }],
         "$where": [
             "?id rdf:type doacc:Cryptocurrency . ",
-            `FILTER (${searchTextFilter}) . `,
-            `FILTER (${checkNotNullFilter}) . `,
-            `FILTER (${dateFilter})`,
+            ...filters,
         ],
         "$limit": limit,
         "$offset": offset,
@@ -131,7 +144,7 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
     };
 
     const result = await sparqlTransformer.default(jsonLdQuery, {
-        debug: true,
+        debug: false,
         sparqlFunction: async (query: string) => {
             return {
                 results: {
@@ -144,8 +157,8 @@ export const getCryptocurrencies = async (limit = 10, offset = 0, searchText: st
     return result["@graph"] as Cryptocurrency[];
 };
 
-export const getCryptocurrenciesInfo = async (searchText: string[] = [""], startDate = "2000-01-01", endDate = "2016-12-31"): Promise<CryptocurrenciesInfo> => {
-    const filters = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
+export const getCryptocurrenciesInfo = async (searchText: string[] = [""], startDate = "", endDate = ""): Promise<CryptocurrenciesInfo> => {
+    const searchTextFilter = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
 
     const query = `
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
@@ -154,40 +167,17 @@ export const getCryptocurrenciesInfo = async (searchText: string[] = [""], start
         WHERE {
             ?id rdf:type doacc:Cryptocurrency .
             ?id doacc:symbol ?symbol .
-            FILTER (${filters})
+            ?id doacc:date-founded ?dateFounded .
+            ${JSON.stringify(searchText) !== JSON.stringify([""]) ? `FILTER (${searchTextFilter}) .` : ""}
+            ${startDate !== "" || endDate !== "" ? "FILTER (!isBlank(?dateFounded)) ." : ""}
+            ${startDate !== "" ? `FILTER (?dateFounded >= "${startDate}"^^xsd:date) .` : ""}
+            ${endDate !== "" ? `FILTER (?dateFounded <= "${endDate}"^^xsd:date) .` : ""}
         }
     `;
     const result = await sparqlClient.query.select(query);
 
     return { totalCount: parseInt(result[0].totalCount.value) };
 };
-
-// 1
-// export const getCryptocurrenciesInfo = async (searchText: string[] = [""], startDate = "", endDate = ""): Promise<CryptocurrenciesInfo> => {
-//     const searchTextFilter = searchText.map(text => `CONTAINS(LCASE(?symbol), LCASE("${text}"))`).join(" || ");
-
-//     let dateFilter = "";
-//     if (startDate != "" || endDate != "") {
-//         dateFilter = `(?dateFounded >= "${startDate}"^^xsd:date && ?dateFounded <= "${endDate}"^^xsd:date)`;
-//     }
-//     const checkNotNullFilter = "(!isBlank(?dateFounded))";
-
-//     const query = `
-//         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
-//         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-//         SELECT (COUNT(?id) AS ?totalCount)
-//         WHERE {
-//             ?id rdf:type doacc:Cryptocurrency .
-//             ?id doacc:symbol ?symbol .
-//             FILTER (${searchTextFilter}) .
-//             FILTER (${checkNotNullFilter}) . 
-//             FILTER (${dateFilter})
-//         }
-//     `;
-//     const result = await sparqlClient.query.select(query);
-
-//     return { totalCount: parseInt(result[0].totalCount.value) };
-// };
 
 export const createCryptocurrency = async (cryptocurrency: CreateCryptocurrencyInput): Promise<Cryptocurrency> => {
     const id = `http://purl.org/net/bel-epa/doacc#${crypto.randomUUID()}`;
