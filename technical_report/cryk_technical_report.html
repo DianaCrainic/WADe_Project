@@ -765,7 +765,7 @@
                             </li>
                             <li><i>news-service</i>
                                 <ul>
-                                    <li>Implemented get news by cryptocurrency id query</li>
+                                    <li>Implemented get news by cryptocurrency id query, with ordering by date of publishing (<i>publishedAt</i> property)</li>
                                     <li>Implemented get news by id query (not exported in the schema, but used by mutations)
                                     </li>
                                     <li>Implemented create news mutation</li>
@@ -776,9 +776,10 @@
                             </li>
                             <li><i>cryk-ui</i>
                                 <ul>
-                                    <li>Implemented fetching and pagination of news in cryptocurrency details pag</li>
+                                    <li>Implemented fetching and pagination of news in cryptocurrency details page</li>
                                     <li>Created components for handling news service mutations</li>
                                     <li>Implemented input validation for create and update news mutations</li>
+                                    <li>Added sanitization for <i>title</i> and <i>body</i> fields when creating/updating a news card</li>
                                 </ul>
                             </li>
                             <li>Technical report
@@ -814,11 +815,16 @@
                                     <li>Created components for handling cryptocurrency service mutations</li>
                                     <li>Implemented input validation for create and update cryptocurrency mutations</li>
                                     <li>Integrated delete cryptocurrency mutation in cryptocurrency card</li>
+                                    <li>Implemented searching on <i>symbol</i> field for the Cryptocurrencies page</li>
+                                    <li>Implemented sorting on <i>dateFounded</i> field for the Cryptocurrencies page</li>
+                                    <li>Implemented date range filtering on <i>dateFounded</i> field for the Cryptocurrencies page
+                                    </li>
                                 </ul>
                             </li>
                             <li><i>cryptocurrencies-service</i>
                                 <ul>
                                     <li>Implemented get cryptocurrencies information query</li>
+                                    <li>Updated the queries for the searching and filtering options</li>
                                 </ul>
                             </li>
                             <li>Technical report
@@ -864,6 +870,7 @@
                                             <li>Line Chart that includes a timeline with the number of coins founded over time</li>
                                             <li>Bar Chart containing the total number of coins for each cryptocurrency on the current page</li>
                                             <li>Bar Chart containing the block time for each cryptocurrency on the current page</li>
+                                            <li>Area Chart containing the historical prices of a cryptocurrency as well as the results of a DCA investment for that cryptocurrency</li>
                                         </ul>
                                     </li>
                                     <li>Authentication</li>
