@@ -524,13 +524,18 @@
             </section>
             <section role="doc-part">
                 <h2 id="Used_RDF-based_Knowledge_Models">8 Used RDF-based Knowledge Models</h2>
-                <p>In the application, we make use, for cryptocurrencies, of the RDF-based knowledge model defined by the <strong>DOACC</strong> <a href="https://doacc.github.io/concepts/doacc-owl/index.html">vocabulary</a>, while for news pertaining to
-                    a specific cryptocurrency we design a model based on the <strong>Schema.org</strong> <a href="https://schema.org/">one</a>. The vocabulary of DOACC, used for defining cryptocurrency entities in
-                    <a href="https://raw.githubusercontent.com/DOACC/individuals/master/cryptocurrency.nt">this</a> knowledge source, is expressive but also comprehensive, comprising a good amount of classes and properties for defining a cryptocurrency
+                <p>In the application, we use:</p>
+                <ul>
+                    <li>an RDF-based knowledge model defined by the <strong>DOACC</strong> <a href="https://doacc.github.io/concepts/doacc-owl/index.html">vocabulary</a> for cryptocurrencies, with additional properties from the
+                        <strong>Schema.org</strong> <a href="https://schema.org/">one</a> pertaining to <a href="https://schema.org/MonetaryAmount"><em>MonetaryAmount</em></a> in order to describe the data used in their DCA charts;</li>
+                    <li>a designed model based on the <strong>Schema.org</strong> <a href="https://schema.org/">vocabulary</a> for news pertaining to a specific cryptocurrency.</li>
+                </ul>
+                <p>The vocabulary of DOACC, used for defining cryptocurrency entities in
+                    <a href="https://raw.githubusercontent.com/DOACC/individuals/master/cryptocurrency.nt">this</a> knowledge source, is expressive but also comprehensive, comprising an adequate amount of classes and properties for defining a cryptocurrency
                     and any concept describing it. While <em>CryptoNews</em>, the API model used for depicting a news article about a cryptocurrency, may not be as complex as the one used for a cryptocurrency, the fact that the RDF-based knowledge model
                     designed is based on Schema.org, which is very expressive (especially in the case of <em>NewsArticle</em>, on which the API model is based), allows for future additions of properties. The Schema.org vocabulary is also recognized and
-                    indexed by the robots of the main search engines, which makes it easier to extract data modeled on it. Furthermore, both vocabularies can be used with different encodings such as RDFa, Microdata and JSON-LD. As such, our application
-                    includes RDFa constructs in the web pages, which are showcased below:</p>
+                    indexed by the robots of the main search engines, which makes it easier to extract data modeled on it. Furthermore, both vocabularies can be used with different encodings such as RDFa, Microdata and JSON-LD. As such, below we showcase
+                    RDFa constructs in the web pages of our application:</p>
 
                 <ul>
                     <li>RDFa constructs observed in cryptocurrencies page:</li>
@@ -569,7 +574,9 @@
                     <section>
                         <h3 id="Pragmatic_Use">9.1 Pragmatic Use</h3>
                         <p>The application makes use of the external data available <a href="https://raw.githubusercontent.com/DOACC/individuals/master/cryptocurrency.nt">here</a>, which models cryptocurrency entities based on the DOACC vocabulary. The file
-                            which contains the data is used to populate an Amazon Neptune instance, with which the <em>cryptocurrency</em> service interacts with through a SPARQL endpoint.</p>
+                            which contains the data is used to populate an Amazon Neptune instance, with which the <em>cryptocurrency</em> service interacts with through a SPARQL endpoint. Besides that, the application also uses data obtained from
+                            <a href="https://www.coingecko.com/"><em>CoinGecko</em></a> and <a href="https://messari.io/"><em>Messari</em></a> through their exposed APIs, with the former's data being used to further enrich the DOACC model of a cryptocurrency
+                            in order to portray <strong>DCA</strong> (dollar-cost averaging) charts for different cryptocurrencies, while the latter's is used to populate the associated Amazon Neptune instance of the service with <em>CryptoNews</em> entities.</p>
                     </section>
                     <section>
                         <h3 id="SPARQL">9.2 SPARQL</h3>
@@ -577,7 +584,7 @@
                         <p>Below are some examples of non-trivial SPARQL queries used to interact with the data in the Amazon Neptune instance of the <em>cryptocurrency</em> service:</p>
 
                         <ul>
-                            <li>To get the cryptocurrencies for a specific page, the following query will be called:</li>
+                            <li>To get the cryptocurrencies for a specific page, without any filtering or specific ordering, the following query will be called:</li>
 
                             <figure typeof="schema:SoftwareSourceCode" role="doc-example">
                                 <pre class="sparql-code-container">
@@ -585,34 +592,35 @@
     PREFIX doacc: &lt;http://purl.org/net/bel-epa/doacc#&gt;
     PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
     PREFIX elements: &lt;http://purl.org/dc/elements/1.1/&gt;
-    SELECT DISTINCT ?id ?symbol ?v3 ?v4 ?v5 ?v6 ?v7 ?v8 ?v9 ?v10r ?v102 ?v11r 
-    ?v112
+    SELECT DISTINCT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins 
+    ?dateFounded ?source ?website ?protScheme ?protSchemeDescription ?distScheme 
+    ?distSchemeDescription
     WHERE {
         ?id rdf:type doacc:Cryptocurrency.
         ?id doacc:symbol ?symbol.
-        OPTIONAL { ?id elements:description ?v3  }.
-        OPTIONAL { ?id doacc:block-reward ?v4  }.
-        OPTIONAL { ?id doacc:block-time ?v5  }.
-        OPTIONAL { ?id doacc:total-coins ?v6  }.
-        OPTIONAL { ?id doacc:date-founded ?v7  }.
-        OPTIONAL { ?id doacc:source ?v8  }.
-        OPTIONAL { ?id doacc:website ?v9  }.
-        OPTIONAL { ?id doacc:protection-scheme ?v10r .
-        OPTIONAL { ?v10r elements:description ?v102  }}.
-        OPTIONAL { ?id doacc:distribution-scheme ?v11r .
-        OPTIONAL { ?v11r elements:description ?v112  }}
+        OPTIONAL { ?id elements:description ?description  }.
+        OPTIONAL { ?id doacc:block-reward ?blockReward  }.
+        OPTIONAL { ?id doacc:block-time ?blockTime  }.
+        OPTIONAL { ?id doacc:total-coins ?totalCoins  }.
+        OPTIONAL { ?id doacc:date-founded ?dateFounded  }.
+        OPTIONAL { ?id doacc:source ?source  }.
+        OPTIONAL { ?id doacc:website ?website  }.
+        OPTIONAL { ?id doacc:protection-scheme ?protScheme .
+        OPTIONAL { ?protScheme elements:description ?protSchemeDescription  }}.
+        OPTIONAL { ?id doacc:distribution-scheme ?distScheme .
+        OPTIONAL { ?distScheme elements:description ?distSchemeDescription  }}
     }
-    ORDER BY ?symbol
+    ORDER BY DESC (?dateFounded) ?symbol
     LIMIT givenLimit
     OFFSET givenOffset
                                 </code>
                             </pre>
-                                <figcaption class="sparql-code-caption"><em>Get Paginated Cryptocurrencies</em></figcaption>
+                                <figcaption class="sparql-code-caption"><em>Get Paginated Cryptocurrencies (Simple Query)</em></figcaption>
                             </figure>
 
                             <p>The query receives as parameters <var>givenLimit</var> and <var>givenOffset</var>, and based on their values, will return a "page" of cryptocurrencies from the database.</p>
 
-                            <li>To get a specific cryptocurrency, the previous query is rewritten as follows:</li>
+                            <li>If we desire to filter the returned values, or to change the direction of the ordering done based on <em>doacc:date-founded</em> predicate's values, the previous query will become this:</li>
 
                             <figure typeof="schema:SoftwareSourceCode" role="doc-example">
                                 <pre class="sparql-code-container">
@@ -620,22 +628,73 @@
     PREFIX doacc: &lt;http://purl.org/net/bel-epa/doacc#&gt;
     PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
     PREFIX elements: &lt;http://purl.org/dc/elements/1.1/&gt;
-    SELECT DISTINCT givenId ?symbol ?v3 ?v4 ?v5 ?v6 ?v7 ?v8 ?v9 ?v10r ?v102 ?v11r 
-    ?v112
+    SELECT DISTINCT ?id ?symbol ?description ?blockReward ?blockTime ?totalCoins 
+    ?dateFounded ?source ?website ?protScheme ?protSchemeDescription ?distScheme 
+    ?distSchemeDescription
+    WHERE {
+        ?id rdf:type doacc:Cryptocurrency.
+        FILTER (CONTAINS(LCASE(?symbol), LCASE(searchSymbol1)) || 
+            CONTAINS(LCASE(?symbol), LCASE(searchSymbol2))) .
+        FILTER (!isBlank(?dateFounded)) .
+        FILTER (?dateFounded >= startDate^^xsd:date) .
+        FILTER (?dateFounded <= endDate^^xsd:date) .
+        ?id doacc:symbol ?symbol.
+        OPTIONAL { ?id elements:description ?description  }.
+        OPTIONAL { ?id doacc:block-reward ?blockReward  }.
+        OPTIONAL { ?id doacc:block-time ?blockTime  }.
+        OPTIONAL { ?id doacc:total-coins ?totalCoins  }.
+        OPTIONAL { ?id doacc:date-founded ?dateFounded  }.
+        OPTIONAL { ?id doacc:source ?source  }.
+        OPTIONAL { ?id doacc:website ?website  }.
+        OPTIONAL { ?id doacc:protection-scheme ?protScheme .
+        OPTIONAL { ?protScheme elements:description ?protSchemeDescription  }}.
+        OPTIONAL { ?id doacc:distribution-scheme ?distScheme .
+        OPTIONAL { ?distScheme elements:description ?distSchemeDescription  }}
+    }
+    ORDER BY givenOrder (?dateFounded) ?symbol
+    LIMIT givenLimit
+    OFFSET givenOffset
+                                </code>
+                            </pre>
+                                <figcaption class="sparql-code-caption"><em>Get Paginated Cryptocurrencies (Complex Query)</em></figcaption>
+                            </figure>
+
+                            <p>As it can be seen, this query is comparatively more complex than the previous one. Firstly, we have a filter on the value of <var>?symbol</var>, in which we check for the entries where the values of variables
+                                <var>searchSymbol1</var> and <var>searchSymbol2</var> are included in it. To be noted that in the example we have only 2 such variables, but there can be an even bigger or smaller number of them (if there are no such variables,
+                                the filter is dropped, as seen in the previous query). Secondly, we have filters on the value of <var>?dateFounded</var> that check that the field associated is not blank, and that the value is between a
+                                <var>startDate</var> and <var>endDate</var> (as with the previous case, if the ends of the time period are not given, all 3 filters are dropped). Finally, the keyword giving the direction for the ordering by the values
+                                of <var>?dateFounded</var> is given by the variable <var>givenOrder</var> (if not present, the direction will default to <code>DESC</code>, as seen previously).</p>
+
+                            <li>To get a specific cryptocurrency, the simple version of the previous query is rewritten as follows:</li>
+
+                            <figure typeof="schema:SoftwareSourceCode" role="doc-example">
+                                <pre class="sparql-code-container">
+                                <code class="sparql-code-section">
+    PREFIX doacc: &lt;http://purl.org/net/bel-epa/doacc#&gt;
+    PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+    PREFIX elements: &lt;http://purl.org/dc/elements/1.1/&gt;
+    PREFIX schema: &lt;http://schema.org/&gt;
+    SELECT DISTINCT ?symbol ?description ?blockReward ?blockTime ?totalCoins 
+    ?dateFounded ?source ?website ?hadPrice ?currency ?datePosted ?value 
+    ?protScheme ?protSchemeDescription ?distScheme ?distSchemeDescription
     WHERE {
         givenId rdf:type doacc:Cryptocurrency.
         givenId doacc:symbol ?symbol.
-        OPTIONAL { givenId elements:description ?v3  }.
-        OPTIONAL { givenId doacc:block-reward ?v4  }.
-        OPTIONAL { givenId doacc:block-time ?v5  }.
-        OPTIONAL { givenId doacc:total-coins ?v6  }.
-        OPTIONAL { givenId doacc:date-founded ?v7  }.
-        OPTIONAL { givenId doacc:source ?v8  }.
-        OPTIONAL { givenId doacc:website ?v9  }.
-        OPTIONAL { givenId doacc:protection-scheme ?v10r .
-        OPTIONAL { ?v10r elements:description ?v102  }}.
-        OPTIONAL { givenId doacc:distribution-scheme ?v11r .
-        OPTIONAL { ?v11r elements:description ?v112  }}
+        OPTIONAL { givenId elements:description ?description  }.
+        OPTIONAL { givenId doacc:block-reward ?blockReward  }.
+        OPTIONAL { givenId doacc:block-time ?blockTime  }.
+        OPTIONAL { givenId doacc:total-coins ?totalCoins  }.
+        OPTIONAL { givenId doacc:date-founded ?dateFounded  }.
+        OPTIONAL { givenId doacc:source ?source  }.
+        OPTIONAL { givenId doacc:website ?website  }.
+        OPTIONAL { givenId doacc:hadPrice ?hadPrice .
+        OPTIONAL { ?hadPrice schema:currency ?currency  }.
+        OPTIONAL { ?hadPrice schema:datePosted ?datePosted  }.
+        OPTIONAL { ?hadPrice schema:value ?value  }}.
+        OPTIONAL { givenId doacc:protection-scheme ?protScheme .
+        OPTIONAL { ?protScheme elements:description ?protSchemeDescription  }}.
+        OPTIONAL { givenId doacc:distribution-scheme ?distScheme .
+        OPTIONAL { ?distScheme elements:description ?distSchemeDescription  }}
     }
                                 </code>
                             </pre>
@@ -645,7 +704,8 @@
                             <p>The <code>LIMIT</code>, <code>OFFSET</code> and <code>ORDER BY</code> sections are no longer needed, and therefore removed, and this time we have only one parameter, <var>givenId</var>, which replaces the <var>?id</var> field
                                 in the previous query.</p>
 
-                            <li>To get the total number of cryptocurrencies in the databases, which will be used in the UI for pagination, the following query is used:</li>
+                            <li>To get the total number of cryptocurrencies in the databases (based on the filters applied in the complex version of the get paginated cryptocurrencies query), which will be used in the UI for pagination, the following query
+                                is used:</li>
 
                             <figure typeof="schema:SoftwareSourceCode" role="doc-example">
                                 <pre class="sparql-code-container">
@@ -654,20 +714,28 @@
     PREFIX rdf:      &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
     SELECT (COUNT(?id) AS ?totalCount)
     WHERE {
-        ?id rdf:type doacc:Cryptocurrency 
+        ?id rdf:type doacc:Cryptocurrency .
+        ?id doacc:symbol ?symbol .
+        ?id doacc:date-founded ?dateFounded .
+        FILTER (CONTAINS(LCASE(?symbol), LCASE(searchSymbol1)) || 
+            CONTAINS(LCASE(?symbol), LCASE(searchSymbol2))) .
+        FILTER (!isBlank(?dateFounded)) .
+        FILTER (?dateFounded >= startDate^^xsd:date) .
+        FILTER (?dateFounded <= endDate^^xsd:date) .
     }
                                 </code>
                             </pre>
                                 <figcaption class="sparql-code-caption"><em>Get Cryptocurrencies Count</em></figcaption>
                             </figure>
 
-                            <p>Since all cryptocurrencies have the <em>type</em> property, we use it as condition for counting all entities in the database.</p>
+                            <p>Since all cryptocurrencies have the <em>type</em> property, we use it as condition for counting the entities in the database. Moreover, we count only those entities that fulfill the conditions of the filters (as explained at
+                                the complex version of the get paginated cryptocurrencies query). If there are no filters (no variable required by them was provided), the query will count all entries in the database.</p>
 
                         </ul>
-                        <p>Although the <em>news</em> service does not interact with any external data (the entries need to be added by the admins in the Amazon Neptune instance assigned to the service), it is worth mentioning some queries here too:</p>
+                        <p>Although not as complex as the <em>cryptocurrency</em> service in regards to it's SPARQL queries, it is worth mentioning some queries for the <em>news</em> service too:</p>
 
                         <ul>
-                            <li>To get paginated news for a specific cryptocurrency, we use the following query:</li>
+                            <li>To get paginated news for a specific cryptocurrency, in a descending order based on the date of publishing, we use the following query:</li>
 
                             <figure typeof="schema:SoftwareSourceCode" role="doc-example">
                                 <pre class="sparql-code-container">
@@ -675,15 +743,17 @@
     PREFIX schema: &lt;http://schema.org/&gt;
     PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
     PREFIX elements: &lt;http://purl.org/dc/elements/1.1/&gt;
-    SELECT DISTINCT ?id ?v2 ?v3 ?v4
+    SELECT DISTINCT ?id ?title ?body ?publishedAt ?source ?about
     WHERE {
         ?id rdf:type schema:NewsArticle.
         ?id elements:subject idCryptocurrency.
-        ?id schema:headline ?v2.
-        ?id schema:articleBody ?v3.
-        ?id elements:subject ?v4
+        ?id schema:headline ?title.
+        ?id schema:articleBody ?body.
+        ?id schema:datePublished ?publishedAt.
+        ?id schema:url ?source.
+        ?id elements:subject ?about
     }
-    ORDER BY ?title
+    ORDER BY DESC(?publishedAt)
     LIMIT givenLimit
     OFFSET givenOffset
                                 </code>
@@ -691,8 +761,8 @@
                                 <figcaption class="sparql-code-caption"><em>Get Paginated News for Cryptocurrency</em></figcaption>
                             </figure>
 
-                            <p>The query's structure is relatively similar to the one used for getting paginated cryptocurrencies, the major difference being that since we need to get only the news which have as <em>subject</em> the cryptocurrency given
-                                by <var>idCryptocurrency</var>, we also have to add the restriction that one of the values for the predicate <em>elements:subject</em> is <var>idCryptocurrency</var>.</p>
+                            <p>The query's structure is relatively similar to the simple version of the one used for getting paginated cryptocurrencies, the major difference being that since we need to get only the news which have as <em>subject</em> the
+                                cryptocurrency given by <var>idCryptocurrency</var>, we also have to add the restriction that one of the values for the predicate <em>elements:subject</em> is <var>idCryptocurrency</var>.</p>
 
                             <li>To get the total of news for a specific cryptocurrency, which will also be used for pagination, we use the following query:</li>
 
@@ -712,9 +782,8 @@
                                 <figcaption class="sparql-code-caption"><em>Get News Count for a Cryptocurrency</em></figcaption>
                             </figure>
 
-                            <p>Again, the structure is similar with the equivalent query used in the <em>cryptocurrency</em> service, with again the addition that we count only the news entities which have <var>idCryptocurrency</var> as one of the values
-                                for predicate
-                                <em>elements:subject</em>.</p>
+                            <p>Again, the structure is similar with the equivalent filterless version of the query used in the <em>cryptocurrency</em> service, with again the addition that we count only the news entities which have
+                                <var>idCryptocurrency</var> as one of the values for predicate <em>elements:subject</em>.</p>
                         </ul>
                     </section>
                 </div>
