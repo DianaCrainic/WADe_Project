@@ -35,7 +35,7 @@ const getCryptocurrencyMarketData = async (name: string, startDate: number, endD
 
 export const handler = async (event: any) => {
     const name = event.name;
-    const startDate = new Date(new Date().setFullYear(new Date().getFullYear() - 5)).getTime() / 1000; // 5 years ago
+    const startDate = new Date(new Date().setFullYear(new Date().getFullYear() - 3)).getTime() / 1000; // 3 years ago
     const endDate = new Date().getTime() / 1000; // now
     const cryptoMarketData = await getCryptocurrencyMarketData(name, startDate, endDate);
 

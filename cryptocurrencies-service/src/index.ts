@@ -8,10 +8,10 @@ export const handler = async (event: any, context: any, callback: any) => {
             callback(null, await getCryptocurrencyById(event.arguments.id));
             break;
         case "cryptocurrencies":
-            callback(null, await getCryptocurrencies(event.arguments.limit, event.arguments.offset, event.arguments.searchText, event.arguments.sortOrder));
+            callback(null, await getCryptocurrencies(event.arguments.limit, event.arguments.offset, event.arguments.searchText, event.arguments.sortOrder, event.arguments.startDate, event.arguments.endDate));
             break;
         case "cryptocurrenciesInfo":
-            callback(null, await getCryptocurrenciesInfo(event.arguments.searchText));
+            callback(null, await getCryptocurrenciesInfo(event.arguments.searchText, event.arguments.startDate, event.arguments.endDate));
             break;
         case "createCryptocurrency":
             callback(null, await createCryptocurrency(event.arguments.createCryptocurrencyInput));

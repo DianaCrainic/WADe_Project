@@ -285,7 +285,7 @@ export default function CryptoInformation(props: any) {
                     </p>
                     <p className="crypto-date-founded">
                         <span>Date founded: </span>
-                        {dateFounded ? <span property="http://www.w3.org/2001/XMLSchema#date">{dateFounded}</span> : UNKNOWN_MESSAGE}
+                        {dateFounded ? <span property="http://purl.org/net/bel-epa/doacc#date-founded">{dateFounded}</span> : UNKNOWN_MESSAGE}
                     </p>
                     <p className="crypto-reward">
                         <span>Reward: </span>

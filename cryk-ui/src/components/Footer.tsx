@@ -16,7 +16,7 @@ import { AuthContext } from "../App";
 Amplify.configure({
     Auth: {
         userPoolId: "",
-        region: "us-east-1",
+        region: "",
         userPoolWebClientId: "",
     }
 });

@@ -2,6 +2,7 @@ import envs from "../envs";
 import ParsingClient from "sparql-http-client/ParsingClient";
 import { CreateCryptocurrencyInput, Cryptocurrency, UpdateCryptocurrencyInput, CryptocurrenciesInfo } from "../models/cryptocurrency";
 import sparqlTransformer from "sparql-transformer";
+import crypto from "crypto";
 
 const sparqlClient = new ParsingClient({ endpointUrl: envs.sparqlEndpoint, updateUrl: envs.sparqlEndpoint });
 
@@ -244,6 +245,27 @@ export const updateCryptocurrencyById = async (cryptocurrency: UpdateCryptocurre
         PREFIX doacc:    <http://purl.org/net/bel-epa/doacc#>
         PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX elements: <http://purl.org/dc/elements/1.1/>
+
+        INSERT {
+            ${cryptocurrency.description ? `<${id}> elements:description "${cryptocurrency.description}"@en                                         .` : ""}
+            ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   "${cryptocurrency.blockReward}"^^<http://www.w3.org/2001/XMLSchema#string> .` : ""}
+            ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     "${cryptocurrency.blockTime}"^^<http://www.w3.org/2001/XMLSchema#integer>  .` : ""}
+            ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    "${cryptocurrency.totalCoins}"^^<http://www.w3.org/2001/XMLSchema#string>  .` : ""}
+            ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   "${cryptocurrency.dateFounded}"^^<http://www.w3.org/2001/XMLSchema#date>   .` : ""}
+            ${cryptocurrency.source ? `<${id}> doacc:source         <${cryptocurrency.source}>                                                 .` : ""}
+            ${cryptocurrency.website ? `<${id}> doacc:website        <${cryptocurrency.website}>                                                .` : ""}
+        }
+        WHERE {
+            MINUS {
+                ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
+                ${cryptocurrency.blockReward ? `<${id}> doacc:block-reward   ?oldBlockReward . ` : ""}
+                ${cryptocurrency.blockTime ? `<${id}> doacc:block-time     ?oldBlockTime   . ` : ""}
+                ${cryptocurrency.totalCoins ? `<${id}> doacc:total-coins    ?oldTotalCoins  . ` : ""}
+                ${cryptocurrency.dateFounded ? `<${id}> doacc:date-founded   ?oldDateFounded . ` : ""}
+                ${cryptocurrency.source ? `<${id}> doacc:source         ?oldSource      . ` : ""}
+                ${cryptocurrency.website ? `<${id}> doacc:website        ?oldWebsite     . ` : ""}
+            }
+        };
 
         DELETE {
             ${cryptocurrency.description ? `<${id}> elements:description ?oldDescription . ` : ""}
