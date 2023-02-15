@@ -8,6 +8,12 @@ type DistributionScheme {
     description: String
 }
 
+type PriceData {
+    currency: String!
+    timestamp: Float!
+    value: Float!
+}
+
 # https://doacc.github.io/doacc.xml#Cryptocurrency
 type Cryptocurrency {
     id: ID!
@@ -19,8 +25,13 @@ type Cryptocurrency {
     dateFounded: String
     source: String
     website: String
+    priceHistory: [PriceData!]!
     protectionScheme: ProtectionScheme
     distributionScheme: DistributionScheme
+}
+
+type CryptocurrenciesInfo {
+    totalCount: Int
 }
 
 input CreateCryptocurrencyInput {
@@ -50,12 +61,20 @@ type CryptoNews {
     id: ID!
     title: String! # https://schema.org/headline
     body: String! # https://schema.org/articleBody
+    publishedAt: String! # https://schema.org/datePublished
+    source: String # https://schema.org/url
     about: [ID!]! 
+}
+
+type CryptoNewsInfo {
+    totalCount: Int
 }
 
 input CreateCryptoNewsInput {
     title: String!
     body: String!
+    publishedAt: String!
+    source: String
     about: [ID!]!
 }
 
@@ -63,14 +82,18 @@ input UpdateCryptoNewsInput {
     id: ID!
     title: String
     body: String
+    publishedAt: String!
+    source: String
     about: [ID!]
 }
 
 type Query {
     cryptocurrency(id: ID!): Cryptocurrency!
-    cryptocurrencies(limit: Int, offset: Int): [Cryptocurrency!]!
+    cryptocurrencies(limit: Int, offset: Int, searchText: [String], sortOrder: String, startDate: String, endDate: String): [Cryptocurrency!]!
+    cryptocurrenciesInfo(searchText: [String], startDate: String, endDate: String): CryptocurrenciesInfo
 
-    cryptoNews(cryptocurrencyId: ID!): [CryptoNews!]!
+    cryptoNews(cryptocurrencyId: ID!, limit: Int, offset: Int): [CryptoNews!]!
+    cryptoNewsInfo(cryptocurrencyId: ID!): CryptoNewsInfo
 }
 
 type Mutation {
